@@ -19,6 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
+using Crestron.SimplSharp;
 
 namespace Elegant.Pellucid
 {
@@ -29,34 +30,25 @@ namespace Elegant.Pellucid
     {
         private static Dictionary<string, GlobalCommand> consoleCommandNames = new Dictionary<string, GlobalCommand>(1);
 
-        public static bool CreateCrestronConsoleCommand(string commandName, string commandHelp, CommandAccess access)
+        /// <summary>
+        /// Creates a global command, adding it to the Crestron console.
+        /// </summary>
+        /// <param name="command">The command to register.</param>
+        public static bool RegisterCrestronConsoleCommand(GlobalCommand command)
         {
-            if (consoleCommandNames.ContainsKey(commandName))
+            if (consoleCommandNames.ContainsKey(command.Name))
             {
                 return false;
             }
             else
             {
-                var cmd = new GlobalCommand(commandName, commandHelp, access);
-                if (cmd.AddToConsole())
-                {
-                    consoleCommandNames.Add(commandName, cmd);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                consoleCommandNames.Add(command.Name, command);
+                return true;
             }
         }
 
         public static bool RemoveCrestronConsoleCommand(string commandName)
         {
-            if (consoleCommandNames.ContainsKey(commandName))
-            {
-                consoleCommandNames[commandName].RemoveFromConsole();
-            }
-
             return consoleCommandNames.Remove(commandName);
         }
 
@@ -78,6 +70,6 @@ namespace Elegant.Pellucid
             }
 
             return RegisterResult.GlobalCommandNotFound;
-        }        
+        }
     }
 }

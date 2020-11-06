@@ -199,7 +199,13 @@ namespace Elegant.Pellucid
         public bool AddToConsole()
         {
             ConsoleAccessLevelEnum level = (ConsoleAccessLevelEnum)CommandAccess;
-            return CrestronConsole.AddNewConsoleCommand(ExecuteCommand, Name, Help, level);
+
+            if (CrestronConsole.AddNewConsoleCommand(ExecuteCommand, Name, Help, level))
+            {
+                return Manager.RegisterCrestronConsoleCommand(this);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -208,7 +214,8 @@ namespace Elegant.Pellucid
         /// <returns>True if it succeeds, false if it fails for any reason.</returns>
         public bool RemoveFromConsole()
         {
-            return CrestronConsole.RemoveConsoleCommand(Name);
+            CrestronConsole.RemoveConsoleCommand(Name);
+            return Manager.RemoveCrestronConsoleCommand(Name);
         }
 
         /// <summary>
@@ -376,7 +383,7 @@ namespace Elegant.Pellucid
                     }
                     else
                     {
-                        WriteErrorMethod(string.Format("No verb with the specified name '{0}' exists. Enter '{1} --help' to view all available verbs.", commandName, verb));
+                        WriteErrorMethod(string.Format("No verb with the specified name '{0}' exists. Enter '{0} --help' to view all available verbs.", commandName));
                     }
                     return;
                 }
@@ -563,7 +570,7 @@ namespace Elegant.Pellucid
 
                 if (examples.Count > 0)
                 {
-                    sb.AppendLine("Examples");
+                    sb.AppendLine(FormatHelpTextMethod("Examples"));
                     foreach (var e in examples)
                     {
                         sb.AppendLine(FormatHelpSampleMethod(string.Format("'{0}'", e.Sample)));
@@ -571,7 +578,6 @@ namespace Elegant.Pellucid
                         sb.AppendLine(FormatHelpTextMethod(e.Description));
                         sb.AppendLine();
                     }
-                    sb.AppendLine();
                 }
 
                 List<OperandAttribute> operands = new List<OperandAttribute>();
@@ -603,17 +609,25 @@ namespace Elegant.Pellucid
                     nameWidth = Math.Max(nameWidth, flags.Max(fa => fa.Name.Length));
                 }
 
-                foreach (var op in operands)
+                sb.Append(FormatHelpTextMethod("Available "));
+                sb.Append(FormatHelpOperandMethod("Operands"));
+                sb.Append(FormatHelpTextMethod(" and "));
+                sb.AppendLine(FormatHelpFlagMethod("Flags"));
+                sb.AppendLine();
+
+                if (operands.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(op.Name))
+                    foreach (var op in operands)
                     {
-                        sb.Append(FormatHelpTextMethod("--"));
-                        sb.Append(FormatHelpOperandMethod(op.Name.PadRight(nameWidth)));
-                        sb.Append('\t', 2);
-                        sb.AppendLine(FormatHelpTextMethod(op.Help));
+                        if (!string.IsNullOrEmpty(op.Name))
+                        {
+                            sb.Append(FormatHelpTextMethod("--"));
+                            sb.Append(FormatHelpOperandMethod(op.Name.PadRight(nameWidth)));
+                            sb.Append('\t', 2);
+                            sb.AppendLine(FormatHelpTextMethod(op.Help));
+                        }
                     }
                 }
-
                 foreach (var flag in flags)
                 {
                     sb.Append(FormatHelpTextMethod("--"));
@@ -640,9 +654,9 @@ namespace Elegant.Pellucid
             {
                 sb.AppendLine(FormatHelpTextMethod(help));
             }
-
-            sb.AppendLine(FormatHelpTextMethod("-----"));
-            sb.AppendLine(FormatHelpTextMethod("Available Verbs"));
+            sb.AppendLine();
+            sb.Append(FormatHelpTextMethod("Available"));
+            sb.AppendLine(formatHelpVerbMethod(" Verbs"));
             sb.AppendLine();
 
             var verbs = CommandHelpers.GetVerbs(command);
@@ -653,29 +667,37 @@ namespace Elegant.Pellucid
                 nameWidth = verbs.Max(v => v.Value.Name.Length);
             }
 
-            nameWidth = Math.Max(nameWidth, 4);
+            nameWidth = Math.Max(nameWidth, 7);
 
             var details = new List<VerbAttribute>();
 
-            foreach (var kvp in verbs)
+            foreach (var kvp in verbs.OrderBy(t => t.Value.Name))
             {
                 if (details.Where(d => d.Name == kvp.Value.Name).Count() == 0)
                 {
                     details.Add(kvp.Value);
 
-                    sb.Append(kvp.Value.Name.PadRight(nameWidth));
+                    if (string.IsNullOrEmpty(kvp.Value.Name))
+                    {
+                        sb.Append(FormatHelpVerbMethod("<none>".PadRight(nameWidth)));
+                    }
+                    else
+                    {
+                        sb.Append(FormatHelpVerbMethod(kvp.Value.Name.PadRight(nameWidth)));
+                    }
                     sb.Append('\t', 2);
-                    sb.Append(kvp.Value.Help);
+                    sb.Append(FormatHelpTextMethod(kvp.Value.Help));
                     sb.AppendLine();
                 }
             }
-
-            sb.Append(FormatHelpFlagMethod("Help".PadRight(nameWidth)));
+            sb.AppendLine();
+            sb.Append(FormatHelpTextMethod("Available "));
+            sb.AppendLine(FormatHelpFlagMethod("Flags."));
+            sb.AppendLine();
+            sb.Append(FormatHelpFlagMethod("--Help".PadRight(nameWidth)));
             sb.Append('\t', 2);
             sb.Append(FormatHelpTextMethod("Prints help for this command."));
             sb.AppendLine();
-
-            sb.AppendLine(FormatHelpTextMethod("-----"));
 
             WriteHelpMethod(sb.ToString());
         }
