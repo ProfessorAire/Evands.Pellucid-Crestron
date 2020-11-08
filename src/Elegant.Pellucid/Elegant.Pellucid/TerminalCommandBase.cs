@@ -25,7 +25,10 @@ namespace Elegant.Pellucid
     /// </summary>
     public abstract class TerminalCommandBase
     {
-        private string nameOverride;
+        /// <summary>
+        /// Backing field for the <see cref="Name"/> property.
+        /// </summary>
+        private string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TerminalCommandBase"/> class.
@@ -37,27 +40,74 @@ namespace Elegant.Pellucid
         /// <summary>
         /// Initializes a new instance of the <see cref="TerminalCommandBase"/> class.
         /// </summary>
-        /// <param name="name">The name to override this command with.</param>
-        public TerminalCommandBase(string name)
+        /// <param name="suffix">The suffix to provide this command's name with.</param>
+        public TerminalCommandBase(string suffix)
         {
-            nameOverride = name;
+            if (!string.IsNullOrEmpty(suffix))
+            {
+                this.name = string.Format("{0}{1}", Name, suffix);
+            }
         }
 
         /// <summary>
-        /// Attempts to register the command with the specified console command.
+        /// Gets the name of the command.
         /// </summary>
-        /// <param name="consoleCommandName">The name of the console command to register this command with.</param>
-        /// <returns>A value indicating whether the registration suceeded or the reason it failed.</returns>
-        public RegisterResult RegisterCommand(string consoleCommandName)
+        public string Name
         {
-            if (string.IsNullOrEmpty(nameOverride))
+            get
             {
-                return Manager.Register(consoleCommandName, this);
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = CommandHelpers.GetCommandNameFromAttribute(this);
+                }
+
+                return name;
             }
-            else
+        }
+
+        /// <summary>
+        /// Gets an array of all the global commands this command is registered with.
+        /// </summary>
+        /// <returns>An array of global commands that this is registered with.</returns>
+        public GlobalCommand[] GetCommandsRegisteredWith()
+        {
+            return Manager.ReturnAllTerminalCommandIsRegisteredTo(this);
+        }
+
+        /// <summary>
+        /// Attempts to register the command with the specified global command.
+        /// </summary>
+        /// <param name="globalCommandName">The name of the global command to register this command with.</param>
+        /// <returns>A value indicating whether the registration suceeded or the reason it failed.</returns>
+        public RegisterResult RegisterCommand(string globalCommandName)
+        {
+            if (string.IsNullOrEmpty(this.Name))
             {
-                return Manager.Register(consoleCommandName, this, nameOverride);
+                return RegisterResult.NoCommandAttributeFound;
             }
+
+            return Manager.Register(globalCommandName, this);
+        }
+
+        /// <summary>
+        /// Attempts to remove the command from all the global commands it is registered with.
+        /// </summary>
+        public void UnregisterCommand()
+        {
+            foreach (var gc in GetCommandsRegisteredWith())
+            {
+                Manager.Unregister(gc.Name, this);
+            }
+        }
+
+        /// <summary>
+        /// Attempts to remove the command from the specified global command.
+        /// </summary>
+        /// <param name="globalCommandName">The name of the global command to register this command with.</param>
+        /// <returns><see langword="True"/> if the command was unregistered, false if the unregistration failed.</returns>
+        public bool UnregisterCommand(string globalCommandName)
+        {
+            return Manager.Unregister(globalCommandName, this);
         }
     }
 }

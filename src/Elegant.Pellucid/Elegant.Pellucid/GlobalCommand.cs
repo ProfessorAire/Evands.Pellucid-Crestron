@@ -270,6 +270,16 @@ namespace Elegant.Pellucid
         }
 
         /// <summary>
+        /// Gets whether the specified command is registered with this global command.
+        /// </summary>
+        /// <param name="command">The command to check registration of.</param>
+        /// <returns><see langword="True"/> if the command is registered.</returns>
+        public bool IsCommandRegistered(TerminalCommandBase command)
+        {
+            return this.commands.ContainsKey(command.Name) && this.commands[command.Name] == command;
+        }
+
+        /// <summary>
         /// Attempts to execute a command with the specified argument text.
         /// <para>This text should be the contents of the command line, without this <see cref="GlobalCommand"/>'s command name.</para>
         /// <para>eg: 'sampleCommand verb defaultValue --flag --operand operandValue'</para>

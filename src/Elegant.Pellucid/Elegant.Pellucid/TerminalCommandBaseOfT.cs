@@ -40,9 +40,9 @@ namespace Elegant.Pellucid
         /// Initializes a new instance of the <see cref="TerminalCommandBase{T}"/> class.
         /// </summary>
         /// <param name="targetObject">The object this command should provide a reference to.</param>
-        /// <param name="nameOverride">The name to override this command with.</param>
-        public TerminalCommandBase(T targetObject, string nameOverride)
-            : base(nameOverride)
+        /// <param name="suffix">The suffix to provide this command's name with.</param>
+        public TerminalCommandBase(T targetObject, string suffix)
+            : base(suffix)
         {
             TargetObject = targetObject;
         }

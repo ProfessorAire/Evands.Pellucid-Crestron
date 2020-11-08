@@ -80,6 +80,7 @@
     <Compile Include="Attributes\VerbAttribute.cs" />
     <Compile Include="CommandAccess.cs" />
     <Compile Include="CommandHelpers.cs" />
+    <Compile Include="ITerminalCommandProvider.cs" />
     <Compile Include="TerminalCommandException.cs" />
     <Compile Include="TerminalCommandBaseOfT.cs" />
     <Compile Include="Manager.cs" />
