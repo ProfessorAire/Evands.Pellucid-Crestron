@@ -8,6 +8,18 @@ By providing `IConsoleWriter` and `ILogWriter` interfaces you have the option an
 
 Using the `Evands.Pellucid.Pro` library will also provide classes to make writing console commands far easier. With these classes you can add a single global command to the Crestron console and then register additional commands with that global command as you need. In addition, these commands are created by decorating classes with attributes, which allows automatic parsing and command help formatting, in addition to standardizing all your commands in a familiar manner.
 
+## Installation
+
+There are two different ways you can install these libraries.
+
+### Nuget
+
+If you're using Visual Studio 2017/19 to produce code for Series-4 processors you can install the libraries via Nuget, as there are 2 Nuget packages available, `Evands.Pellucid` and `Evands.Pellucid.Pro`. If you're using Visual Studio 2008 you can still install via the Nuget packages manually. When you add references to the `dll`s, however, the Crestron Simpl# plugin will prevent the `Evands.Pellucid.Pro` from being properly added. This is because the plugin expects all the libraries that the file being added references to be available in the same directory, however the `Evands.Pellucid.dll` file is not in the `Evands.Pellucid.Pro` package. This can be overcome by manually adding the references to your project file. The easiest process is to add the `Evands.Pellucid.dll` reference and then manually edit your project file, copying the `Evands.Pellucid.dll` reference and updating it to point to the `Evands.Pellucid.Pro.dll` file.
+
+### Release Binaries
+
+The [Releases](https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases) page has binaries for each release. The releases also contain the compiled demo project `Evands.Pellucid.ProDemo.cpz` that you can load on a processor. View the demo code [here](https://github.com/ProfessorAire/Evands.Pellucid-Crestron/tree/main/src/Evands.Pellucid.ProDemo).
+
 ## Basic Functionality
 
 ### Options
