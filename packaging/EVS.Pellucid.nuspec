@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata minClientVersion="5.3.0">
+        <id>EVS.Pellucid</id>
+        <version>0.0.1</version>
+        <description>EVS.Pellucid provides a flexible framework for console interactions, debug messaging, and logging, all focused on Crestron Simpl# and Simpl# Pro projects.
+        </description>
+        <authors>christopher.mcneely</authors>
+        <projectUrl>https://github.com/ProfessorAire/EVS.Pellucid-Crestron</projectUrl>
+        <license type="expression">MIT</license>
+        <icon>images\icon.png</icon>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <releaseNotes>
+Initial Release
+        </releaseNotes>
+        <copyright>Christopher McNeely 2021</copyright>
+        <tags>Crestron S# Simpl# Simpl</tags>
+    </metadata>
+    <files>
+        <file src="..\icon.png" target="images\" />
+        <file src="..\src\EVS.Pellucid\bin\Release\EVS.Pellucid.dll" target="lib\net35-cf" />
+        <file src="..\src\EVS.Pellucid\bin\Release\EVS.Pellucid.xml" target="lib\net35-cf" />
+        <file src="..\src\EVS.Pellucid\bin\Release\EVS.Pellucid.dll" target="lib\net47" />
+        <file src="..\src\EVS.Pellucid\bin\Release\EVS.Pellucid.xml" target="lib\net47" />
+    </files>
+</package>
