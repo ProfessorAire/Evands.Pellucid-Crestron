@@ -23,7 +23,7 @@ using System.Text;
 using Crestron.SimplSharp.CrestronIO;
 using EVS.Pellucid.Diagnostics;
 
-namespace Silver.Diagnostics
+namespace EVS.Pellucid.Diagnostics
 {
     /// <summary>
     /// Provides simple methods for logging to a file.

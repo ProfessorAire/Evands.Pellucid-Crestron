@@ -25,6 +25,7 @@ namespace EVS.Pellucid.Diagnostics
     /// <summary>
     /// Provides extension methods to simplify logging on objects.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class LoggerExtensions
     {
         /// <summary>

@@ -15,6 +15,10 @@ Initial Release
         </releaseNotes>
         <copyright>Christopher McNeely 2021</copyright>
         <tags>Crestron S# Simpl# Simpl</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.7" />
+            <group targetFramework=".NETFramework3.5-CompactFramework" />
+        </dependencies>
     </metadata>
     <files>
         <file src="..\icon.png" target="images\" />
