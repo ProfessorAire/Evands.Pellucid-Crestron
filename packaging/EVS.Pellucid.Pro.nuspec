@@ -19,7 +19,12 @@ Initial Release
         <copyright>Christopher McNeely 2021</copyright>
         <tags>Crestron S# S#Pro Simpl# Simpl</tags>
         <dependencies>
-            <dependency id="EVS.Pellucid" version="1.0.0" />
+            <group targetFramework=".NETFramework4.7">
+                <dependency id="EVS.Pellucid" version="1.0.0" />
+            </group>
+            <group targetFramework="NETFramework3.5-CompactFramework">
+                <dependency id="EVS.Pellucid" version="1.0.0" />
+            </group>
         </dependencies>
     </metadata>
     <files>

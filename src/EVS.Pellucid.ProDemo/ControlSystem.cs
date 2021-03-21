@@ -87,7 +87,7 @@ namespace EVS.Pellucid.ProDemo
                 var path = Path.Combine(Directory.GetApplicationRootDirectory(), "user");
                 path = Path.Combine(path, "logs");
                 path = Path.Combine(path, string.Format("App{0}SimpleLog.log", InitialParametersClass.ApplicationNumber));
-                Logger.RegisterLogWriter(new Silver.Diagnostics.SimpleFileLogger(path));
+                Logger.RegisterLogWriter(new EVS.Pellucid.Diagnostics.SimpleFileLogger(path));
 
                 // Subscribe to the controller events (System, Program, and Ethernet)
                 CrestronEnvironment.SystemEventHandler += new SystemEventHandler(ControlSystem_ControllerSystemEventHandler);

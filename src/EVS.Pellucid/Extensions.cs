@@ -23,6 +23,7 @@ namespace EVS.Pellucid
     /// <summary>
     /// Provides extension methods for some useful commands.
     /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static class Extensions
     {
         /// <summary>
