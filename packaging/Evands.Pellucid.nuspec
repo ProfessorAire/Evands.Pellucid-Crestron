@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata minClientVersion="5.3.0">
+        <id>Evands.Pellucid</id>
+        <version>0.0.1</version>
+        <description>Evands.Pellucid provides a flexible framework for console interactions, debug messaging, and logging, for Crestron Simpl# and Simpl# Pro projects.
+        </description>
+        <authors>christopher.mcneely</authors>
+        <projectUrl>https://github.com/ProfessorAire/Evands.Pellucid-Crestron</projectUrl>
+        <license type="expression">MIT</license>
+        <icon>images\icon.png</icon>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <releaseNotes>
+Initial Release
+        </releaseNotes>
+        <copyright>Christopher McNeely 2021</copyright>
+        <tags>Crestron S# Simpl# Simpl</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.7" />
+            <group targetFramework=".NETFramework3.5-CompactFramework" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\icon.png" target="images\" />
+        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.dll" target="lib\net35-cf" />
+        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.xml" target="lib\net35-cf" />
+        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.dll" target="lib\net47" />
+        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.xml" target="lib\net47" />
+    </files>
+</package>
