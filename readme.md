@@ -88,13 +88,13 @@ ConsoleBase.WriteLine(new RgbColor(0xFF, 0xB6, 0xF8), "This message is written i
 
 ### `Evands.Pellucid.Diagnostics.Debug`
 
-Although the `ConsoleBase` class provides a variety of methods for writing messages directly to the console, in almost all cases, it probably isn't the manner you want to print messages to the console using.
+Although the `ConsoleBase` class provides a variety of methods for writing messages directly to the console, in almost all cases, it probably isn't the manner you want to print messages to the console.
 
-The `Debug` class provides a large variety of methods for printing messages to the console that are only printed when the `Evands.Pellucid.Options.DebugLevels` property contains the appropriate levels.
+The `Evands.Pellucid.Diagnostics.Debug` class provides a large variety of methods for printing messages to the console that are only printed when the `Evands.Pellucid.Options.DebugLevels` property contains the appropriate levels.
 
 > The available debug flags are: `None`, `Debug`, `Progress`, `Success`, `Error`, `Notice`, `Warning`, `Exception`, `Uncategorized`, `All`, and `AllButDebug`.
 
-Messages printed in this manner are also printed with a header, in the final format `[Slot#][Source] Message`. The first parameter passed into all `Debug.Write[Level]` or `Debug.Write[Level]Line` methods is an object, normally the object that the method is originating from. When these methods are called the header is determined by the following steps:
+Messages printed in this manner are also printed with a header, in the final format `[Slot#][TimeStamp][Source] Message`. The first parameter passed into all `Debug.Write[Level]` or `Debug.Write[Level]Line` methods is an object, normally the object that the method is originating from. When these methods are called the header is determined by the following steps:
 
 1. If the object provided is `null` then the message is printed without the source header.
 2. If the object provided is a `string` then the source header is the string provided.
@@ -107,7 +107,7 @@ When a string or the type name is used, the `Debug` class checks to see if the s
 
 > Headers can be registered by calling `Debug.RegisterHeaderObject(yourClass, yourColorFormat);` or `Debug.RegisterHeaderObject("StringValue", yourColorFormat);`
 
-Besides restricting messages by their type, you can also narrow which debug messages are printed in several ways. You can add source header text to an `Allowed` or `Disallowed` list. (`Debug.AddAllowed` or `Debug.AddDisallowed`) When there are *any* items in the `Allowed` list, then *only* items in that list are allowed to print. This is especially useful in program code, as using the provided `Evands.Pellucid.Terminal.DebuggingCommand` makes it easy to add and remove these on the fly from the console. If you're working on debugging a specific object you can add just the objects you want to allow into this list.
+Besides restricting messages by their type, you can also narrow which debug messages are printed in several ways. You can add source header text to an `Allowed` or `Disallowed` list. (`Debug.AddAllowed` or `Debug.AddDisallowed`) When there are *any* items in the `Allowed` list, then *only* items in that list are allowed to print. This is especially useful in program code, as using the provided `Evands.Pellucid.Terminal.DebuggingCommands` makes it easy to add and remove these on the fly from the console. If you're working on debugging a specific object you can add just the objects you want to allow into this list.
 
 Likewise, if you have a particularly chatty object that prints many debug messages and you want to explicitly enable viewing these messages only when you want to, add it to the `Disallowed` list, which will prevent messages originating from objects with that source header from being printed, regardless of the `DebugLevels` property.
 
@@ -163,12 +163,33 @@ public ExampleClass : IDebugData
         Debug.WriteException(this, ex, "Example dummy exception.");
 
         // Writes a message to the console, written when the DebugLevels.Uncategorized flag is set.
-        Debug.WriteLine(this, new ColorFormat(RgbColor(111, 222, 111)), "This is an uncategorized custom message, written in the color you specify.");
+        Debug.WriteLine(this, new ColorFormat(new RgbColor(111, 222, 111)), "This is an uncategorized custom message, written in the color you specify.");
     }
 }
 ```
 
-> If the default color formats of these aren't to your liking, you can customize all of them by setting the corresponding property in the `ConsoleBase.Colors` class.
+Theoretical output of this might look like the following:
+
+```text
+[01][11:11:11][ControlSystem] This is a debug message.
+[01][11:11:11][ControlSystem] Doing something......
+[01][11:11:11][ControlSystem] This is a notice message.
+[01][11:11:12][ControlSystem] This is a success message.
+[01][11:11:12][ControlSystem] This is a warning message.
+[01][11:11:12][ControlSystem] This is an error message.
+[01][11:11:12][ControlSystem] Example dummy exception.
+--------Exception 1--------
+System.ArgumentNullException: Value can not be null.
+Parameter name: Dummy
+-----------------------------
+
+
+[01][11:11:13][ControlSystem] This is an uncategorized custom message, written in the color you specify.");
+```
+
+Coloring of each line is dependent on the message type.
+
+> If the default color formats aren't to your liking, you can customize all of them by setting the corresponding property in the `ConsoleBase.Colors` class.
 
 ### `Evands.Pellucid.Diagnostics.Logger`
 

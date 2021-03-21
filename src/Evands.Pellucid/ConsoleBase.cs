@@ -676,7 +676,7 @@ namespace Evands.Pellucid
             static Colors()
             {
                 Debug = new ColorFormat(ColorCode.BrightYellow);
-                Success = new ColorFormat(ColorCode.Black, ColorCode.BrightGreen);
+                Success = new ColorFormat(ColorCode.BrightGreen);
                 Progress = new ColorFormat(ColorCode.BrightCyan);
                 Error = new ColorFormat(ColorCode.BrightRed);
                 Exception = new ColorFormat(ColorCode.BrightRed);

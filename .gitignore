@@ -18,6 +18,8 @@ packaging/releases
 *.c3prj
 *.ASV
 
+#project info
+*.projectinfo
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
