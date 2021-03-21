@@ -1,4 +1,4 @@
-# EVS.Pellucid-Crestron
+# Evands.Pellucid-Crestron
 
 ## Overview
 
@@ -6,13 +6,13 @@ This library is intended to make writing information to the console or error log
 
 By providing `IConsoleWriter` and `ILogWriter` interfaces you have the option and ability to easily add new writers to the `ConsoleBase` and `Logger` classes to write to alternate locations. This makes it easier to do something like write a custom TCP console agent for a VC-4 instance. The right implementation can easily be swapped in based on the runtime environment. Pre-built implementations for the `CrestronConsole` and `ErrorLog` classes are automatically added when a call to the `ConsoleBase` or `Logger` classes occur without any registered implementations.
 
-Using the `EVS.Pellucid.Pro` library will also provide classes to make writing console commands far easier. With these classes you can add a single global command to the Crestron console and then register additional commands with that global command as you need. In addition, these commands are created by decorating classes with attributes, which allows automatic parsing and command help formatting, in addition to standardizing all your commands in a familiar manner.
+Using the `Evands.Pellucid.Pro` library will also provide classes to make writing console commands far easier. With these classes you can add a single global command to the Crestron console and then register additional commands with that global command as you need. In addition, these commands are created by decorating classes with attributes, which allows automatic parsing and command help formatting, in addition to standardizing all your commands in a familiar manner.
 
 ## Basic Functionality
 
 ### Options
 
-There are a variety of options available for the `ConsoleBase`, `Debug`, and `Logger` classes, all located in the `EVS.Pellucid.Options` class. These options are automatically saved and loaded from the file `pellucid.console-options.toml` in the application directory. In this manner your options are persisted across reboots. If you manually set any of these options in your code your selections will take effect after the program reboots, overriding whatever values were loaded from the configuration file.
+There are a variety of options available for the `ConsoleBase`, `Debug`, and `Logger` classes, all located in the `Evands.Pellucid.Options` class. These options are automatically saved and loaded from the file `pellucid.console-options.toml` in the application directory. In this manner your options are persisted across reboots. If you manually set any of these options in your code your selections will take effect after the program reboots, overriding whatever values were loaded from the configuration file.
 
 This also means that it's possible to provide a default configuration file with your program. Using your preferred method of configuration transformation you can create a different version for `Debug` and `Release` configurations and load them automatically with the code to the processor.
 
@@ -24,8 +24,8 @@ The available options are:
 | `Use24HourTime`         | `bool`         | `true`            | Indicates whether debug timestamps should be formatted as `13:00:15` or `1:00:15 PM`                                                            |
 | `LogLevels`             | `LogLevels`    | `LogLevels.None`  | Flagged enumeration indicating what types of messages should be logged.                                                                         |
 | `DebugLevels`           | `DebugLevels`  | `DebugLevels.All` | Flagged enumeration indicating what debug messages should be printed.                                                                           |
-| `Suppressed`            | `List<string>` | Empty list        | List of strings matching suppressed debug source headers as described below in [`EVS.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Debug` class methods, instead of the `Options` class. |
-| `Allowed`               | `List<string>` | Empty list        | List of strings matching allowed debug source headers as described below in [`EVS.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Logger` class methods, instead of directly through the `Options` class.    |
+| `Suppressed`            | `List<string>` | Empty list        | List of strings matching suppressed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Debug` class methods, instead of the `Options` class. |
+| `Allowed`               | `List<string>` | Empty list        | List of strings matching allowed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Logger` class methods, instead of directly through the `Options` class.    |
 
 The default values saved to disk will look like:
 
@@ -51,24 +51,24 @@ suppressed = [ "SomeClassName", "SomeOtherClassName" ]
 allowed = [  ]
 ```
 
-### `EVS.Pellucid.ConsoleBase` and `EVS.Pellucid.ProConsole`
+### `Evands.Pellucid.ConsoleBase` and `Evands.Pellucid.ProConsole`
 
 The `ConsoleBase` class is a bit of a unique one, as it's an `abstract` class that has only static methods. It isn't intended to be used as a instanced class. As such, its constructor is protected and allows other classes to extend it, in order to provide additional static functionality, or simply make it easier to call.
 
-The `ProConsole` in the `EVS.Pellucid.Pro` project is an example of this and extends the class to provide the ability to add the `EVS.Pellucid.Pro` library's `ConsoleCommands` and `DebuggingCommands` to a list of commands that you provide the names of to the `ProConsole.InitializeConsole` method. In most cases if you're writing S# Pro Library or Program you'll want to extend the `ProConsole` over the `ConsoleBase`, unless you manually add these commands yourself.
+The `ProConsole` in the `Evands.Pellucid.Pro` project is an example of this and extends the class to provide the ability to add the `Evands.Pellucid.Pro` library's `ConsoleCommands` and `DebuggingCommands` to a list of commands that you provide the names of to the `ProConsole.InitializeConsole` method. In most cases if you're writing S# Pro Library or Program you'll want to extend the `ProConsole` over the `ConsoleBase`, unless you manually add these commands yourself.
 
 Generally it's easiest to call the console if you create your own implementation named `Console` that exists in the root of your project namespace. If it exists in the project's root namespace it will supersede the `System.Console` class, which will allow you to call `Console.[CommandName]` instead of `ConsoleBase.[CommandName]` or `ProConsole.[CommandName]`.
 
-In addition, the console has a variety of options for printing colorized text, which makes it far easier to differentiate messages when reading a busy console. You can specify a variety of standard console colors, or use an implementation of the `EVS.Pellucid.Terminal.Formatting.IConsoleColor` interface, such as `EVS.Pellucid.Terminal.Formatting.RgbColor` to specify a custom color. These colors are only printed if the `EVS.Pellucid.Options.Instance.ColorizeConsoleOutput` property is set to `true`. (By default it is.)
+In addition, the console has a variety of options for printing colorized text, which makes it far easier to differentiate messages when reading a busy console. You can specify a variety of standard console colors, or use an implementation of the `Evands.Pellucid.Terminal.Formatting.IConsoleColor` interface, such as `Evands.Pellucid.Terminal.Formatting.RgbColor` to specify a custom color. These colors are only printed if the `Evands.Pellucid.Options.Instance.ColorizeConsoleOutput` property is set to `true`. (By default it is.)
 
 Finally, messages printed to the console using the `Write` and `WriteLine` methods are prefixed with the numer of the program slot that the code is executing in, formatted like `"[01] Your message here."`, which can make it easier to differentiate between programs writing to the console.
 
 #### Console Examples
 
 ```csharp
-using EVS.Pellucid;
-using EVS.Pellucid.Terminal;
-using EVS.Pellucid.Terminal.Formatting;
+using Evands.Pellucid;
+using Evands.Pellucid.Terminal;
+using Evands.Pellucid.Terminal.Formatting;
 
 // Registering the default CrestronConsoleWriter. (This happens automatically if none are registered.)
 ConsoleBase.RegisterConsoleWriter(new CrestronConsoleWriter());
@@ -86,11 +86,11 @@ ConsoleBase.WriteLine(ConsoleBase.Colors.Black, ConsoleBase.Colors.BrightRed, "T
 ConsoleBase.WriteLine(new RgbColor(0xFF, 0xB6, 0xF8), "This message is written in light pink.");
 ```
 
-### `EVS.Pellucid.Diagnostics.Debug`
+### `Evands.Pellucid.Diagnostics.Debug`
 
 Although the `ConsoleBase` class provides a variety of methods for writing messages directly to the console, in almost all cases, it probably isn't the manner you want to print messages to the console using.
 
-The `Debug` class provides a large variety of methods for printing messages to the console that are only printed when the `EVS.Pellucid.Options.DebugLevels` property contains the appropriate levels.
+The `Debug` class provides a large variety of methods for printing messages to the console that are only printed when the `Evands.Pellucid.Options.DebugLevels` property contains the appropriate levels.
 
 > The available debug flags are: `None`, `Debug`, `Progress`, `Success`, `Error`, `Notice`, `Warning`, `Exception`, `Uncategorized`, `All`, and `AllButDebug`.
 
@@ -107,15 +107,15 @@ When a string or the type name is used, the `Debug` class checks to see if the s
 
 > Headers can be registered by calling `Debug.RegisterHeaderObject(yourClass, yourColorFormat);` or `Debug.RegisterHeaderObject("StringValue", yourColorFormat);`
 
-Besides restricting messages by their type, you can also narrow which debug messages are printed in several ways. You can add source header text to an `Allowed` or `Disallowed` list. (`Debug.AddAllowed` or `Debug.AddDisallowed`) When there are *any* items in the `Allowed` list, then *only* items in that list are allowed to print. This is especially useful in program code, as using the provided `EVS.Pellucid.Terminal.DebuggingCommand` makes it easy to add and remove these on the fly from the console. If you're working on debugging a specific object you can add just the objects you want to allow into this list.
+Besides restricting messages by their type, you can also narrow which debug messages are printed in several ways. You can add source header text to an `Allowed` or `Disallowed` list. (`Debug.AddAllowed` or `Debug.AddDisallowed`) When there are *any* items in the `Allowed` list, then *only* items in that list are allowed to print. This is especially useful in program code, as using the provided `Evands.Pellucid.Terminal.DebuggingCommand` makes it easy to add and remove these on the fly from the console. If you're working on debugging a specific object you can add just the objects you want to allow into this list.
 
 Likewise, if you have a particularly chatty object that prints many debug messages and you want to explicitly enable viewing these messages only when you want to, add it to the `Disallowed` list, which will prevent messages originating from objects with that source header from being printed, regardless of the `DebugLevels` property.
 
 #### Debug Examples
 
 ```csharp
-using EVS.Pellucid.Diagnostics;
-using EVS.Pellucid.Terminal.Formatting;
+using Evands.Pellucid.Diagnostics;
+using Evands.Pellucid.Terminal.Formatting;
 
 public ExampleClass : IDebugData
 {
@@ -170,11 +170,11 @@ public ExampleClass : IDebugData
 
 > If the default color formats of these aren't to your liking, you can customize all of them by setting the corresponding property in the `ConsoleBase.Colors` class.
 
-### `EVS.Pellucid.Diagnostics.Logger`
+### `Evands.Pellucid.Diagnostics.Logger`
 
 The `Logger` class is useful for situations where you want to log messages somewhere, so they can be examined at a later date. Typically this is done with the `ErrorLog` class, which is what the default `CrestronLogWriter` implementation provided does. In addition to logging, messages logged will *also* be printed to the console via the `Debug` class, provided the correct `DebugLevels` flag is set.
 
-Like the `Debug` class, the `Logger` class has levels that can be enabled or disabled independently of the `Debug` levels, located in the `EVS.Pellucid.Options.LogLevels` property.
+Like the `Debug` class, the `Logger` class has levels that can be enabled or disabled independently of the `Debug` levels, located in the `Evands.Pellucid.Options.LogLevels` property.
 
 > The available log flags are: `None`, `Notice`, `Warning`, `Error`, `Exception`, `Debug`, `All`, and `AllButDebug`.
 
@@ -187,7 +187,7 @@ There are extension methods that can provide faster access to writing to the `Lo
 #### Logger Examples
 
 ```csharp
-using EVS.Pellucid.Diagnostics;
+using Evands.Pellucid.Diagnostics;
 
 public ExampleClass : IDebugData
 {
@@ -215,16 +215,16 @@ public ExampleClass : IDebugData
 
 ### Console Commands
 
-When using the `EVS.Pellucid.Pro` library you'll have access to a variety of classes that make creating console commands far easier. When using commands written this way they're far easier to explore and execute via the console, as help messages are automatically generated and formatted based on the attributes you apply to the classes and methods.
+When using the `Evands.Pellucid.Pro` library you'll have access to a variety of classes that make creating console commands far easier. When using commands written this way they're far easier to explore and execute via the console, as help messages are automatically generated and formatted based on the attributes you apply to the classes and methods.
 
-There are a few attributes that contribute to this functionality, all located in the `EVS.Pellucid.Terminal.Commands.Attributes` namespace. These are all demonstrated in the sample below.
+There are a few attributes that contribute to this functionality, all located in the `Evands.Pellucid.Terminal.Commands.Attributes` namespace. These are all demonstrated in the sample below.
 
 #### Command Example
 
 ```csharp
-using EVS.Pellucid;
-using EVS.Pellucid.Terminal.Commands.Attributes;
-using EVS.Pellucid.Terminal.Commands;
+using Evands.Pellucid;
+using Evands.Pellucid.Terminal.Commands.Attributes;
+using Evands.Pellucid.Terminal.Commands;
 
     [Command("example", "Example console command.")]
     public class ExampleCommands : TerminalCommandBase
@@ -312,4 +312,4 @@ This message is green.
 
 Looking at the output you can see that creating console commands in this manner allows for super powerful interactions with little to no effort, apart from organizing your commands logically. In our case the framework handles converting `OperandAttribute` values to `string`, `int`, `double`, `bool`, etc. Creating commands in this manner allows you to focus on the command functionality without having to parse values or do any regex matching to determine what values have been provided.
 
-The `EVS.Pellucid.Pro` library has several classes that demonstrate powerful console commands for configuring the `Debug`, `Logger`, and `ConsoleBase` options, such as `DebugLevels`, `ColorizeConsoleOutput`, etc.
+The `Evands.Pellucid.Pro` library has several classes that demonstrate powerful console commands for configuring the `Debug`, `Logger`, and `ConsoleBase` options, such as `DebugLevels`, `ColorizeConsoleOutput`, etc.

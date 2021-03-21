@@ -34,7 +34,7 @@ function Get-LibVersion {
 $dte = New-Object -ComObject VisualStudio.DTE.9.0
 
 $path = Split-Path $PSScriptRoot -Parent
-$path = "$path\src\EVS.Pellucid.sln"
+$path = "$path\src\Evands.Pellucid.sln"
 
 "Attempting to open $path"
 $dte.Solution.Open($path)
@@ -51,7 +51,18 @@ foreach ($item in $dte.Solution.SolutionBuild.SolutionConfigurations) {
 
 "Active Configuration is " + $dte.Solution.SolutionBuild.ActiveConfiguration.Name
 if ($dte.Solution.SolutionBuild.ActiveConfiguration.Name -eq "Release") {
+    "Building Project"
     $dte.Solution.SolutionBuild.Build($true)
+    $failed = $dte.Solution.SolutionBuild.LastBuildInfo
+
+    "$failed projects failed to build."
+
+    if ($failed -gt 0)
+    {
+        Write-Error -Message "Failed to build project." -Category InvalidResult -ErrorId 1000
+        $exitCode = 1000
+        return
+    }
 }
 
 $libVersion = ""
@@ -68,10 +79,10 @@ foreach ($proj in $dte.Solution.Projects) {
                             $ver = $element.Value
 
                             if ($name -eq "AssemblyVersion") {
-                                if ($proj.Name -eq "EVS.Pellucid") {
+                                if ($proj.Name -eq "Evands.Pellucid") {
                                     $libVersion = $ver
                                 }
-                                elseif ($proj.Name -eq "EVS.Pellucid.Pro") {
+                                elseif ($proj.Name -eq "Evands.Pellucid.Pro") {
                                     $proVersion = $ver
                                 }
                             }
@@ -93,23 +104,23 @@ else {
     $ver1 = Get-LibVersion $libVersion
     $ver2 = Get-LibVersion $proVersion
     
-    "Final EVS.Pellucid Version: $ver1"
-    "Final EVS.Pellucid.Pro Version: $ver2"
+    "Final Evands.Pellucid Version: $ver1"
+    "Final Evands.Pellucid.Pro Version: $ver2"
 
-    "Creating Nuget Package for EVS.Pellucid"
-    nuget pack EVS.Pellucid.nuspec -Version $ver1 -OutputDirectory ./releases
+    "Creating Nuget Package for Evands.Pellucid"
+    nuget pack Evands.Pellucid.nuspec -Version $ver1 -OutputDirectory ./releases
 
-    if ([System.IO.File]::Exists("$PSScriptRoot/releases/EVS.Pellucid.$ver1.nupkg") -eq $false)
+    if ([System.IO.File]::Exists("$PSScriptRoot/releases/Evands.Pellucid.$ver1.nupkg") -eq $false)
     {
-        Write-Warning "Unable to create nuget package for EVS.Pellucid"
+        Write-Warning "Unable to create nuget package for Evands.Pellucid"
         $exitCode = 1002
     }
     else {
-        "Creating Nuget Package for EVS.Pellucid.Pro"
-        nuget pack EVS.Pellucid.Pro.nuspec -Version $ver2 -OutputDirectory ./releases
-        if ([System.IO.File]::Exists("$PSScriptRoot/releases/EVS.Pellucid.Pro.$ver2.nupkg") -eq $false)
+        "Creating Nuget Package for Evands.Pellucid.Pro"
+        nuget pack Evands.Pellucid.Pro.nuspec -Version $ver2 -OutputDirectory ./releases
+        if ([System.IO.File]::Exists("$PSScriptRoot/releases/Evands.Pellucid.Pro.$ver2.nupkg") -eq $false)
         {
-            Write-Warning "Unable to create nuget package for EVS.Pellucid.Pro"
+            Write-Warning "Unable to create nuget package for Evands.Pellucid.Pro"
             $exitCode = 1003
         }
     }
