@@ -14,11 +14,15 @@ There are two different ways you can install these libraries.
 
 ### Nuget
 
-If you're using Visual Studio 2017/19 to produce code for Series-4 processors you can install the libraries via Nuget, as there are 2 Nuget packages available, `Evands.Pellucid` and `Evands.Pellucid.Pro`. If you're using Visual Studio 2008 you can still install via the Nuget packages manually. When you add references to the `dll`s, however, the Crestron Simpl# plugin will prevent the `Evands.Pellucid.Pro` from being properly added. This is because the plugin expects all the libraries that the file being added references to be available in the same directory, however the `Evands.Pellucid.dll` file is not in the `Evands.Pellucid.Pro` package. This can be overcome by manually adding the references to your project file. The easiest process is to add the `Evands.Pellucid.dll` reference and then manually edit your project file, copying the `Evands.Pellucid.dll` reference and updating it to point to the `Evands.Pellucid.Pro.dll` file.
+If you're using Visual Studio 2017/19 to produce code for Series-4 processors you can install the libraries via Nuget, as there are 2 Nuget packages available, `Evands.Pellucid` and `Evands.Pellucid.Pro`. If you're using Visual Studio 2008 you can still install via the Nuget packages manually. When you add references to the `dll`s, however, the Crestron Simpl# plugin might prevent the `Evands.Pellucid.Pro` from being properly added. If this happens, it can be overcome by manually adding the references to your project file. The easiest process is to add the `Evands.Pellucid.dll` reference and then manually edit your project file, copying the `Evands.Pellucid.dll` reference and updating it to point to the `Evands.Pellucid.Pro.dll` file.
 
 ### Release Binaries
 
 The [Releases](https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases) page has binaries for each release. The releases also contain the compiled demo project `Evands.Pellucid.ProDemo.cpz` that you can load on a processor. View the demo code [here](https://github.com/ProfessorAire/Evands.Pellucid-Crestron/tree/main/src/Evands.Pellucid.ProDemo).
+
+### Dependencies
+
+***Regardless of how you install this, the library functionality requires the inclusion of the*** `SimplSharpReflectionInterface.dll` ***from Crestron.***
 
 ## Basic Functionality
 
