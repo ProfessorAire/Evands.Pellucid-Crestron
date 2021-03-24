@@ -56,6 +56,10 @@ namespace Evands.Pellucid.ProDemo
                 // Setup the static instance reference for the control system.
                 Instance = this;
 
+                // Setup the global command(s).
+                var appCommand = new GlobalCommand("app", "Application commands.", Access.Programmer);
+                var regResult = appCommand.AddToConsole();
+
                 // Add a console writer to the console.
                 // This could be done with the ProConsole class as well, or your own
                 // implementation extending the ConsoleBase class.
@@ -64,10 +68,11 @@ namespace Evands.Pellucid.ProDemo
                 // how to hook your own console writers into the system.
                 ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Terminal.CrestronConsoleWriter());
 
-                // Setup the global command(s).
-                var appCommand = new GlobalCommand("app", "Application commands.", Access.Programmer);
-                appCommand.AddToConsole();
-                
+                if (!regResult)
+                {
+                    Debug.WriteErrorLine(this, "Unable to add global app to the Crestron Console.");
+                }
+
                 // Initialize specific global commands.
                 ProConsole.InitializeConsole("app");
 
@@ -76,9 +81,6 @@ namespace Evands.Pellucid.ProDemo
 
                 var exc = new ExampleCommands();
                 exc.RegisterCommand("app");
-
-                var logCommands = new LoggerCommands();
-                logCommands.RegisterCommand("app");
 
                 // Register log writers.
                 Logger.RegisterLogWriter(new CrestronLogWriter());
@@ -96,7 +98,7 @@ namespace Evands.Pellucid.ProDemo
             }
             catch (Exception e)
             {
-                ErrorLog.Error("Error in the constructor: {0}", e.Message);
+                this.LogException(e, "Exception in the constructor.");
             }
         }
         
@@ -137,7 +139,7 @@ namespace Evands.Pellucid.ProDemo
                     }
                     catch (Exception e)
                     {
-                        ErrorLog.Error("Error in InitializeSystem: {0}", e.Message);
+                        this.LogException(e, "Exception while initializing application.");
                     }
                 });
         }

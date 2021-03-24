@@ -41,6 +41,11 @@ namespace Evands.Pellucid
         private static readonly Evands.Pellucid.Diagnostics.DebuggingCommands DebuggingCommands;
 
         /// <summary>
+        /// Used for configuring logging commands.
+        /// </summary>
+        private static readonly Evands.Pellucid.Diagnostics.LoggerCommands LoggingCommands;
+
+        /// <summary>
         /// Tracks whether the console has been initialized.
         /// </summary>
         private static bool isInitialized;
@@ -52,6 +57,7 @@ namespace Evands.Pellucid
         {
             ConsoleCommands = new ConsoleCommands();
             DebuggingCommands = new Evands.Pellucid.Diagnostics.DebuggingCommands();
+            LoggingCommands = new Evands.Pellucid.Diagnostics.LoggerCommands();
         }
 
         /// <summary>
@@ -69,11 +75,15 @@ namespace Evands.Pellucid
                 for (var i = 0; i < globalCommandNames.Length; i++)
                 {
                     Diagnostics.Debug.WriteProgressLine("ProConsole", "Registering console commands with global command '{0}'", globalCommandNames[i]);
-                    var result = Terminal.Commands.Manager.Register(globalCommandNames[i], ConsoleCommands);
+                    var result = ConsoleCommands.RegisterCommand(globalCommandNames[i]);
                     Diagnostics.Debug.WriteProgressLine("ProConsole", "Register result '{0}'.", result);
 
                     Diagnostics.Debug.WriteProgressLine("ProConsole", "Registering debugging commands with global command '{0}'", globalCommandNames[i]);
-                    result = Terminal.Commands.Manager.Register(globalCommandNames[i], DebuggingCommands);
+                    result = DebuggingCommands.RegisterCommand(globalCommandNames[i]);
+                    Diagnostics.Debug.WriteProgressLine("ProConsole", "Register result '{0}'.", result);
+
+                    Diagnostics.Debug.WriteProgressLine("ProConsole", "Registering logging commands with global command '{0}'", globalCommandNames[i]);
+                    result = LoggingCommands.RegisterCommand(globalCommandNames[i]);
                     Diagnostics.Debug.WriteProgressLine("ProConsole", "Register result '{0}'.", result);
                 }
             }
