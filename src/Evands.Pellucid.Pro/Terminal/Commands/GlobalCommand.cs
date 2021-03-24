@@ -38,7 +38,7 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <summary>
         /// The regex to use for parsing command details from console text input.
         /// </summary>
-        private static Regex commandRegex = new Regex("^(?<name>[\\w-]+){1} ?(?<verb>[^\\r\\n\"\\ ]+)? ?\"?(?<defaultValue>[^\\r\\n\"-]+)?\"? ?(?<parameters>.*)?", RegexOptions.Compiled);
+        private static Regex commandRegex = new Regex("^(?!-{1,2})(?<name>[\\w-]+){1} ?(?!-{1,2})(?<verb>[^\\r\\n\"\\ ]+)? ?\"?(?<defaultValue>[^\\r\\n\"-]+)?\"? ?(?<parameters>.*)?", RegexOptions.Compiled);
 
         /// <summary>
         /// The regex to use for parsing parameters from console text commands.
@@ -379,13 +379,13 @@ namespace Evands.Pellucid.Terminal.Commands
 
                     ProcessCommand(cmdName, verb, defaultValue, operands);
                 }
-                else if (args.Contains("--help") || args.Contains("-h"))
+                else if (args.ToLower().Contains("--help") || args.ToLower().Contains("-h"))
                 {
                     PrintGlobalCommandsHelp();
                 }
                 else
                 {
-                    WriteErrorMethod("Invalid command syntax. Enter '--help' for help.");
+                    WriteErrorMethod("You must enter the name of a command. Enter '--help' for a list of available commands.");
                 }
             }
             catch (TerminalCommandException e)
@@ -420,6 +420,12 @@ namespace Evands.Pellucid.Terminal.Commands
         {
             TerminalCommandBase command = null;
 
+            if (string.IsNullOrEmpty(commandName) && (operandsAndFlags.ContainsKey("help") || operandsAndFlags.ContainsKey("h")))
+            {
+                PrintGlobalCommandsHelp();
+                return;
+            }
+
             if (!commands.ContainsKey(commandName))
             {
                 WriteErrorMethod(string.Format("No command with the name '{0}' exists. Enter '--help' to view all available commands.", commandName));
@@ -430,7 +436,7 @@ namespace Evands.Pellucid.Terminal.Commands
                 command = commands[commandName];
             }
 
-            if (string.IsNullOrEmpty(verb))
+            if (string.IsNullOrEmpty(verb) && (operandsAndFlags.ContainsKey("help") || operandsAndFlags.ContainsKey("h")))
             {
                 PrintCommandHelp(command, commandName);
                 return;
@@ -447,7 +453,7 @@ namespace Evands.Pellucid.Terminal.Commands
                     }
                     else
                     {
-                        WriteErrorMethod(string.Format("No verb with the specified name '{0}' exists. Enter '{0} --help' to view all available verbs.", commandName));
+                        WriteErrorMethod(string.Format("No verb with the specified name '{1}' exists. Enter '{0} --help' to view all available verbs.", commandName, verb));
                     }
 
                     return;
@@ -477,7 +483,7 @@ namespace Evands.Pellucid.Terminal.Commands
                         var parameterCount = entry.Key.GetParameters().Length;
 
                         var success = true;
-                        
+
                         foreach (var oaf in operandsAndFlags.Keys)
                         {
                             if (operandAttributes.Values.Any(oa => oa.Name.ToLower() == oaf))
@@ -559,7 +565,7 @@ namespace Evands.Pellucid.Terminal.Commands
                         }
                     }
 
-                    WriteErrorMethod(string.Format("The verb '{0}' requires a different combination of operands than what was provided.", verb));
+                    WriteErrorMethod(string.Format("The verb '{0}' requires a different combination of operands than what was provided. Enter '{1} {0} --help' for more information.", verb, commandName));
                 }
             }
         }
@@ -699,7 +705,7 @@ namespace Evands.Pellucid.Terminal.Commands
                 foreach (var v in verbs)
                 {
                     var ec = EqualityComparer<KeyValuePair<ParameterInfo, OperandAttribute>>.Default;
-                                        
+
                     var ops = Helpers.GetOperands(v.Key);
                     if (ops.Count > 0)
                     {

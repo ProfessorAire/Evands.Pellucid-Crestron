@@ -64,8 +64,6 @@ namespace Evands.Pellucid.ProDemo
             Debug.WriteDebugLine(ControlSystem.Instance, "Supports 3-Series Plug-In Cards = '{0}'", ControlSystem.Instance.SupportsThreeSeriesPlugInCards);
             Debug.WriteDebugLine(ControlSystem.Instance, "Supports USB HID = '{0}'", ControlSystem.Instance.SupportsUsbHid);
             Debug.WriteDebugLine(ControlSystem.Instance, "Supports Versiport = '{0}'", ControlSystem.Instance.SupportsVersiport);
-
-            Debug.WriteLine(ControlSystem.Instance, new ColorFormat(new RgbColor(255, 0x77, 0), new StandardColor()), "Testing RGB Colors");
         }
     }
 }
