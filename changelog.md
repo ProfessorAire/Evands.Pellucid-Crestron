@@ -2,6 +2,16 @@
 
 ## Release Notes
 
+### 12/4/2021 - v1.1.0-Beta.1
+
+#### Features
+
+* Feature (#5) Add the ability to output a table to the console.
+
+#### Fixes
+
+* No fixes.
+
 ### 24/3/2021 - v1.0.1
 
 #### Features

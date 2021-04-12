@@ -350,3 +350,45 @@ This message is green.
 Looking at the output you can see that creating console commands in this manner allows for super powerful interactions with little to no effort, apart from organizing your commands logically. In our case the framework handles converting `OperandAttribute` values to `string`, `int`, `double`, `bool`, etc. Creating commands in this manner allows you to focus on the command functionality without having to parse values or do any regex matching to determine what values have been provided.
 
 The `Evands.Pellucid.Pro` library has several classes that demonstrate powerful console commands for configuring the `Debug`, `Logger`, and `ConsoleBase` options, such as `DebugLevels`, `ColorizeConsoleOutput`, etc.
+
+### Tables
+
+Starting in `v1.1.0-Beta.1` the ability to create tables has been added. The classes to do so are located in `Evands.Pellucid.Terminal.Formatting.Tables`, namely the `Table` class, which is designed with methods to allow quickly building a table to print to the console using method chaining.
+
+```csharp
+ConsoleBase.WriteLine();
+ConsoleBase.WriteLineNoHeader(
+    Table.Create()
+    .AddColumnWithHeader("Device", "Touchpanel", "DSP", "Codec", "Display 1", "Display 2")
+    .AddColumnWithHeader("Status", "Online", "Online", "Offline", "Offline", "Online")
+    .FormatHeaders(ConsoleBase.Colors.BrightYellow, HorizontalAlignment.Center)
+    .FormatColumn(0, ConsoleBase.Colors.BrightCyan, HorizontalAlignment.Right)
+    .ForEachCellInColumn(1, c => c.Color = c.Contents == "Offline" ? ConsoleBase.Colors.BrightRed : ConsoleBase.Colors.BrightGreen).ToString());
+```
+
+The above code would print a table that looks like the following, except with colors.
+
+```text
+------------------------
+|   Device   | Status  | 
+|----------------------|
+| Touchpanel | Online  | 
+|----------------------|
+|        DSP | Online  | 
+|----------------------|
+|      Codec | Offline | 
+|----------------------|
+|  Display 1 | Offline | 
+|----------------------|
+|  Display 2 | Online  | 
+------------------------
+```
+
+As demonstrated, each of the primary methods on the `Table` class return the instance of the table being interacted with, allowing the chaining of the methods. There are a variety of commands available, including `AddRow`, `AddColumn`, `WithHeaders`, `ForEachCellInColumn`, all allowing specific methods for adding data to the table.
+
+Each of the cells in a table also have a couple specific formatting commands available, with the ability to set:
+
+* Color - Prints all text in a cell in that color
+* HorizontalAlignment - Aligns the text in a cell to the left, center, or right.
+
+In addition, a table can be formatted with a maximum width cells are allowed to consume, which will cause text that is longer than the specified value to be wrapped. You can also set the minimum width cells must consume, which padds cells that would be shorter (based on the text contents of the column) than the provided value.
