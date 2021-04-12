@@ -414,7 +414,7 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
-        /// Writes a line of text to the console output, without any header appended.
+        /// Writes a line of text to the console output, without any header prepended.
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional array of arguments to format the message using.</param>
@@ -431,7 +431,7 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
-        /// Writes an empty line to the console output.
+        /// Writes an empty line to the console output. This line will have no header.
         /// </summary>
         public static void WriteLine()
         {
