@@ -47,6 +47,18 @@
     <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
     <DocumentationFile>bin\Release\Evands.Pellucid.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;TEST</DefineConstants>
+    <DocumentationFile>bin\Debug\Evands.Pellucid.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="SimplSharpCustomAttributesInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
@@ -94,10 +106,20 @@
     <Compile Include="Terminal\ColorCode.cs" />
     <Compile Include="Terminal\CrestronConsoleWriter.cs" />
     <Compile Include="Terminal\Formatting\ColorFormat.cs" />
+    <Compile Include="Terminal\Formatting\Tables\Column.cs" />
+    <Compile Include="Terminal\Formatting\Tables\ColumnCollection.cs" />
+    <Compile Include="Terminal\Formatting\Tables\Row.cs" />
+    <Compile Include="Terminal\Formatting\Tables\Extensions.cs" />
     <Compile Include="Terminal\Formatting\Formatters.cs" />
     <Compile Include="Terminal\Formatting\IConsoleColor.cs" />
     <Compile Include="Terminal\Formatting\RgbColor.cs" />
     <Compile Include="Terminal\Formatting\StandardColor.cs" />
+    <Compile Include="Terminal\Formatting\Tables\Cell.cs" />
+    <Compile Include="Terminal\Formatting\Tables\HorizontalAlignment.cs" />
+    <Compile Include="Terminal\Formatting\Tables\RowCollection.cs" />
+    <Compile Include="Terminal\Formatting\Tables\Table.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Terminal\IConsoleWriter.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
