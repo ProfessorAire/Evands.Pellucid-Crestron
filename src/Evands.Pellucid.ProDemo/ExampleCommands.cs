@@ -21,6 +21,7 @@
 using Evands.Pellucid;
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
+using Evands.Pellucid.Terminal.Formatting.Tables;
 
 namespace Evands.Pellucid.ProDemo
 {
@@ -88,6 +89,34 @@ namespace Evands.Pellucid.ProDemo
             [Flag("caps", 'c', "When present prints the message in all caps.", true)] bool caps)
         {
             ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.BrightGreen, caps ? message.ToUpper() : message);
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        [Verb("table", "Prints a sample table to the console.")]
+        [Sample("example table", "Prints a sample table with automatic cell widths.")]
+        public void SampleTable()
+        {
+            SampleTable(0);
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        [Verb("table", "Prints a sample table to the console.")]
+        [Sample("example table --min 15", "Prints a sample table with a minimum cell width of 15.")]
+        public void SampleTable(
+            [Operand("min", "Sets the minimum width the cells can be.")] int minWidth)
+        {
+            ConsoleBase.WriteLine();
+            ConsoleBase.WriteLineNoHeader(Table.Create()
+                .SetMinimumColumnWidth(minWidth)
+                .AddColumnWithHeader("Device", "Touchpanel", "DSP", "Codec", "Display 1", "Display 2")
+                .AddColumnWithHeader("Status", "Online", "Online", "Offline", "Offline", "Online")
+                .FormatHeaders(ConsoleBase.Colors.BrightYellow, HorizontalAlignment.Center)
+                .FormatColumn(0, ConsoleBase.Colors.BrightCyan, HorizontalAlignment.Right)
+                .ForEachCellInColumn(1, c => c.Color = c.Contents == "Offline" ? ConsoleBase.Colors.BrightRed : ConsoleBase.Colors.BrightGreen).ToString());
         }
     }
 }

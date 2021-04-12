@@ -109,16 +109,36 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <returns>A <see langword="string"/> containing the provided text and ANSI SGR color formatting based on the colors provided.</returns>
         public static string FormatText(IConsoleColor foreground, IConsoleColor background, string textToFormat, params object[] args)
         {
+            return FormatText(foreground, background, true, textToFormat, args);
+        }
+
+        /// <summary>
+        /// Formats the provided text to include an ANSI SGR escape sequence.
+        /// </summary>
+        /// <param name="foreground">The <see cref="IConsoleColor"/> to use for the foreground.</param>
+        /// <param name="background">The <see cref="IConsoleColor"/> to use for the background.</param>
+        /// <param name="closeColorFormat">When true will end the text with a terminating ANSI SGR sequence.</param>
+        /// <param name="textToFormat">The text to format.</param>
+        /// <param name="args">Optional array of arguments to use when formatting the text.</param>
+        /// <returns>A <see langword="string"/> containing the provided text and ANSI SGR color formatting based on the colors provided.</returns>
+        public static string FormatText(IConsoleColor foreground, IConsoleColor background, bool closeColorFormat, string textToFormat, params object[] args)
+        {
             if (Options.Instance.ColorizeConsoleOutput)
             {
                 var fore = foreground.AsForeground();
                 var back = background.AsBackground();
 
-                return string.Format("\x1b[{0}{1}{2}m{3}\x1b[0m",
+                if (string.IsNullOrEmpty(fore) && string.IsNullOrEmpty(back))
+                {
+                    return string.Format(textToFormat, args);
+                }
+
+                return string.Format("\x1b[{0}{1}{2}m{3}{4}",
                     fore,
-                    fore != string.Empty && back != string.Empty ? ";" : string.Empty,
+                    !string.IsNullOrEmpty(fore) && !string.IsNullOrEmpty(back) ? ";" : string.Empty,
                     back,
-                    string.Format(textToFormat, args));
+                    string.Format(textToFormat, args),
+                    closeColorFormat ? "\x1b[0m" : string.Empty);
             }
             else
             {
@@ -134,7 +154,19 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <returns>A <see langword="string"/> containing this <see cref="ColorFormat"/> object's ANSI SGR color formatting.</returns>
         public string FormatText(string textToFormat, params object[] args)
         {
-            return FormatText(Foreground, Background, textToFormat, args);
+            return FormatText(true, textToFormat, args);
+        }
+
+        /// <summary>
+        /// Formats the provided text to include an ANSI SGR escape sequence.
+        /// </summary>
+        /// <param name="closeColorFormat">When true will end the text with a terminating ANSI SGR sequence.</param>
+        /// <param name="textToFormat">The text to format.</param>
+        /// <param name="args">Optional array of arguments to use when formatting the text.</param>
+        /// <returns>A <see langword="string"/> containing this <see cref="ColorFormat"/> object's ANSI SGR color formatting.</returns>
+        public string FormatText(bool closeColorFormat, string textToFormat, params object[] args)
+        {
+            return FormatText(Foreground, Background, closeColorFormat, textToFormat, args);
         }
     }
 }

@@ -45,6 +45,7 @@ namespace Evands.Pellucid
         /// </summary>        
         public Options()
         {
+#if !TEST
             CrestronEnvironment.ProgramStatusEventHandler += (status) =>
                 {
                     switch (status)
@@ -58,6 +59,7 @@ namespace Evands.Pellucid
                             break;
                     }
                 };
+#endif
         }
 
         /// <summary>
@@ -116,8 +118,10 @@ namespace Evands.Pellucid
         /// </summary>        
         public void Save()
         {
+#if !TEST
             var path = Path.Combine(InitialParametersClass.ProgramDirectory.ToString(), "pellucid.console-options.toml");
             MinimalTomlParser.SerializeToDisk(this, path);
+#endif
         }
 
         /// <summary>
@@ -127,6 +131,7 @@ namespace Evands.Pellucid
         /// <returns>An <see cref="Options"/> object.</returns>        
         private static Options Load()
         {
+#if !TEST
             var path = Path.Combine(InitialParametersClass.ProgramDirectory.ToString(), "pellucid.console-options.toml");
             if (File.Exists(path))
             {
@@ -145,6 +150,9 @@ namespace Evands.Pellucid
             {
                 return new Options().WithDefaults();
             }
+#else
+            return new Options().WithDefaults();
+#endif
         }
 
         /// <summary>
