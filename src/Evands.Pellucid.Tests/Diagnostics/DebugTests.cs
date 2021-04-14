@@ -3,14 +3,15 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Evands.Pellucid;
 
-namespace Evands.Pellucid
+namespace Evands.Pellucid.Diagnostics
 {
     /// <summary>
-    /// Summary description for ConsoleBaseTests
+    /// Summary description for DebugTests
     /// </summary>
     [TestClass]
-    public class ConsoleBaseTests
+    public class DebugTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
@@ -26,10 +27,6 @@ namespace Evands.Pellucid
             writer.Messages.Clear();
             ConsoleBase.UnregisterConsoleWriter(writer);
             ConsoleBase.OptionalHeader = string.Empty;
-        }
-
-        public ConsoleBaseTests()
-        {
         }
 
         private TestContext testContextInstance;
@@ -73,38 +70,25 @@ namespace Evands.Pellucid
         #endregion
 
         [TestMethod]
-        public void HeaderTextIsEmptyByDefault()
-        {
-            Assert.IsTrue(string.IsNullOrEmpty(ConsoleBase.OptionalHeader));
-        }
-
-        [TestMethod]
-        public void HeaderText_GetSet_Functions()
-        {
-            var expected = "01";
-            ConsoleBase.OptionalHeader = expected;
-            Assert.IsTrue(ConsoleBase.OptionalHeader == string.Format("[{0}]", expected));
-        }
-
-        [TestMethod]
-        public void WriteLine_WithEmptyHeader_WritesLineWithNoHeader()
+        public void When_ConsoleBaseOptionalHeader_IsEmpty_NoPrefixWritten()
         {
             var invalidStart = "[01]";
-            var expectedEnd = "Test Message";
-            ConsoleBase.WriteLine(expectedEnd);
+            var expectedContents = "Test Message";
+            Debug.WriteLine(expectedContents);
             var msg = writer.Messages.Last();
-            Assert.IsTrue(!msg.StartsWith(invalidStart) && msg.Contains(expectedEnd));
+            Assert.IsTrue(!msg.StartsWith(invalidStart) && msg.Contains(expectedContents));
         }
 
         [TestMethod]
-        public void WriteLine_WithNonEmptyHeader_WritesLineWithHeader()
+        public void When_ConsoleBaseOptionalHeader_IsNotEmpty_PrefixWritten()
         {
-            ConsoleBase.OptionalHeader = "01";
-            var expectedStart = "[01]";
-            var expectedEnd = "Test Message";
-            ConsoleBase.WriteLine(expectedEnd);
+            var expectedStart = "[OptionalHeader]";
+            ConsoleBase.OptionalHeader = expectedStart;
+            var expectedContents = "Test Message";
+            Debug.WriteLine(expectedContents);
             var msg = writer.Messages.Last();
-            Assert.IsTrue(msg.StartsWith(expectedStart) && msg.Contains(expectedEnd));
+
+            Assert.IsTrue(msg.StartsWith(expectedStart) && msg.Contains(expectedContents));
         }
     }
 }
