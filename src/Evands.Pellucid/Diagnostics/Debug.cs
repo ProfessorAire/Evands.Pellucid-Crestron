@@ -227,7 +227,7 @@ namespace Evands.Pellucid.Diagnostics
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Uncategorized))
             {
                 isLastWriteALine = true;
-                ConsoleBase.WriteLineNoHeader(message, args);
+                ConsoleBase.WriteLine(message, args);
             }
         }
 
@@ -657,22 +657,22 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (obj == null)
                 {
-                    return string.Format("[{0}][{1}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'), GetTimestamp());
+                    return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, GetTimestamp());
                 }
                 else if (obj as string != null)
                 {
-                    return string.Format("[{0}][{1}][{2}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'), GetTimestamp(), obj);
+                    return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj);
                 }
                 else
                 {
                     var debugObject = obj as IDebugData;
                     if (debugObject != null)
                     {
-                        return string.Format("[{0}][{1}][{2}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'), GetTimestamp(), debugObject.Header);
+                        return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), debugObject.Header);
                     }
                 }
 
-                return string.Format("[{0}][{1}][{2}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'), GetTimestamp(), obj.GetType().Name);
+                return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj.GetType().Name);
             }
             else
             {
@@ -691,22 +691,22 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (obj == null)
                 {
-                    return string.Format("[{0}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
+                    return string.Format("{0} ", ConsoleBase.OptionalHeader);
                 }
                 else if (obj as string != null)
                 {
-                    return string.Format("[{0}][{1}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'), obj);
+                    return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj);
                 }
                 else
                 {
                     var debugObject = obj as IDebugData;
                     if (debugObject != null)
                     {
-                        return string.Format("[{0}][{1}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'), debugObject.Header);
+                        return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, debugObject.Header);
                     }
                 }
 
-                return string.Format("[{0}][{1}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'), obj.GetType().Name);
+                return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj.GetType().Name);
             }
             else
             {

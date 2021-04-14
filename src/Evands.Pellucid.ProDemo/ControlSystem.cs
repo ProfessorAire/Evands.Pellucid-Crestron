@@ -134,6 +134,8 @@ namespace Evands.Pellucid.ProDemo
                     {
                         Debug.WriteProgressLine(this, "Initializing Application Logic.");
                         Debug.WriteDebugLine(this, "This message is only written if debugging is enabled.");
+                        ConsoleBase.UseProgramSlotAsHeader();
+                        Debug.WriteDebugLine(this, "Now messages have the program slot prepended.");
                         Logger.LogWarning(this, "This message is written to the console if debug warnings are enabled and to the registered LogWriters if Warnings are enabled in the Logger.");
                         Debug.WriteProgressLine(this, "Application Initialized.");
                     }
