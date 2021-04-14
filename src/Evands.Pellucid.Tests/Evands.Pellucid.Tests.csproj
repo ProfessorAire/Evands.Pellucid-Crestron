@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleBaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Terminal\Formatting\Tables\CellTests.cs" />
     <Compile Include="Terminal\Formatting\Tables\ColumnTests.cs" />

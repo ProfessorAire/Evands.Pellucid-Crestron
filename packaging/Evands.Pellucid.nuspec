@@ -11,7 +11,7 @@
         <icon>images\icon.png</icon>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <releaseNotes>
-Initial Release
+Feature (#5) Add the ability to output a table to the console.
         </releaseNotes>
         <copyright>Christopher McNeely 2021</copyright>
         <tags>Crestron S# Simpl# Simpl</tags>
