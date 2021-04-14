@@ -5,4 +5,4 @@
 [assembly: AssemblyProduct("Evands.Pellucid")]
 [assembly: AssemblyCopyright("Copyright © Christopher McNeely 2021")]
 [assembly: AssemblyVersion("1.1.0.200")]
-
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Evands.Pellucid.Tests")]

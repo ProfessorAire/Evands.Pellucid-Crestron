@@ -56,7 +56,7 @@ namespace Evands.Pellucid
         /// <summary>
         /// Tracks whether the last item written included a line terminator.
         /// </summary>
-        private static bool isLastWriteALine;
+        private static bool isLastWriteALine = true;
 
         /// <summary>
         /// Initializes static members of the <see cref="ConsoleBase"/> class.
@@ -64,7 +64,6 @@ namespace Evands.Pellucid
         static ConsoleBase()
         {
             writers = new List<IConsoleWriter>();
-            headerText = string.Format("[{0}] ", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
         }
 
         /// <summary>
@@ -72,6 +71,31 @@ namespace Evands.Pellucid
         /// </summary>
         protected ConsoleBase()
         {
+        }
+
+        /// <summary>
+        /// Gets or sets the text used for the first header value. If null or an empty string the first header value is omitted.
+        /// <para>Will be enclosed with brackets, such as [HeaderText].</para>
+        /// </summary>
+        public static string OptionalHeader
+        {
+            get { return headerText; }
+
+            set
+            {
+                headerText = string.Format("{0}{1}{2}",
+                    value.StartsWith("[") ? string.Empty : "[",
+                    value,
+                    value.EndsWith("]") ? string.Empty : "]");
+            }
+        }
+
+        /// <summary>
+        /// Configures the console to use the current program's slot as the first header value.
+        /// </summary>
+        public static void UseProgramSlotAsHeader()
+        {
+            OptionalHeader = InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0');
         }
 
         /// <summary>
