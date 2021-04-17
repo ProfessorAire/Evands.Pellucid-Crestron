@@ -34,5 +34,21 @@ namespace Evands.Pellucid
         {
             ConsoleBase.Write(Terminal.Formatting.Formatters.FormatObjectForConsole(obj));
         }
+
+        /// <summary>
+        /// Optionally formats a message, depending on whether the args parameter is null or empty.
+        /// </summary>
+        /// <param name="message">The message to potentially format.</param>
+        /// <param name="args">Optional array of args.</param>
+        /// <returns>A string with the proper formatting applied.</returns>
+        internal static string OptionalFormat(this string message, params object[] args)
+        {
+            if (args != null && args.Length > 0)
+            {
+                return string.Format(message, args);
+            }
+
+            return message;
+        }
     }
 }
