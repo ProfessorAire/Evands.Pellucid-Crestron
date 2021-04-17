@@ -11,7 +11,7 @@ namespace Evands.Pellucid.Diagnostics
     /// Summary description for DebugTests
     /// </summary>
     [TestClass]
-    public class DebugTests
+    public class DebugOptionalHeaderTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 

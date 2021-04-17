@@ -26,6 +26,11 @@ namespace Evands.Pellucid
             }
         }
 
+        public void Write(string message)
+        {
+            Messages.Add(message);
+        }
+
         public void WriteLine(string message, params object[] args)
         {
             if (args != null && args.Length > 0)
@@ -38,6 +43,11 @@ namespace Evands.Pellucid
             }
         }
 
+        public void WriteLine(string message)
+        {
+            Messages.Add(message);
+        }
+
         public void WriteLine()
         {
             Messages.Add("\r\n");
@@ -46,6 +56,11 @@ namespace Evands.Pellucid
         public void WriteCommandResponse(string message, params object[] args)
         {
             this.Write(message, args);
+        }
+
+        public void WriteCommandResponse(string message)
+        {
+            this.Write(message);
         }
     }
 }

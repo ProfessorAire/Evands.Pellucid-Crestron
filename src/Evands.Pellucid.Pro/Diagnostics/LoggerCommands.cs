@@ -101,7 +101,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (all && none)
             {
-                ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.BrightRed, "The '--all' and '--none' flags are mutually exclusive. You cannot include both of these.{0}", CrestronEnvironment.NewLine);
+                ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.BrightRed, "The '--all' and '--none' flags are mutually exclusive. You cannot include both of these.{0}", ConsoleBase.NewLine);
                 return;
             }
             else if (all)

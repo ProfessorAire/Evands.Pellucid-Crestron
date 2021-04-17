@@ -35,11 +35,23 @@ namespace Evands.Pellucid.Terminal
         void Write(string message, params object[] args);
 
         /// <summary>
+        /// Writes a message to the console, without a line termination.
+        /// </summary>
+        /// <param name="message">The message to write to the console.</param>
+        void Write(string message);
+
+        /// <summary>
         /// Writes a message to the console, with a line termination.
         /// </summary>
         /// <param name="message">The message to write to the console.</param>
         /// <param name="args">Optional array of arguments to format the message using.</param>
         void WriteLine(string message, params object[] args);
+
+        /// <summary>
+        /// Writes a message to the console, with a line termination.
+        /// </summary>
+        /// <param name="message">The message to write to the console.</param>
+        void WriteLine(string message);
 
         /// <summary>
         /// Writes an empty line to the console.
@@ -54,5 +66,13 @@ namespace Evands.Pellucid.Terminal
         /// <param name="message">The message response to write to the console.</param>
         /// <param name="args">Optional array of arguments to format the message using.</param>
         void WriteCommandResponse(string message, params object[] args);
+
+        /// <summary>
+        /// Writes a console command response to the console.
+        /// <para>Most writers will recycle their normal console writer commands for this.
+        /// This is provided specifically to accommodate the Crestron console class.</para>
+        /// </summary>
+        /// <param name="message">The message response to write to the console.</param>
+        void WriteCommandResponse(string message);
     }
 }

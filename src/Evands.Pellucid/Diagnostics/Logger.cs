@@ -59,9 +59,7 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Debug))
             {
-                message = string.Format(message, args);
-                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message);
-
+                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteNotice(msg));
             }           
         }
@@ -78,9 +76,7 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Notice))
             {
-                message = string.Format(message, args);
-                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message);
-
+                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteNotice(msg));
             }
         }
@@ -97,9 +93,7 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Warning))
             {
-                message = string.Format(message, args);
-                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message);
-
+                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteWarning(message));
             }
         }
@@ -116,9 +110,7 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Error))
             {
-                message = string.Format(message, args);
-                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message);
-
+                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteError(message));
             }
         }
@@ -136,8 +128,7 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Exception))
             {
-                message = string.Format(message, args);
-                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message);
+                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 var sb = new StringBuilder(message.Length + (ex.Message.Length * 2));
 
                 sb.AppendLine(msg);
