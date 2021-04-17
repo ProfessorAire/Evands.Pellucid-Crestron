@@ -130,19 +130,19 @@ namespace Evands.Pellucid.Terminal.Formatting
 
                 if (string.IsNullOrEmpty(fore) && string.IsNullOrEmpty(back))
                 {
-                    return string.Format(textToFormat, args);
+                    return textToFormat.OptionalFormat(args);
                 }
 
                 return string.Format("\x1b[{0}{1}{2}m{3}{4}",
                     fore,
                     !string.IsNullOrEmpty(fore) && !string.IsNullOrEmpty(back) ? ";" : string.Empty,
                     back,
-                    string.Format(textToFormat, args),
+                    textToFormat.OptionalFormat(args),
                     closeColorFormat ? "\x1b[0m" : string.Empty);
             }
             else
             {
-                return string.Format(textToFormat, args);
+                return textToFormat.OptionalFormat(args);
             }
         }
 

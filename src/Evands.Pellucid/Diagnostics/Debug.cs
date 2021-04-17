@@ -108,7 +108,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with the specified color formatting.
+        /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="colors">The ColorFormat to use when writing the message.</param>
@@ -128,7 +128,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with the specified color formatting.
+        /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="foreground">The message foreground color.</param>
@@ -140,7 +140,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with the specified color formatting.
+        /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="foreground">The message foreground color.</param>
@@ -153,7 +153,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with no additional color formatting applied.
+        /// Writes an uncategorized message to the console, with no additional color formatting applied.
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -167,7 +167,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with the specified color formatting.
+        /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="colors">The ColorFormat to use when writing the message.</param>
@@ -193,7 +193,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with the specified color formatting.
+        /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="foreground">The message foreground color.</param>
@@ -205,7 +205,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with the specified color formatting.
+        /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="foreground">The message foreground color.</param>
@@ -218,7 +218,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, with no additional color formatting applied.
+        /// Writes an uncategorized message to the console, with no additional color formatting applied.
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -264,26 +264,20 @@ namespace Evands.Pellucid.Diagnostics
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteDebugLine(object obj, string message, params object[] args)
         {
-            try
+            if (Options.Instance.DebugLevels.Contains(DebugLevels.Debug) && IsValid(obj))
             {
-                if (Options.Instance.DebugLevels.Contains(DebugLevels.Debug) && IsValid(obj))
-                {
-                    message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Debug, message, args);
+                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Debug, message, args);
 
-                    if (isLastWriteALine)
-                    {
-                        var headerColors = GetHeaderColors(obj);
-                        var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
-                        ForceWriteLine("{0}{1}", header, message);
-                    }
-                    else
-                    {
-                        ForceWriteLine(Formatters.GetColorFormattedString(ConsoleBase.Colors.Debug, message, args));
-                    }
+                if (isLastWriteALine)
+                {
+                    var headerColors = GetHeaderColors(obj);
+                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    ForceWriteLine("{0}{1}", header, message);
                 }
-            }
-            catch
-            {
+                else
+                {
+                    ForceWriteLine(Formatters.GetColorFormattedString(ConsoleBase.Colors.Debug, message, args));
+                }
             }
         }
 
@@ -338,7 +332,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's ProgressColors ColorFormat.
+        /// Writes a progress message to the console, using the console's ProgressColors ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -363,7 +357,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's ProgressColors ColorFormat.
+        /// Writes a progress message to the console, using the console's ProgressColors ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -388,7 +382,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's Notice ColorFormat.
+        /// Writes a notice message to the console, using the console's Notice ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -413,7 +407,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's Notice ColorFormat.
+        /// Writes a notice message to the console, using the console's Notice ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -438,7 +432,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's Warning ColorFormat.
+        /// Writes a warning message to the console, using the console's Warning ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -463,7 +457,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's Warning ColorFormat.
+        /// Writes a warning message to the console, using the console's Warning ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -488,7 +482,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's ErrorColors ColorFormat.
+        /// Writes an error message to the console, using the console's ErrorColors ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -513,7 +507,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes a debug message to the console, using the console's ErrorColors ColorFormat.
+        /// Writes an error message to the console, using the console's ErrorColors ColorFormat.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
         /// <param name="message">The message to write.</param>
@@ -565,10 +559,10 @@ namespace Evands.Pellucid.Diagnostics
                 while (ex != null)
                 {
                     exceptionIndex++;
-                    sb.AppendFormat("--------Exception {0}--------\x0d\x0a", exceptionIndex);
-                    sb.AppendLine(ex.ToString());
-                    sb.AppendFormat("-----------------------------\x0d\x0a");
-                    sb.AppendLine();
+                    sb.AppendFormat("--------Exception {0}--------{1}", exceptionIndex, ConsoleBase.NewLine);
+                    sb.AppendFormat("{0}{1}", ex.ToString(), ConsoleBase.NewLine);
+                    sb.AppendFormat("-----------------------------{0}", ConsoleBase.NewLine);
+                    sb.Append(ConsoleBase.NewLine);
 
                     ex = ex.InnerException;
                 }
@@ -657,22 +651,42 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (obj == null)
                 {
-                    return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, GetTimestamp());
+                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                    {
+                        return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, GetTimestamp());
+                    }
+
+                    return string.Format("[{0}] ", GetTimestamp());
                 }
                 else if (obj as string != null)
                 {
-                    return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj);
+                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                    {
+                        return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj);
+                    }
+
+                    return string.Format("[{0}][{1}] ", GetTimestamp(), obj);
                 }
                 else
                 {
                     var debugObject = obj as IDebugData;
                     if (debugObject != null)
                     {
-                        return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), debugObject.Header);
+                        if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                        {
+                            return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), debugObject.Header);
+                        }
+
+                        return string.Format("[{0}][{1}] ", GetTimestamp(), debugObject.Header);
                     }
                 }
 
-                return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj.GetType().Name);
+                if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                {
+                    return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj.GetType().Name);
+                }
+
+                return string.Format("[{0}][{1}] ", GetTimestamp(), obj.GetType().Name);
             }
             else
             {
@@ -691,22 +705,42 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (obj == null)
                 {
-                    return string.Format("{0} ", ConsoleBase.OptionalHeader);
+                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                    {
+                        return string.Format("{0} ", ConsoleBase.OptionalHeader);
+                    }
+
+                    return string.Empty;
                 }
                 else if (obj as string != null)
                 {
-                    return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj);
+                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                    {
+                        return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj);
+                    }
+
+                    return string.Format("[{0}] ", obj);
                 }
                 else
                 {
                     var debugObject = obj as IDebugData;
                     if (debugObject != null)
                     {
-                        return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, debugObject.Header);
+                        if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                        {
+                            return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, debugObject.Header);
+                        }
+
+                        return string.Format("[{0}] ", debugObject.Header);
                     }
                 }
 
-                return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj.GetType().Name);
+                if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                {
+                    return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj.GetType().Name);
+                }
+
+                return string.Format("[{0}] ", obj.GetType().Name);
             }
             else
             {
@@ -744,10 +778,18 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.Use24HourTime)
             {
+#if TEST
+                return DateTime.Now.ToString("HH:mm:ss");
+#else
                 return CrestronEnvironment.GetLocalTime().ToString("HH:mm:ss");
+#endif
             }
 
+#if TEST
+            return DateTime.Now.ToLongTimeString();
+#else
             return CrestronEnvironment.GetLocalTime().ToLongTimeString();
+#endif
         }
 
         /// <summary>

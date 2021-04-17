@@ -70,7 +70,7 @@ namespace Evands.Pellucid.Terminal.Formatting
             }
             else
             {
-                return string.Format(message, args);
+                return message.OptionalFormat(args);
             }
         }
 

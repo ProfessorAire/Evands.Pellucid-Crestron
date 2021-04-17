@@ -41,9 +41,21 @@ namespace Evands.Pellucid.Terminal
         }
 
         /// <inheritdoc/>
+        public void Write(string message)
+        {
+            CrestronConsole.Print(message);
+        }
+
+        /// <inheritdoc/>
         public void WriteLine(string message, params object[] args)
         {
             CrestronConsole.PrintLine(message, args);
+        }
+
+        /// <inheritdoc/>
+        public void WriteLine(string message)
+        {
+            CrestronConsole.PrintLine(message);
         }
 
         /// <inheritdoc/>
@@ -56,6 +68,12 @@ namespace Evands.Pellucid.Terminal
         public void WriteCommandResponse(string message, params object[] args)
         {
             CrestronConsole.ConsoleCommandResponse(message, args);
+        }
+
+        /// <inheritdoc/>
+        public void WriteCommandResponse(string message)
+        {
+            CrestronConsole.ConsoleCommandResponse(message);
         }
     }
 }

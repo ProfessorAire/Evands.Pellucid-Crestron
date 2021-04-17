@@ -6,6 +6,10 @@
 # Custom Release Files
 packaging/releases
 
+# Custom Testing Files
+testing/*.trx
+testing/**/
+
 # User-specific files
 *.rsuser
 *.suo

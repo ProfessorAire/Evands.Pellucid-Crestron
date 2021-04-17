@@ -138,6 +138,8 @@ namespace Evands.Pellucid.ProDemo
                         Debug.WriteDebugLine(this, "Now messages have the program slot prepended.");
                         Logger.LogWarning(this, "This message is written to the console if debug warnings are enabled and to the registered LogWriters if Warnings are enabled in the Logger.");
                         Debug.WriteProgressLine(this, "Application Initialized.");
+
+                        Debug.WriteDebugLine(this, "Testing issue-14 Text with {} braces. { \"Value\": true }");
                     }
                     catch (Exception e)
                     {

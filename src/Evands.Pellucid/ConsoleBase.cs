@@ -64,6 +64,7 @@ namespace Evands.Pellucid
         static ConsoleBase()
         {
             writers = new List<IConsoleWriter>();
+            NewLine = "\r\n";
         }
 
         /// <summary>
@@ -72,6 +73,11 @@ namespace Evands.Pellucid
         protected ConsoleBase()
         {
         }
+
+        /// <summary>
+        /// Gets or sets the string to use for NewLine operations.
+        /// </summary>
+        public static string NewLine { get; set; }
 
         /// <summary>
         /// Gets or sets the text used for the first header value. If null or an empty string the first header value is omitted.
@@ -252,7 +258,7 @@ namespace Evands.Pellucid
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void Write(string message, params object[] args)
         {
-            message = string.Format(message, args);
+            message = message.OptionalFormat(message, args);
 
             if (!string.IsNullOrEmpty(message))
             {
@@ -419,7 +425,7 @@ namespace Evands.Pellucid
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteLine(string message, params object[] args)
         {
-            message = string.Format(message, args);
+            message = message.OptionalFormat(message, args);
             if (!string.IsNullOrEmpty(message))
             {
                 if (isLastWriteALine)
@@ -573,7 +579,7 @@ namespace Evands.Pellucid
                 RegisterConsoleWriter(new CrestronConsoleWriter());
             }
 
-            writers.ForEach(w => w.Write(message, args));
+            writers.ForEach(w => w.Write(message.OptionalFormat(args)));
             isLastWriteALine = false;
         }
 
@@ -589,7 +595,7 @@ namespace Evands.Pellucid
                 RegisterConsoleWriter(new CrestronConsoleWriter());
             }
 
-            writers.ForEach(w => w.WriteLine(message, args));
+            writers.ForEach(w => w.WriteLine(message.OptionalFormat(args)));
             isLastWriteALine = true;
         }
 
@@ -605,7 +611,7 @@ namespace Evands.Pellucid
                 RegisterConsoleWriter(new CrestronConsoleWriter());
             }
 
-            writers.ForEach(w => w.WriteCommandResponse(message, args));
+            writers.ForEach(w => w.WriteCommandResponse(message.OptionalFormat(args)));
             isLastWriteALine = true;
         }
 

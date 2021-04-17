@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.Pro", "Evands.Pellucid.Pro\Evands.Pellucid.Pro.csproj", "{72D8FC8F-9480-4872-8321-F83F9E65AE9B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid", "Evands.Pellucid\Evands.Pellucid.csproj", "{906AE64A-D167-4567-AD60-FDA6C90C3291}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5A2D7A75-F172-43BE-AF04-18A89560D79E} = {5A2D7A75-F172-43BE-AF04-18A89560D79E}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.ProDemo", "Evands.Pellucid.ProDemo\Evands.Pellucid.ProDemo.csproj", "{B65B2FA8-F547-4234-99B6-EA081EE522F6}"
 EndProject
@@ -14,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Evands.Pellucid.vsmdi = Evands.Pellucid.vsmdi
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.Fakes", "Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj", "{5A2D7A75-F172-43BE-AF04-18A89560D79E}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -42,11 +47,14 @@ Global
 		{B65B2FA8-F547-4234-99B6-EA081EE522F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B65B2FA8-F547-4234-99B6-EA081EE522F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B65B2FA8-F547-4234-99B6-EA081EE522F6}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{B65B2FA8-F547-4234-99B6-EA081EE522F6}.Test|Any CPU.Build.0 = Test|Any CPU
 		{BC372062-5208-4B9D-9AD4-E36501DC2BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC372062-5208-4B9D-9AD4-E36501DC2BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC372062-5208-4B9D-9AD4-E36501DC2BEA}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{BC372062-5208-4B9D-9AD4-E36501DC2BEA}.Test|Any CPU.Build.0 = Test|Any CPU
+		{5A2D7A75-F172-43BE-AF04-18A89560D79E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A2D7A75-F172-43BE-AF04-18A89560D79E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A2D7A75-F172-43BE-AF04-18A89560D79E}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{5A2D7A75-F172-43BE-AF04-18A89560D79E}.Test|Any CPU.Build.0 = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
