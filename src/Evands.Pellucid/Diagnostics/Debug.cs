@@ -83,31 +83,6 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Gets the colors to use for an object's header for debugging.
-        /// </summary>
-        /// <param name="obj">The object to get a color format for.</param>
-        /// <returns>A <see cref="ColorFormat"/> object.</returns>
-        public static ColorFormat GetHeaderColors(object obj)
-        {
-            if (obj != null)
-            {
-                var key = obj.GetType().FullName;
-                if (registeredClasses.ContainsKey(key))
-                {
-                    return registeredClasses[key];
-                }
-
-                var debugObject = obj as IDebugData;
-                if (debugObject != null)
-                {
-                    return debugObject.HeaderColor;
-                }
-            }
-
-            return ConsoleBase.Colors.Subtle;
-        }
-
-        /// <summary>
         /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
         /// <param name="obj">The object the message is originating from. Can be null.</param>
@@ -153,7 +128,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes an uncategorized message to the console, with no additional color formatting applied.
+        /// Writes an uncategorized message to the console, with no header and no additional color formatting applied.
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -218,7 +193,7 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
-        /// Writes an uncategorized message to the console, with no additional color formatting applied.
+        /// Writes an uncategorized message to the console, with no header and no additional color formatting applied.
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -749,11 +724,36 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
+        /// Gets the colors to use for an object's header for debugging.
+        /// </summary>
+        /// <param name="obj">The object to get a color format for.</param>
+        /// <returns>A <see cref="ColorFormat"/> object.</returns>
+        private static ColorFormat GetHeaderColors(object obj)
+        {
+            if (obj != null)
+            {
+                var key = obj.GetType().FullName;
+                if (registeredClasses.ContainsKey(key))
+                {
+                    return registeredClasses[key];
+                }
+
+                var debugObject = obj as IDebugData;
+                if (debugObject != null)
+                {
+                    return debugObject.HeaderColor;
+                }
+            }
+
+            return ConsoleBase.Colors.Subtle;
+        }
+
+        /// <summary>
         /// Always writes a message to the console, with no additional color formatting applied.
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
-        public static void ForceWrite(string message, params object[] args)
+        private static void ForceWrite(string message, params object[] args)
         {
             ConsoleBase.WriteNoHeader(message, args);
             isLastWriteALine = false;
@@ -764,7 +764,7 @@ namespace Evands.Pellucid.Diagnostics
         /// </summary>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
-        public static void ForceWriteLine(string message, params object[] args)
+        private static void ForceWriteLine(string message, params object[] args)
         {
             ConsoleBase.WriteLineNoHeader(message, args);
             isLastWriteALine = true;
@@ -778,18 +778,10 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.Use24HourTime)
             {
-#if TEST
-                return DateTime.Now.ToString("HH:mm:ss");
-#else
                 return CrestronEnvironment.GetLocalTime().ToString("HH:mm:ss");
-#endif
             }
 
-#if TEST
-            return DateTime.Now.ToLongTimeString();
-#else
             return CrestronEnvironment.GetLocalTime().ToLongTimeString();
-#endif
         }
 
         /// <summary>
