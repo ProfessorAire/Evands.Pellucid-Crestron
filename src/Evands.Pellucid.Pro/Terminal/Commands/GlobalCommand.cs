@@ -51,6 +51,11 @@ namespace Evands.Pellucid.Terminal.Commands
         private Dictionary<string, TerminalCommandBase> commands = new Dictionary<string, TerminalCommandBase>();
 
         /// <summary>
+        /// Dictionary of <see cref="TerminalCommandBase"/> objects registered with aliases with this command.
+        /// </summary>
+        private Dictionary<string, TerminalCommandBase> aliasedCommands = new Dictionary<string, TerminalCommandBase>();
+
+        /// <summary>
         /// Backing field for the <see cref="WriteErrorMethod"/> property.
         /// </summary>
         private Action<string> writeErrorMethod;
@@ -253,33 +258,19 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <para>Unlike the Global commands, these can be added at any point in program execution.</para>
         /// </summary>
         /// <param name="command">The <see cref="TerminalCommandBase"/> to add to the global command's handler.</param>
-        /// <returns>The result of the registration attempt as a <see cref="RegisterResult"/>.</returns>
-        public RegisterResult AddCommand(TerminalCommandBase command)
-        {
-            var name = Helpers.GetCommandNameFromAttribute(command);
-
-            if (string.IsNullOrEmpty(name))
-            {
-                return RegisterResult.NoCommandAttributeFound;
-            }
-
-            return AddCommand(command, name);
-        }
-
-        /// <summary>
-        /// Add a new terminal command to the global command.
-        /// <para>Unlike the Global commands, these can be added at any point in program execution.</para>
-        /// </summary>
-        /// <param name="command">The <see cref="TerminalCommandBase"/> to add to the global command's handler.</param>
-        /// <param name="name">The name to add the command using. If this is specified the class's <see cref="Attributes.CommandAttribute.Name"/> value will not be used.</param>
         /// <returns><see cref="RegisterResult"/>.</returns>
-        public RegisterResult AddCommand(TerminalCommandBase command, string name)
+        public RegisterResult AddCommand(TerminalCommandBase command)
         {
             RegisterResult result;
 
-            if (!commands.ContainsKey(name.ToLower()))
+            if (!commands.ContainsKey(command.Name.ToLower()) && !string.IsNullOrEmpty(command.Alias) ? !aliasedCommands.ContainsKey(command.Alias.ToLower()) : true)
             {
-                commands.Add(name.ToLower(), command);
+                commands.Add(command.Name.ToLower(), command);
+                if (!string.IsNullOrEmpty(command.Alias))
+                {
+                    aliasedCommands.Add(command.Alias.ToLower(), command);
+                }
+
                 result = RegisterResult.Success;
             }
             else
@@ -299,20 +290,11 @@ namespace Evands.Pellucid.Terminal.Commands
         {
             if (IsCommandRegistered(command))
             {
-                return RemoveCommand(command.Name);
+                aliasedCommands.Remove(command.Alias);
+                return commands.Remove(command.Name);
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Removes the command with the specified name from the global command's handler.
-        /// </summary>
-        /// <param name="name">The name of the command to try to remove.</param>
-        /// <returns>True if a command was removed, false if no command existed with that name.</returns>
-        public bool RemoveCommand(string name)
-        {
-            return commands.Remove(name);
         }
 
         /// <summary>
@@ -416,6 +398,13 @@ namespace Evands.Pellucid.Terminal.Commands
             }
         }
 
+        /// <summary>
+        /// Processes the command with the provided values.
+        /// </summary>
+        /// <param name="commandName">The name of the command.</param>
+        /// <param name="verb">The verb contained in the command.</param>
+        /// <param name="defaultValue">The default value of the command.</param>
+        /// <param name="operandsAndFlags">The operands and flags of the command.</param>
         private void ProcessCommand(string commandName, string verb, string defaultValue, Dictionary<string, string> operandsAndFlags)
         {
             TerminalCommandBase command = null;
@@ -428,8 +417,13 @@ namespace Evands.Pellucid.Terminal.Commands
 
             if (!commands.ContainsKey(commandName))
             {
-                WriteErrorMethod(string.Format("No command with the name '{0}' exists. Enter '--help' to view all available commands.", commandName));
-                return;
+                if (!aliasedCommands.ContainsKey(commandName))
+                {
+                    WriteErrorMethod(string.Format("No command with the name '{0}' exists. Enter '--help' to view all available commands.", commandName));
+                    return;
+                }
+
+                command = aliasedCommands[commandName];
             }
             else
             {
@@ -438,7 +432,7 @@ namespace Evands.Pellucid.Terminal.Commands
 
             if (string.IsNullOrEmpty(verb) && (operandsAndFlags.ContainsKey("help") || operandsAndFlags.ContainsKey("h")))
             {
-                PrintCommandHelp(command, commandName);
+                PrintCommandHelp(command);
                 return;
             }
             else
@@ -680,22 +674,26 @@ namespace Evands.Pellucid.Terminal.Commands
 
             if (verbs.Count > 0)
             {
-                sb.AppendLine();
-                sb.Append(string.Format("{0}", FormatHelpVerbMethod(verbs.First().Value.Name)));
+                sb.Append(ConsoleBase.NewLine);
+                sb.Append(FormatHelpCommandMethod(verbs.First().Value.HelpFormattedName));
                 sb.Append(' ', 6);
-                sb.AppendLine(FormatHelpTextMethod(string.Format("{0}", verbs.First().Value.Help)));
-                sb.AppendLine();
+                sb.Append(FormatHelpTextMethod(string.Format("{0}", verbs.First().Value.Help)));
+                sb.Append(ConsoleBase.NewLine);
+                sb.Append(ConsoleBase.NewLine);
 
                 var examples = Helpers.GetVerbExamples(command, verbName);
                 if (examples.Count > 0)
                 {
-                    sb.AppendLine(FormatHelpTextMethod("Examples"));
+                    sb.Append(FormatHelpTextMethod("Examples"));
+                    sb.Append(ConsoleBase.NewLine);
                     foreach (var e in examples)
                     {
-                        sb.AppendLine(FormatHelpSampleMethod(string.Format("'{0}'", e.Sample)));
+                        sb.Append(FormatHelpSampleMethod(string.Format("'{0}'", e.Sample)));
+                        sb.Append(ConsoleBase.NewLine);
                         sb.Append(' ', 5);
-                        sb.AppendLine(FormatHelpTextMethod(e.Description));
-                        sb.AppendLine();
+                        sb.Append(FormatHelpTextMethod(e.Description));
+                        sb.Append(ConsoleBase.NewLine);
+                        sb.Append(ConsoleBase.NewLine);
                     }
                 }
 
@@ -744,8 +742,9 @@ namespace Evands.Pellucid.Terminal.Commands
 
                 sb.Append(FormatHelpOperandMethod("Operands"));
                 sb.Append(FormatHelpTextMethod("/"));
-                sb.AppendLine(FormatHelpFlagMethod("Flags"));
-                sb.AppendLine();
+                sb.Append(FormatHelpFlagMethod("Flags"));
+                sb.Append(ConsoleBase.NewLine);
+                sb.Append(ConsoleBase.NewLine);
 
                 foreach (var op in operands)
                 {
@@ -753,7 +752,8 @@ namespace Evands.Pellucid.Terminal.Commands
                     {
                         sb.Append(FormatHelpOperandMethod(string.Format("--{0}", op.Name.PadRight(nameWidth - 2))));
                         sb.Append(' ', 6);
-                        sb.AppendLine(FormatHelpTextMethod(op.Help));
+                        sb.Append(FormatHelpTextMethod(op.Help));
+                        sb.Append(ConsoleBase.NewLine);
                     }
                 }
 
@@ -768,7 +768,8 @@ namespace Evands.Pellucid.Terminal.Commands
                     value = FormatHelpFlagMethod(value.PadRight(nameWidth));
                     sb.Append(value);
                     sb.Append(' ', 6);
-                    sb.AppendLine(FormatHelpTextMethod(flag.Help));
+                    sb.Append(FormatHelpTextMethod(flag.Help));
+                    sb.Append(ConsoleBase.NewLine);
                 }
             }
             else
@@ -783,28 +784,27 @@ namespace Evands.Pellucid.Terminal.Commands
         /// Prints the associated command's help.
         /// </summary>
         /// <param name="command">The command to print help for.</param>
-        /// <param name="name">The name of the name of the command.</param>
-        private void PrintCommandHelp(TerminalCommandBase command, string name)
+        private void PrintCommandHelp(TerminalCommandBase command)
         {
             var sb = new StringBuilder();
             var help = Helpers.GetCommandHelpFromAttribute(command);
-            sb.AppendLine();
-            sb.AppendLine(FormatHelpCommandMethod(name));
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append(FormatHelpCommandMethod(Helpers.GetCommandNameHelpFromAttribute(command)));
             if (!string.IsNullOrEmpty(help))
             {
-                sb.AppendLine(FormatHelpTextMethod(help));
+                sb.AppendFormat(" - {0}{1}", FormatHelpTextMethod(help), ConsoleBase.NewLine);
             }
 
-            sb.AppendLine();
-            sb.AppendLine(formatHelpVerbMethod("Verbs"));
-            sb.AppendLine(formatHelpTextMethod("-----"));
+            sb.Append(ConsoleBase.NewLine);
+            sb.AppendFormat("{0}{1}", formatHelpVerbMethod("Verbs"), ConsoleBase.NewLine);
+            sb.AppendFormat("{0}{1}", formatHelpTextMethod("-----"), ConsoleBase.NewLine);
 
             var verbs = Helpers.GetVerbs(command);
 
             var nameWidth = 0;
             if (verbs.Count > 0)
             {
-                nameWidth = verbs.Max(v => v.Value.Name.Length);
+                nameWidth = verbs.Max(v => v.Value.HelpFormattedName.Length);
             }
 
             nameWidth = Math.Max(nameWidth, 10);
@@ -823,22 +823,22 @@ namespace Evands.Pellucid.Terminal.Commands
                     }
                     else
                     {
-                        sb.Append(FormatHelpVerbMethod(kvp.Value.Name.PadRight(nameWidth)));
+                        sb.Append(FormatHelpVerbMethod(kvp.Value.HelpFormattedName.PadRight(nameWidth)));
                     }
 
                     sb.Append(' ', 6);
                     sb.Append(FormatHelpTextMethod(kvp.Value.Help));
-                    sb.AppendLine();
+                    sb.Append(ConsoleBase.NewLine);
                 }
             }
 
-            sb.AppendLine();
-            sb.AppendLine(FormatHelpFlagMethod("Flags"));
-            sb.AppendLine(FormatHelpTextMethod("-----"));
+            sb.Append(ConsoleBase.NewLine);
+            sb.AppendFormat("{0}{1}", FormatHelpFlagMethod("Flags"), ConsoleBase.NewLine);
+            sb.AppendFormat("{0}{1}", FormatHelpTextMethod("-----"), ConsoleBase.NewLine);
             sb.Append(FormatHelpFlagMethod("--Help, -h".PadRight(nameWidth)));
             sb.Append(' ', 6);
             sb.Append(FormatHelpTextMethod("Prints help for this command."));
-            sb.AppendLine();
+            sb.Append(ConsoleBase.NewLine);
 
             WriteHelpMethod(sb.ToString());
         }
@@ -846,8 +846,9 @@ namespace Evands.Pellucid.Terminal.Commands
         private void PrintGlobalCommandsHelp()
         {
             var sb = new StringBuilder();
-            sb.AppendLine(FormatHelpTextMethod(string.Format("Listing the commands available for '{0}'", Name)));
-            sb.AppendLine(FormatHelpTextMethod("-----"));
+            sb.Append(FormatHelpTextMethod(string.Format("Listing the commands available for '{0}'{1}", Name, ConsoleBase.NewLine)));
+            sb.Append(FormatHelpTextMethod("-----"));
+            sb.Append(ConsoleBase.NewLine);
 
             var nameWidth = commands.Max(c => c.Key.Length);
 
@@ -857,10 +858,11 @@ namespace Evands.Pellucid.Terminal.Commands
                 sb.Append(' ', 6);
                 var help = Helpers.GetCommandHelpFromAttribute(command.Value);
                 sb.Append(FormatHelpTextMethod(string.IsNullOrEmpty(help) ? "No help is available for this command." : help));
-                sb.AppendLine();
+                sb.Append(ConsoleBase.NewLine);
             }
 
-            sb.AppendLine(FormatHelpTextMethod("-----"));
+            sb.Append(FormatHelpTextMethod("-----"));
+            sb.Append(ConsoleBase.NewLine);
 
             WriteHelpMethod(sb.ToString());
         }

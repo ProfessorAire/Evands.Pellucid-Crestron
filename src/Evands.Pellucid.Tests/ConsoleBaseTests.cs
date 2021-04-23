@@ -84,6 +84,9 @@ namespace Evands.Pellucid
             var expected = "01";
             ConsoleBase.OptionalHeader = expected;
             Assert.IsTrue(ConsoleBase.OptionalHeader == string.Format("[{0}]", expected));
+
+            ConsoleBase.OptionalHeader = string.Empty;
+            Assert.IsTrue(ConsoleBase.OptionalHeader == string.Empty);
         }
 
         [TestMethod]

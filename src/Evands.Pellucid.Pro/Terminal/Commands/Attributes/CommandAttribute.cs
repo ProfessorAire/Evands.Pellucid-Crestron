@@ -27,7 +27,12 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
     /// </summary>
     [global::System.AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class CommandAttribute : Attribute
-    {        
+    {
+        /// <summary>
+        /// Backing field for the <see cref="Alias"/> property.
+        /// </summary>
+        private string alias = string.Empty;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
         /// </summary>
@@ -35,14 +40,53 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
         /// <param name="help">Help to print in the console regarding the command.</param>
         /// <exception cref="ArgumentNullException">Thrown when the name parameter is null or an empty string.</exception>
         public CommandAttribute(string name, string help)
+            : this(name, 0, help)
+        {            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
+        /// </summary>
+        /// <param name="name">The name of the command, as it should be seen on the console.</param>
+        /// <param name="aliasLength">The number of characters from the name that should be used for the command's alias.</param>
+        /// <param name="help">Help to print in the console regarding the command.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the name parameter is null or an empty string.</exception>
+        public CommandAttribute(string name, int aliasLength, string help)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name", "Commands must have names.");
             }
 
-            this.Name = name;
-            this.Help = string.IsNullOrEmpty(help) ? string.Empty : help;
+            Name = name;
+            Help = string.IsNullOrEmpty(help) ? string.Empty : help;
+            if (aliasLength > 0)
+            {
+                Alias = Name.Substring(0, Math.Min(aliasLength, Name.Length));
+            }
+            else
+            {
+                Alias = string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
+        /// </summary>
+        /// <param name="name">The name of the command, as it should be seen on the console.</param>
+        /// <param name="alias">The alias to use for the command.</param>
+        /// <param name="help">Help to print in the console regarding the command.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the name parameter is null or an empty string.</exception>
+        public CommandAttribute(string name, string alias, string help)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name", "Commands must have names.");
+            }
+
+            Name = name;
+            Help = string.IsNullOrEmpty(help) ? string.Empty : help;
+            Alias = string.IsNullOrEmpty(alias) ? string.Empty : alias;
         }
 
         /// <summary>
@@ -54,5 +98,34 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
         /// Gets the help text for the command.
         /// </summary>
         public string Help { get; private set; }
+
+        /// <summary>
+        /// Gets the name/alias of the command formatted for presentation in help documentation.
+        /// </summary>
+        public string HelpFormattedName { get; private set; }
+
+        /// <summary>
+        /// Gets the alias of the command as it can be seen in the console.
+        /// </summary>
+        public string Alias
+        {
+            get { return this.alias; }
+
+            set
+            {
+                if (alias != value)
+                {
+                    alias = value;
+                    if (!string.IsNullOrEmpty(alias))
+                    {
+                        HelpFormattedName = string.Format("{0} ({1})", Name, Alias);
+                    }
+                    else
+                    {
+                        HelpFormattedName = Name;
+                    }
+                }
+            }
+        }
     }
 }

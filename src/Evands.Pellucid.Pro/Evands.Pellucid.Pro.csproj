@@ -79,6 +79,7 @@
     <Compile Include="Terminal\Commands\Attributes\CommandAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Terminal\Commands\Attributes\DefaultVerbAttribute.cs" />
     <Compile Include="Terminal\Commands\Attributes\FlagAttribute.cs">
       <SubType>Code</SubType>
     </Compile>

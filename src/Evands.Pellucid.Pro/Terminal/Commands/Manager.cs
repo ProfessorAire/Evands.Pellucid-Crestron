@@ -83,7 +83,7 @@ namespace Evands.Pellucid.Terminal.Commands
         {
             if (consoleCommandNames.ContainsKey(consoleCommandName))
             {
-                return consoleCommandNames[consoleCommandName].AddCommand(command, command.Name);
+                return consoleCommandNames[consoleCommandName].AddCommand(command);
             }
 
             return RegisterResult.GlobalCommandNotFound;
@@ -99,7 +99,7 @@ namespace Evands.Pellucid.Terminal.Commands
         {
             if (consoleCommandNames.ContainsKey(globalCommandName))
             {
-                return consoleCommandNames[globalCommandName].RemoveCommand(command.Name);
+                return consoleCommandNames[globalCommandName].RemoveCommand(command);
             }
 
             return false;
