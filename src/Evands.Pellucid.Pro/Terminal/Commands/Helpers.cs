@@ -37,7 +37,7 @@ namespace Evands.Pellucid.Terminal.Commands
         /// Gets the name of a command from the <see cref="CommandAttribute"/> associated with a <see cref="TerminalCommandBase"/> object.
         /// </summary>
         /// <param name="command">The <see cref="TerminalCommandBase"/> to get a name for.</param>
-        /// <returns>A <see langword="string"/> with the name retrieved, or <see cref="String.Empty"/> if no name was found.</returns>        
+        /// <returns>A <see langword="string"/> with the name retrieved, or <see langword="String.Empty"/> if no name was found.</returns>        
         internal static string GetCommandNameFromAttribute(TerminalCommandBase command)
         {
             var name = string.Empty;
@@ -52,10 +52,46 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         /// <summary>
+        /// Gets the alias of a command from the <see cref="CommandAttribute"/> associated with a <see cref="TerminalCommandBase"/> object.
+        /// </summary>
+        /// <param name="command">The <see cref="TerminalCommandBase"/> to get an alias for.</param>
+        /// <returns>A <see langword="string"/> with the alias, or <see langword="string.Empty"/> if no alias was found.</returns>
+        internal static string GetCommandAliasFromAttribute(TerminalCommandBase command)
+        {
+            var alias = string.Empty;
+            var ca = command.GetType().GetCType().GetCustomAttributes(false).OfType<CommandAttribute>().FirstOrDefault();
+
+            if (ca != null)
+            {
+                alias = ca.Alias;
+            }
+
+            return alias;
+        }
+
+        /// <summary>
+        /// Gets the command help formatted name from the <see cref="CommandAttribute"/> associated with a <see cref="TerminalCommandBase"/> object.
+        /// </summary>
+        /// <param name="command">The <see cref="TerminalCommandBase"/> to get the help formatted name for.</param>
+        /// <returns>A <see langword="string"/> with the name retrieved.</returns>
+        internal static string GetCommandNameHelpFromAttribute(TerminalCommandBase command)
+        {
+            var nameHelp = string.Empty;
+            var ca = command.GetType().GetCType().GetCustomAttributes(false).OfType<CommandAttribute>().FirstOrDefault();
+
+            if (ca != null)
+            {
+                nameHelp = ca.HelpFormattedName;
+            }
+
+            return nameHelp;
+        }
+
+        /// <summary>
         /// Gets the help text from a <see cref="CommandAttribute"/> associated with a <see cref="TerminalCommandBase"/> object.
         /// </summary>
         /// <param name="command">The <see cref="TerminalCommandBase"/> to get the help text for.</param>
-        /// <returns>A <see langword="string"/> with the help text, or <see cref="String.Empty"/> if no help text was found.</returns>        
+        /// <returns>A <see langword="string"/> with the help text, or <see langword="String.Empty"/> if no help text was found.</returns>        
         internal static string GetCommandHelpFromAttribute(TerminalCommandBase command)
         {
             var help = string.Empty;
@@ -103,13 +139,24 @@ namespace Evands.Pellucid.Terminal.Commands
             var result = new Dictionary<MethodInfo, VerbAttribute>();
 
             var methods = command.GetType().GetCType().GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-
             foreach (var m in methods)
             {
                 var verb = m.GetCustomAttributes(false).OfType<VerbAttribute>().FirstOrDefault();
-                if (verb != null && string.Equals(verb.Name, verbName, StringComparison.InvariantCultureIgnoreCase))
+                if (verb != null)
                 {
-                    result.Add(m, verb);
+                    if (string.IsNullOrEmpty(verbName))
+                    {
+                        var def = m.GetCustomAttributes(false).OfType<DefaultVerbAttribute>().FirstOrDefault();
+                        if (def != null)
+                        {
+                            result.Add(m, verb);
+                        }
+                    }
+                    else if (string.Equals(verb.Name, verbName, StringComparison.InvariantCultureIgnoreCase) ||
+                        string.Equals(verb.Alias, verbName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        result.Add(m, verb);
+                    }
                 }
             }
 

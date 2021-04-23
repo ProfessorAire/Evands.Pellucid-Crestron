@@ -31,6 +31,11 @@ namespace Evands.Pellucid.Terminal.Commands
         private string name;
 
         /// <summary>
+        /// Backing field for the <see cref="Alias"/> property.
+        /// </summary>
+        private string alias;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TerminalCommandBase"/> class.
         /// </summary>
         public TerminalCommandBase()
@@ -47,6 +52,10 @@ namespace Evands.Pellucid.Terminal.Commands
             if (!string.IsNullOrEmpty(suffix))
             {
                 this.name = string.Format("{0}{1}", Name, suffix);
+                if (!string.IsNullOrEmpty(this.Alias))
+                {
+                    this.alias = string.Format("{0}{1}", Alias, suffix);
+                }
             }
         }
 
@@ -63,6 +72,22 @@ namespace Evands.Pellucid.Terminal.Commands
                 }
 
                 return name;
+            }
+        }
+
+        /// <summary>
+        /// Gets the alias for the command, if it exists.
+        /// </summary>
+        public string Alias
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(alias))
+                {
+                    alias = Helpers.GetCommandAliasFromAttribute(this);
+                }
+
+                return alias;
             }
         }
 

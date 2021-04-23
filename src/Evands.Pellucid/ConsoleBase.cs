@@ -89,10 +89,17 @@ namespace Evands.Pellucid
 
             set
             {
-                headerText = string.Format("{0}{1}{2}",
-                    value.StartsWith("[") ? string.Empty : "[",
-                    value,
-                    value.EndsWith("]") ? string.Empty : "]");
+                if (!string.IsNullOrEmpty(value))
+                {
+                    headerText = string.Format("{0}{1}{2}",
+                        value.StartsWith("[") ? string.Empty : "[",
+                        value,
+                        value.EndsWith("]") ? string.Empty : "]");
+                }
+                else
+                {
+                    headerText = value;
+                }
             }
         }
 
