@@ -86,7 +86,7 @@ namespace Evands.Pellucid.ProDemo
                 Logger.RegisterLogWriter(new CrestronLogWriter());
 
                 // In addition to the CrestronLogWriter we're registering an additional writer that targets another file.
-                var path = Path.Combine(Directory.GetApplicationRootDirectory(), "user");
+                var path = Path.Combine(Directory.GetApplicationRootDirectory(), "/user");
                 path = Path.Combine(path, "logs");
                 path = Path.Combine(path, string.Format("App{0}SimpleLog.log", InitialParametersClass.ApplicationNumber));
                 Logger.RegisterLogWriter(new Evands.Pellucid.Diagnostics.SimpleFileLogger(path));

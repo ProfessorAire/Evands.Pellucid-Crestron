@@ -32,7 +32,7 @@ namespace Evands.Pellucid
         /// <param name="obj">The object to dump to the console.</param>
         public static void Dump(this object obj)
         {
-            ConsoleBase.Write(Terminal.Formatting.Formatters.FormatObjectForConsole(obj));
+            ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj));
         }
 
         /// <summary>

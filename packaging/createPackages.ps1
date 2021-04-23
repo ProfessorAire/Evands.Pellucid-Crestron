@@ -94,6 +94,9 @@ foreach ($proj in $dte.Solution.Projects) {
     }
 }
 
+$dte.Solution.Close($false)
+$dte.Quit()
+
 $exitCode = 0
 
 if ($libVersion -eq "" -or $proVersion -eq "") {
@@ -126,6 +129,4 @@ else {
     }
 }
 
-$dte.Solution.Close($false)
-$dte.Quit()
 exit $exitCode
