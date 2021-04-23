@@ -119,5 +119,12 @@ namespace Evands.Pellucid.ProDemo
                 .FormatColumn(0, ConsoleBase.Colors.BrightCyan, HorizontalAlignment.Right)
                 .ForEachCellInColumn(1, c => c.Color = c.Contents == "Offline" ? ConsoleBase.Colors.BrightRed : ConsoleBase.Colors.BrightGreen).ToString());
         }
+
+        [Verb("DumpOptions", 4, "Dumps the Evands.Pellucid.Options class to the console.")]
+        public void DumpOptions()
+        {
+            ConsoleBase.WriteLine();
+            Evands.Pellucid.Options.Instance.Dump();
+        }
     }
 }
