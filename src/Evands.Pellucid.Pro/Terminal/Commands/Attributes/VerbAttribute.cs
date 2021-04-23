@@ -29,6 +29,11 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
     public sealed class VerbAttribute : Attribute
     {
         /// <summary>
+        /// Backing field for the <see cref="Alias"/> property.
+        /// </summary>
+        private string alias = string.Empty;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VerbAttribute"/> class.
         /// <para>Multiple methods may have a verb attribute with the same name.</para>
         /// </summary>
@@ -40,13 +45,66 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
         /// <para>Only the help text from the first found attribute will be printed.</para>
         /// </remarks>
         public VerbAttribute(string name, string help)
+            : this(name, 0, help)
         {
-            if (string.IsNullOrEmpty(name))
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VerbAttribute"/> class.
+        /// <para>Multiple methods may have a verb attribute with the same name.</para>
+        /// </summary>
+        /// <param name="name">The name the verb should have in the console. Leave empty to use as a command's default action.</param>
+        /// <param name="aliasLength">The number of characters from the name that should be used as the verb's alias.</param>
+        /// <param name="help">Help text describing the use of the flag.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the name parameter is null or an empty string.</exception>
+        /// <remarks>
+        /// Multiple methods can have the same verb attribute name.
+        /// <para>Only the help text from the first matching attribute will be printed.</para>
+        /// </remarks>
+        public VerbAttribute(string name, int aliasLength, string help)
+        {
+            this.Name = string.IsNullOrEmpty(name) ? string.Empty : name;
+
+            if (aliasLength > 0)
             {
-                throw new ArgumentNullException("name", "Verbs cannot have empty names.");
+                Alias = Name.Substring(0, Math.Min(aliasLength, Name.Length));
+                HelpFormattedName = string.Format("{0} ({1})", Name, Alias);
+            }
+            else
+            {
+                Alias = string.Empty;
+                HelpFormattedName = Name;
             }
 
-            this.Name = name;
+            this.Help = string.IsNullOrEmpty(help) ? "No help is available for this command." : help;
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VerbAttribute"/> class.
+        /// <para>Multiple methods may have a verb attribute with the same name.</para>
+        /// </summary>
+        /// <param name="name">The name the verb should have in the console. Leave empty to use as a command's default action.</param>
+        /// <param name="alias">The alias to use for the verb.</param>
+        /// <param name="help">Help text describing the use of the flag.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the name parameter is null or an empty string.</exception>
+        /// <remarks>
+        /// Multiple methods can have the same verb attribute name.
+        /// <para>Only the help text from the first matching attribute will be printed.</para>
+        /// </remarks>
+        public VerbAttribute(string name, string alias, string help)
+        {
+            this.Name = string.IsNullOrEmpty(name) ? string.Empty : name;
+            if (!string.IsNullOrEmpty(alias))
+            {
+                Alias = alias;
+                HelpFormattedName = string.Format("{0} ({1})", Name, Alias);
+            }
+            else
+            {
+                Alias = string.Empty;
+                HelpFormattedName = Name;
+            }
+
             this.Help = string.IsNullOrEmpty(help) ? "No help is available for this command." : help;
         }
 
@@ -56,8 +114,41 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
         public string Name { get; private set; }
 
         /// <summary>
+        /// Gets the alias of the verb as it should be seen in the console.
+        /// </summary>
+        public string Alias
+        {
+            get { return this.alias; }
+
+            set
+            {
+                if (alias != value)
+                {
+                    alias = value;
+                    if (!string.IsNullOrEmpty(alias) && !string.IsNullOrEmpty(Name))
+                    {
+                        HelpFormattedName = string.Format("{0} ({1})", Name, Alias);
+                    }
+                    else if (string.IsNullOrEmpty(alias) && !string.IsNullOrEmpty(Name))
+                    {
+                        HelpFormattedName = Name;
+                    }
+                    else
+                    {
+                        HelpFormattedName = "<none>";
+                    }
+                }
+            }
+        }
+        
+        /// <summary>
         /// Gets the help text for the verb.
         /// </summary>
         public string Help { get; private set; }
+
+        /// <summary>
+        /// Gets the name/alias of the verb formatted for presentation in help documentation.
+        /// </summary>
+        public string HelpFormattedName { get; private set; }
     }
 }

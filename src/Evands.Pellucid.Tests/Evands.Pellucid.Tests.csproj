@@ -54,6 +54,8 @@
     <Compile Include="Diagnostics\DebugBraceTests.cs" />
     <Compile Include="Diagnostics\DebugOptionalHeaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Terminal\Commands\TestCommand.cs" />
+    <Compile Include="Terminal\Commands\TerminalCommandTests.cs" />
     <Compile Include="Terminal\Formatting\Tables\CellTests.cs" />
     <Compile Include="Terminal\Formatting\Tables\ColumnTests.cs" />
     <Compile Include="Terminal\Formatting\Tables\ColumnCollectionTests.cs" />
@@ -63,6 +65,14 @@
     <Compile Include="TestConsoleWriter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj">
+      <Project>{5A2D7A75-F172-43BE-AF04-18A89560D79E}</Project>
+      <Name>Evands.Pellucid.Fakes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Evands.Pellucid.Pro\Evands.Pellucid.Pro.csproj">
+      <Project>{72D8FC8F-9480-4872-8321-F83F9E65AE9B}</Project>
+      <Name>Evands.Pellucid.Pro</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Evands.Pellucid\Evands.Pellucid.csproj">
       <Project>{906AE64A-D167-4567-AD60-FDA6C90C3291}</Project>
       <Name>Evands.Pellucid</Name>

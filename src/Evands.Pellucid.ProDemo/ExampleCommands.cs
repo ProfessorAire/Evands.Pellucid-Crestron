@@ -28,7 +28,7 @@ namespace Evands.Pellucid.ProDemo
     /// <summary>
     /// Example commands.
     /// </summary>
-    [Command("example", "Example console command.")]
+    [Command("example", 2, "Example console command.")]
     public class ExampleCommands : TerminalCommandBase
     {
         /// <summary>
@@ -36,7 +36,7 @@ namespace Evands.Pellucid.ProDemo
         /// </summary>
         /// <param name="message">The message to echo.</param>
         /// <param name="caps">When true will print the message in all caps.</param>
-        [Verb("echo", "Echoes the message provided back to the console.")]
+        [Verb("echo", 2, "Echoes the message provided back to the console.")]
         [Sample("example echo --message \"Just a test.\" -c", "Prints the message \"JUST A TEST.\" to the console.")]
         public void EchoMessage(
             [Operand("message", "The message to echo.")] string message,
@@ -51,7 +51,7 @@ namespace Evands.Pellucid.ProDemo
         /// <param name="message">The message to echo.</param>
         /// <param name="caps">When true will print the message in all caps.</param>
         /// <param name="red">When true will print the message in red.</param>
-        [Verb("echo", "Echoes the message provided back to the console in a specified color.")]
+        [Verb("echo", 2, "Echoes the message provided back to the console in a specified color.")]
         [Sample("example echo --message \"Just a test.\" -cr", "Prints the message \"JUST A TEST.\" to the console in red.")]
         public void EchoRedMessage(
             [Operand("message", "The message to echo.")] string message,
@@ -67,7 +67,7 @@ namespace Evands.Pellucid.ProDemo
         /// <param name="message">The message to echo.</param>
         /// <param name="caps">When true will print the message in all caps.</param>
         /// <param name="blue">When true will print the message in blue.</param>
-        [Verb("echo", "Echoes the message provided back to the console in a specified color.")]
+        [Verb("echo", 2, "Echoes the message provided back to the console in a specified color.")]
         [Sample("example echo --message \"Just a test.\" -cb", "Prints the message \"JUST A TEST.\" to the console in blue.")]
         public void EchoBlueMessage(
             [Operand("message", "The message to echo.")] string message,
@@ -82,7 +82,7 @@ namespace Evands.Pellucid.ProDemo
         /// </summary>
         /// <param name="message">The message to echo.</param>
         /// <param name="caps">When true will print the message in all caps.</param>
-        [Verb("echo-green", "Echoes the message provided back to the console in green.")]
+        [Verb("echo-green", 6, "Echoes the message provided back to the console in green.")]
         [Sample("example echo-green --message \"Just a test.\"", "Prints the message \"Just a test.\" to the console in green.")]
         public void EchoGreenMessage(
             [Operand("message", "The message to echo.")] string message,
@@ -94,8 +94,9 @@ namespace Evands.Pellucid.ProDemo
         /// <summary>
         /// Prints a sample table to the console.
         /// </summary>
-        [Verb("table", "Prints a sample table to the console.")]
+        [Verb("table", 3, "Prints a sample table to the console.")]
         [Sample("example table", "Prints a sample table with automatic cell widths.")]
+        [DefaultVerb()]
         public void SampleTable()
         {
             SampleTable(0);
@@ -104,7 +105,7 @@ namespace Evands.Pellucid.ProDemo
         /// <summary>
         /// Prints a sample table to the console.
         /// </summary>
-        [Verb("table", "Prints a sample table to the console.")]
+        [Verb("table", 3, "Prints a sample table to the console.")]
         [Sample("example table --min 15", "Prints a sample table with a minimum cell width of 15.")]
         public void SampleTable(
             [Operand("min", "Sets the minimum width the cells can be.")] int minWidth)

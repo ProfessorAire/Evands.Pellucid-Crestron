@@ -83,7 +83,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <param name="uncat">Toggles uncategorized level.</param>
         /// <param name="all">Toggles all levels.</param>
         [Verb("Toggle", "Configures debugging, toggling individual level settings.")]
-        [Sample("debug toggle --error -tx", "Toggles error, subtle, and exception messages.")]
+        [Sample("debug toggle --error -nx", "Toggles error, notice, and exception messages.")]
         public void ToggleLevels(
             [Flag("debug", 'd', "Include to toggle printing debug messages.", true)] bool debug,
             [Flag("progress", 'p', "Include to toggle printing progress messages.", true)] bool progress,
@@ -152,7 +152,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <param name="all">Enables all levels.</param>
         /// <param name="none">Disables all levels.</param>
         [Verb("Levels", "Configures logging, enabling or disabling individual level settings.")]
-        [Sample("debug levels --error -tx", "Enables error, subtle, and exception messages.")]
+        [Sample("debug levels --error -nx", "Enables error, notice, and exception messages.")]
         public void ToggleLevels(
             [Flag("debug", 'd', "Include to enable printing debug messages. Exclude to disable.", true)] bool debug,
             [Flag("progress", 'p', "Include to enable printing progress messages. Exclude to disable.", true)] bool progress,
