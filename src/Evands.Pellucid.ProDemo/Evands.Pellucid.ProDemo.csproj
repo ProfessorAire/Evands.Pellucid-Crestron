@@ -89,6 +89,8 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="Sample\NestedSample.cs" />
+    <Compile Include="Sample\SampleItem.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
