@@ -33,11 +33,26 @@ namespace Evands.Pellucid
     public class Options
     {
         /// <summary>
+        /// The default file name for the options file.
+        /// </summary>
+        private static string fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
+
+        /// <summary>
+        /// Backing field for the <see cref="AutoSave"/> property.
+        /// </summary>
+        private bool autoSave = true;
+
+        /// <summary>
+        /// Backing field for the <see cref="Instance"/> property.
+        /// </summary>
+        private static Options instance;
+
+        /// <summary>
         /// Initializes static members of the <see cref="Options"/> class.
         /// </summary>        
         static Options()
         {
-            Instance = Load();
+            FilePath = Path.Combine(Path.Combine("/USER", "Pellucid"), fileName);
         }
 
         /// <summary>
@@ -46,32 +61,30 @@ namespace Evands.Pellucid
         public Options()
         {
 #if !TEST
-            CrestronEnvironment.ProgramStatusEventHandler += (status) =>
-                {
-                    switch (status)
-                    {
-                        case eProgramStatusEventType.Stopping:
-                        case eProgramStatusEventType.Paused:
-                            Save();
-                            break;
-                        case eProgramStatusEventType.Resumed:
-                            Load();
-                            break;
-                    }
-                };
+            CrestronEnvironment.ProgramStatusEventHandler += HandleAutoLoad;
 #endif
         }
 
         /// <summary>
         /// Gets the singleton instance of the <see cref="Options"/> class.
         /// </summary>        
-        public static Options Instance { get; private set; }
+        public static Options Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = Load();
+                }
+
+                return instance;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the <see cref="LogLevels"/> used to determine what items are written to the logs.
-        /// </summary>        
-        [TomlProperty("logging-levels")]
-        public LogLevels LogLevels { get; set; }
+        /// Gets or sets the file path to save the options file to.
+        /// </summary>
+        public static string FilePath { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not console output should be colorized.
@@ -81,6 +94,18 @@ namespace Evands.Pellucid
         /// </summary>
         [TomlProperty("console-colorizeOutput")]
         public bool ColorizeConsoleOutput { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="LogLevels"/> used to determine what items are written to the logs.
+        /// </summary>        
+        [TomlProperty("logging-levels")]
+        public LogLevels LogLevels { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DebugLevels"/> used to determine what debug messages are written to the consoles.
+        /// </summary>        
+        [TomlProperty("debugging-levels")]
+        public DebugLevels DebugLevels { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not debug messages will have timestamps prepended to them.
@@ -95,12 +120,6 @@ namespace Evands.Pellucid
         public bool Use24HourTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="DebugLevels"/> used to determine what debug messages are written to the consoles.
-        /// </summary>        
-        [TomlProperty("debugging-levels")]
-        public DebugLevels DebugLevels { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of headers that are suppressed and will not have debug messages of any level print to the console.
         /// </summary>        
         [TomlProperty("suppressed")]
@@ -113,36 +132,68 @@ namespace Evands.Pellucid
         public List<string> Allowed { get; set; }
 
         /// <summary>
-        /// Saves the options to a TOML file in the application directory.
-        /// <para>This file is automatically saved when the program is shutting down.</para>
+        /// Gets or sets a value indicating whether or not the options will be auto saved.
+        /// </summary>
+        [TomlProperty("autosave")]
+        public bool AutoSave
+        {
+            get { return autoSave; }
+
+            set
+            {
+                if (autoSave != value)
+                {
+                    autoSave = value;
+
+                    if (value)
+                    {
+                        CrestronEnvironment.ProgramStatusEventHandler += HandleAutoLoad;
+                    }
+                    else
+                    {
+                        CrestronEnvironment.ProgramStatusEventHandler -= HandleAutoLoad;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves the options to a TOML file to the location specified by the <see cref="FilePath"/> property.
+        /// <para>This file is automatically saved when the program is shutting down if the <see cref="AutoSave"/> property is true.</para>
         /// </summary>        
         public void Save()
         {
 #if !TEST
-            var path = Path.Combine(InitialParametersClass.ProgramDirectory.ToString(), "pellucid.console-options.toml");
-            MinimalTomlParser.SerializeToDisk(this, path);
+            try
+            {
+                MinimalTomlParser.SerializeToDisk(this, FilePath);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.Exception("Pellucid.Options", ex);
+                Debug.WriteException(this, ex, "Exception while saving Pellucid.Options to disk.");
+            }
 #endif
         }
 
         /// <summary>
-        /// Loads the options from a TOML file in the application directory.
+        /// Loads the options from a TOML file in the directory specified in the <see cref="FilePath"/> property.
         /// <para>If it exists, this file is automatically loaded when the application first starts.</para>
         /// </summary>
         /// <returns>An <see cref="Options"/> object.</returns>        
         private static Options Load()
         {
 #if !TEST
-            var path = Path.Combine(InitialParametersClass.ProgramDirectory.ToString(), "pellucid.console-options.toml");
-            if (File.Exists(path))
+            if (File.Exists(FilePath))
             {
                 try
                 {
-                    var options = MinimalTomlParser.DeserializeFromDisk<Options>(path);
+                    var options = MinimalTomlParser.DeserializeFromDisk<Options>(FilePath);
                     return options;
                 }
                 catch (Exception ex)
                 {
-                    ConsoleBase.WriteLine("Exception while loading Evands.Pellucid options from disk. Using the defaults instead.\n{0}", ex.ToString());
+                    Logger.LogWarning("Options", "Exception while loading Evands.Pellucid options from disk. Using the defaults instead.\n{0}", ex.ToString());
                     return new Options().WithDefaults();
                 }
             }
@@ -169,6 +220,24 @@ namespace Evands.Pellucid
             Suppressed = new List<string>();
             Allowed = new List<string>();
             return this;
+        }
+
+        /// <summary>
+        /// Handles auto saving and loading.
+        /// </summary>
+        /// <param name="status">The status of the program.</param>
+        private void HandleAutoLoad(eProgramStatusEventType status)
+        {
+            switch (status)
+            {
+                case eProgramStatusEventType.Stopping:
+                case eProgramStatusEventType.Paused:
+                    Save();
+                    break;
+                case eProgramStatusEventType.Resumed:
+                    Load();
+                    break;
+            }
         }
     }
 }

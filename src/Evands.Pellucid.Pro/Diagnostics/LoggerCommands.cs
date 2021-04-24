@@ -21,13 +21,14 @@
 using Crestron.SimplSharp;
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
+using Evands.Pellucid.Terminal.Formatting.Tables;
 
 namespace Evands.Pellucid.Diagnostics
 {
     /// <summary>
     /// Terminal commands for Logging.
     /// </summary>        
-    [Command("Logging", "Configures logging parameters.")]
+    [Command("Logging", 3, "Configures logging parameters.")]
     public class LoggerCommands : TerminalCommandBase
     {
         /// <summary>
@@ -163,6 +164,15 @@ namespace Evands.Pellucid.Diagnostics
                 {
                     Options.Instance.LogLevels = Options.Instance.LogLevels & ~LogLevels.Exception;
                 }
+
+                if ((int)Options.Instance.LogLevels > 1)
+                {
+                    Options.Instance.LogLevels = Options.Instance.LogLevels & ~LogLevels.None;
+                }
+                else
+                {
+                    Options.Instance.LogLevels = LogLevels.None;
+                }
             }
 
             PrintCurrentConfiguration();
@@ -173,30 +183,26 @@ namespace Evands.Pellucid.Diagnostics
         /// </summary>
         private void PrintCurrentConfiguration()
         {
-            ConsoleBase.WriteCommandResponse(
-                "Logging of {0} is {1}\r\n",
-                ConsoleBase.Colors.Debug.FormatText("Debug Messages"),
-                Options.Instance.LogLevels.Contains(LogLevels.Debug) ? ConsoleBase.Colors.BrightGreen.FormatText("Enabled") : ConsoleBase.Colors.BrightRed.FormatText("Disabled"));
+            var dis = "Disabled";
+            var ena = "Enabled";
 
-            ConsoleBase.WriteCommandResponse(
-                "Logging of {0} are {1}\r\n",
-                ConsoleBase.Colors.Notice.FormatText("Notices"),
-                Options.Instance.LogLevels.Contains(LogLevels.Notice) ? ConsoleBase.Colors.BrightGreen.FormatText("Enabled") : ConsoleBase.Colors.BrightRed.FormatText("Disabled"));
+            var table = Table.Create()
+                .AddRow("Debug Messages", Options.Instance.LogLevels.Contains(LogLevels.Debug) ? ena : dis)
+                .AddRow("Notices", Options.Instance.LogLevels.Contains(LogLevels.Notice) ? ena : dis)
+                .AddRow("Warnings", Options.Instance.LogLevels.Contains(LogLevels.Warning) ? ena : dis)
+                .AddRow("Errors", Options.Instance.LogLevels.Contains(LogLevels.Error) ? ena : dis)
+                .AddRow("Exceptions", Options.Instance.LogLevels.Contains(LogLevels.Exception) ? ena : dis)
+                .ForEachCellInColumn(1, c => c.Color = c.Contents == ena ? ConsoleBase.Colors.BrightGreen : ConsoleBase.Colors.BrightRed)
+                .FormatColumn(0, HorizontalAlignment.Right)
+                .FormatColumn(1, HorizontalAlignment.Left);
 
-            ConsoleBase.WriteCommandResponse(
-                "Logging of {0} are {1}\r\n",
-                ConsoleBase.Colors.Warning.FormatText("Warnings"),
-                Options.Instance.LogLevels.Contains(LogLevels.Warning) ? ConsoleBase.Colors.BrightGreen.FormatText("Enabled") : ConsoleBase.Colors.BrightRed.FormatText("Disabled"));
+            table.Columns[0][0].Color = ConsoleBase.Colors.Debug;
+            table.Columns[0][1].Color = ConsoleBase.Colors.Notice;
+            table.Columns[0][2].Color = ConsoleBase.Colors.Warning;
+            table.Columns[0][3].Color = ConsoleBase.Colors.Error;
+            table.Columns[0][4].Color = ConsoleBase.Colors.Exception;
 
-            ConsoleBase.WriteCommandResponse(
-                "Logging of {0} are {1}\r\n",
-                ConsoleBase.Colors.Error.FormatText("Errors"),
-                Options.Instance.LogLevels.Contains(LogLevels.Error) ? ConsoleBase.Colors.BrightGreen.FormatText("Enabled") : ConsoleBase.Colors.BrightRed.FormatText("Disabled"));
-
-            ConsoleBase.WriteCommandResponse(
-                "Logging of {0} are {1}\r\n",
-                ConsoleBase.Colors.Exception.FormatText("Exceptions"),
-                Options.Instance.LogLevels.Contains(LogLevels.Exception) ? ConsoleBase.Colors.BrightGreen.FormatText("Enabled") : ConsoleBase.Colors.BrightRed.FormatText("Disabled"));
+            ConsoleBase.WriteCommandResponse(table.ToString());
         }
     }
 }

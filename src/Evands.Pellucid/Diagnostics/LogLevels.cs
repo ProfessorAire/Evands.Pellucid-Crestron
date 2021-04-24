@@ -26,7 +26,7 @@ namespace Evands.Pellucid.Diagnostics
     /// Logging level types.
     /// </summary>
     [Flags]
-    public enum LogLevels : int
+    public enum LogLevels
     {
         /// <summary>
         /// No logging.
@@ -61,7 +61,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// All logging.
         /// </summary>
-        All = 63,
+        All = 62,
 
         /// <summary>
         /// All logging but debug.
