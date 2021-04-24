@@ -51,7 +51,7 @@ namespace Evands.Pellucid.Terminal.Formatting
             }
             else
             {
-                return FormatObjectForConsole(obj, 0);
+                return FormatObjectForConsole(obj, 0, 0);
             }
         }
 
@@ -104,8 +104,9 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// </summary>
         /// <param name="obj">The object to format details about.</param>
         /// <param name="subLevel">The number of levels into an object the printing has gone.</param>
+        /// <param name="minListPadding">The minimum number of characters to pad a list entry by.</param>
         /// <returns>A string.</returns>
-        private static string FormatObjectForConsole(object obj, int subLevel)
+        private static string FormatObjectForConsole(object obj, int subLevel, int minListPadding)
         {
             if (obj == null)
             {
@@ -114,23 +115,66 @@ namespace Evands.Pellucid.Terminal.Formatting
 
             var sb = new StringBuilder();
 
-            if (obj is string)
+            var objIsValue = obj.GetType().GetCType().IsValueType;
+            if (objIsValue || obj is string)
             {
-                sb.Append(ConsoleBase.Colors.DumpPropertyValue.FormatText(obj as string));
+                sb.Append(ConsoleBase.Colors.DumpPropertyValue.FormatText(obj.ToString()));
+                sb.Append(ConsoleBase.NewLine);
+                return sb.ToString();
+            }
+
+            var ienum = obj as System.Collections.IEnumerable;
+            if (ienum != null && !(obj.GetType() == typeof(string)))
+            {
+                var index = 0;
+                foreach (var o in ienum)
+                {
+                    if (index == 0)
+                    {
+                        sb.Append(FormatObjectForConsole(o, 0, minListPadding));
+                        index++;
+                    }
+                    else
+                    {
+                        sb.Append(' ', minListPadding);
+                        sb.Append(FormatObjectForConsole(o, 0, minListPadding));
+                        index++;
+                    }
+                }
+
+                if (index == 0)
+                {
+                    sb.Append(ConsoleBase.Colors.DumpPropertyValue.FormatText("<empty>"));
+                    sb.Append(ConsoleBase.NewLine);
+                }
+
                 return sb.ToString();
             }
 
             var icoll = obj as System.Collections.ICollection;
             if (icoll != null && !(obj.GetType() == typeof(string)))
             {
+                var index = 0;
                 foreach (var o in icoll)
                 {
-                    sb.Append(ConsoleBase.NewLine);
-                    sb.Append(' ', subLevel * 2);
-                    sb.Append(FormatObjectForConsole(o, subLevel + 1));
+                    if (index == 0)
+                    {
+                        sb.Append(FormatObjectForConsole(o, 0, minListPadding));
+                        index++;
+                    }
+                    else
+                    {
+                        sb.Append(' ', minListPadding);
+                        sb.Append(FormatObjectForConsole(o, 0, minListPadding));
+                        index++;
+                    }
                 }
-                
+
+                if (index == 0)
+                {
+                    sb.Append(ConsoleBase.Colors.DumpPropertyValue.FormatText("<empty>"));
                     sb.Append(ConsoleBase.NewLine);
+                }
 
                 return sb.ToString();
             }
@@ -138,14 +182,27 @@ namespace Evands.Pellucid.Terminal.Formatting
             var ilist = obj as System.Collections.IList;
             if (ilist != null)
             {
+                var index = 0;
                 foreach (var o in ilist)
                 {
-                    sb.Append(ConsoleBase.NewLine);
-                    sb.Append(' ', subLevel * 2);
-                    sb.Append(FormatObjectForConsole(o, subLevel + 1));
+                    if (index == 0)
+                    {
+                        sb.Append(FormatObjectForConsole(o, 0, minListPadding));
+                        index++;
+                    }
+                    else
+                    {
+                        sb.Append(' ', minListPadding);
+                        sb.Append(FormatObjectForConsole(o, 0, minListPadding));
+                        index++;
+                    }
                 }
 
-                sb.Append(ConsoleBase.NewLine);
+                if (index == 0)
+                {
+                    sb.Append(ConsoleBase.Colors.DumpPropertyValue.FormatText("<empty>"));
+                    sb.Append(ConsoleBase.NewLine);
+                }
 
                 return sb.ToString();
             }
@@ -194,20 +251,19 @@ namespace Evands.Pellucid.Terminal.Formatting
                 width2 = width;
             }
 
-            sb.Append(ConsoleBase.NewLine);
             sb.Append(' ', subLevel * 2);
             sb.Append(GetColorFormattedString(ConsoleBase.Colors.DumpObjectDetail, ot.FullName));
             sb.Append(ConsoleBase.NewLine);
-            sb.Append(' ', subLevel * 2);
+            sb.Append(' ', subLevel * 2 + minListPadding);
             sb.Append(GetColorFormattedString(ConsoleBase.Colors.DumpObjectChrome, string.Empty.PadLeft(ot.FullName.Length, '-')));
             sb.Append(ConsoleBase.NewLine);
 
             if (obj.ToString() != ot.FullName)
             {
-                sb.Append(' ', subLevel * 2);
+                sb.Append(' ', subLevel * 2 + minListPadding);
                 sb.Append(GetColorFormattedString(ConsoleBase.Colors.DumpObjectDetail, obj.ToString()));
                 sb.Append(ConsoleBase.NewLine);
-                sb.Append(' ', subLevel * 2);
+                sb.Append(' ', subLevel * 2 + minListPadding);
                 sb.Append(GetColorFormattedString(ConsoleBase.Colors.DumpObjectChrome, string.Empty.PadLeft(obj.ToString().Length, '-')));
                 sb.Append(ConsoleBase.NewLine);
             }
@@ -219,7 +275,7 @@ namespace Evands.Pellucid.Terminal.Formatting
                     var isValueType = entry.Value.GetType().GetCType().IsValueType;
                     if (isValueType)
                     {
-                        sb.Append(' ', subLevel * 2);
+                        sb.Append(' ', subLevel * 2 + minListPadding);
                         sb.AppendFormat(
                             "{0}=    {1}",
                             GetColorFormattedString(ConsoleBase.Colors.DumpPropertyName, entry.Key.PadRight(width)),
@@ -228,17 +284,17 @@ namespace Evands.Pellucid.Terminal.Formatting
                     }
                     else if (entry.Value != null && (entry.Value.ToString() == entry.Value.GetType().GetCType().FullName || !entry.Value.GetType().GetCType().IsValueType))
                     {
-                        sb.Append(' ', subLevel * 2);
+                        sb.Append(' ', subLevel * 2 + minListPadding);
                         sb.AppendFormat("{0}=    ", GetColorFormattedString(ConsoleBase.Colors.DumpPropertyName, entry.Key.PadRight(width)));
-                        sb.Append(FormatObjectForConsole(entry.Value, subLevel + 1));
-                    }                    
+                        sb.Append(FormatObjectForConsole(entry.Value, subLevel + 1, subLevel * 2 + minListPadding + width + 5));
+                    }
                     else
                     {
-                        sb.Append(' ', subLevel * 2);
+                        sb.Append(' ', subLevel * 2 + minListPadding);
                         sb.AppendFormat(
                             "{0}=    {1}",
                             GetColorFormattedString(ConsoleBase.Colors.DumpPropertyName, entry.Key.PadRight(width)),
-                            GetColorFormattedString(ConsoleBase.Colors.DumpPropertyValue, FormatObjectForConsole(entry.Value != null ? entry.Value : "<null>", subLevel + 1)));
+                            GetColorFormattedString(ConsoleBase.Colors.DumpPropertyValue, FormatObjectForConsole(entry.Value != null ? entry.Value : "<null>", subLevel + 1, subLevel * 2 + minListPadding + width + 5)));
                         sb.Append(ConsoleBase.NewLine);
                     }
                 }
@@ -248,25 +304,35 @@ namespace Evands.Pellucid.Terminal.Formatting
             {
                 foreach (var entry in staticProps)
                 {
-                    if (entry.Value != null && entry.Value.ToString() == entry.Value.GetType().GetCType().FullName)
+                    var isValueType = entry.Value.GetType().GetCType().IsValueType;
+                    if (isValueType)
                     {
-                        sb.Append(' ', subLevel * 2);
-                        sb.AppendFormat("{0}=", GetColorFormattedString(ConsoleBase.Colors.DumpPropertyName, entry.Key.PadRight(width)));
-                        sb.Append(FormatObjectForConsole(entry.Value, subLevel + 1));
-                    }
-                    else
-                    {
-                        sb.Append(' ', subLevel * 2);
+                        sb.Append(' ', subLevel * 2 + minListPadding);
                         sb.AppendFormat(
                             "{0}=    {1}",
                             GetColorFormattedString(ConsoleBase.Colors.DumpPropertyName, entry.Key.PadRight(width)),
-                            GetColorFormattedString(ConsoleBase.Colors.DumpPropertyValue, FormatObjectForConsole(entry.Value != null ? entry.Value.ToString() : "<null>", subLevel + 1)));
+                            GetColorFormattedString(ConsoleBase.Colors.DumpPropertyValue, entry.Value != null ? entry.Value.ToString() : "<null>"));
+                        sb.Append(ConsoleBase.NewLine);
+                    }
+                    else if (entry.Value != null && (entry.Value.ToString() == entry.Value.GetType().GetCType().FullName || !entry.Value.GetType().GetCType().IsValueType))
+                    {
+                        sb.Append(' ', subLevel * 2 + minListPadding);
+                        sb.AppendFormat("{0}=    ", GetColorFormattedString(ConsoleBase.Colors.DumpPropertyName, entry.Key.PadRight(width)));
+                        sb.Append(FormatObjectForConsole(entry.Value, subLevel + 1, subLevel * 2 + minListPadding + width + 5));
+                    }
+                    else
+                    {
+                        sb.Append(' ', subLevel * 2 + minListPadding);
+                        sb.AppendFormat(
+                            "{0}=    {1}",
+                            GetColorFormattedString(ConsoleBase.Colors.DumpPropertyName, entry.Key.PadRight(width)),
+                            GetColorFormattedString(ConsoleBase.Colors.DumpPropertyValue, FormatObjectForConsole(entry.Value != null ? entry.Value : "<null>", subLevel + 1, subLevel * 2 + minListPadding + width + 5)));
                         sb.Append(ConsoleBase.NewLine);
                     }
                 }
             }
 
-            sb.Append(' ', subLevel * 2);
+            sb.Append(' ', subLevel * 2 + minListPadding);
             sb.Append(GetColorFormattedString(ConsoleBase.Colors.DumpObjectChrome, string.Empty.PadLeft(ot.FullName.Length, '-')));
             sb.Append(ConsoleBase.NewLine);
 
