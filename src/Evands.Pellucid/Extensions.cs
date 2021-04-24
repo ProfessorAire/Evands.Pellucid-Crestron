@@ -32,6 +32,11 @@ namespace Evands.Pellucid
         /// <param name="obj">The object to dump to the console.</param>
         public static void Dump(this object obj)
         {
+            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
+            {
+                ConsoleBase.WriteLine();
+            }
+
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj));
         }
 
