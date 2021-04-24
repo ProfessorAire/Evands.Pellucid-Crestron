@@ -44,7 +44,7 @@ namespace Evands.Pellucid.Internal
         /// </summary>        
         static MinimalTomlParser()
         {
-            regex = new Regex("^(?<key>[A-Za-z0-9_\\.-]*) ?= ?(?:[\"']?(?<value>[^\\[\\r\\n\"']*)[\"']?)?(?:\\[ ?(?<array>[^\\]]*?) ?\\])?$", RegexOptions.Multiline | RegexOptions.Compiled);
+            regex = new Regex("^\\W?(?<key>[A-Za-z0-9_\\.-]*) ?= ?(?:[\"']?(?<value>[^\\[\\r\\n\"']*)[\"']?)?(?:\\[ ?(?<array>[^\\]]*?) ?\\])?$", RegexOptions.Multiline | RegexOptions.Compiled);
         }
 
         /// <summary>
