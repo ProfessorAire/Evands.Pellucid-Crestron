@@ -56,6 +56,9 @@ namespace Evands.Pellucid.ProDemo
                 // Setup the static instance reference for the control system.
                 Instance = this;
 
+                // Setup the path the options are saved to and loaded from.
+                Options.FilePath = "/USER/pellucid.console-options.toml";
+
                 // Setup the global command(s).
                 var appCommand = new GlobalCommand("app", "Application commands.", Access.Programmer);
                 var regResult = appCommand.AddToConsole();
