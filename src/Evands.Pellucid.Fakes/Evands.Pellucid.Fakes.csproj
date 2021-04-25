@@ -68,6 +68,7 @@
     <Compile Include="Crestron\SimplSharp\CrestronIO\FileNotFoundException.cs" />
     <Compile Include="Crestron\SimplSharp\CrestronIO\InvalidDirectoryLocationException.cs" />
     <Compile Include="Crestron\SimplSharp\CrestronIO\Path.cs" />
+    <Compile Include="Crestron\SimplSharp\eCrestronSeries.cs" />
     <Compile Include="Crestron\SimplSharp\eProgramStatusEventType.cs" />
     <Compile Include="Crestron\SimplSharp\ErrorLog.cs" />
     <Compile Include="Crestron\SimplSharp\InitialParametersClass.cs" />

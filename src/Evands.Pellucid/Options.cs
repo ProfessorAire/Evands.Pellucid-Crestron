@@ -38,14 +38,14 @@ namespace Evands.Pellucid
         private static string fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
 
         /// <summary>
-        /// Backing field for the <see cref="AutoSave"/> property.
-        /// </summary>
-        private bool autoSave = true;
-
-        /// <summary>
         /// Backing field for the <see cref="Instance"/> property.
         /// </summary>
         private static Options instance;
+
+        /// <summary>
+        /// Backing field for the <see cref="AutoSave"/> property.
+        /// </summary>
+        private bool autoSave = true;
 
         /// <summary>
         /// Initializes static members of the <see cref="Options"/> class.

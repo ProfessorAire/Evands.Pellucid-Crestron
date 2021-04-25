@@ -96,7 +96,7 @@ namespace Evands.Pellucid.ProDemo
         /// </summary>
         [Verb("table", 3, "Prints a sample table to the console.")]
         [Sample("example table", "Prints a sample table with automatic cell widths.")]
-        [DefaultVerb()]
+        [DefaultVerb]
         public void SampleTable()
         {
             SampleTable(0);
@@ -105,6 +105,7 @@ namespace Evands.Pellucid.ProDemo
         /// <summary>
         /// Prints a sample table to the console.
         /// </summary>
+        /// <param name="minWidth">The minimum width the table can print to.</param>
         [Verb("table", 3, "Prints a sample table to the console.")]
         [Sample("example table --min 15", "Prints a sample table with a minimum cell width of 15.")]
         public void SampleTable(

@@ -20,6 +20,7 @@
 
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
+using Evands.Pellucid.Terminal.Formatting.Tables;
 
 namespace Evands.Pellucid.Diagnostics
 {
@@ -268,13 +269,21 @@ namespace Evands.Pellucid.Diagnostics
         [Sample("debug config", "Lists the current debug messaging status.")]
         public void CurrentStatus()
         {
-            ConsoleBase.WriteCommandResponse(
-                ConsoleBase.Colors.Progress,
-                "Timestamps are {0}.\r\n24 Hour Timestamps are {0}.\r\n",
-                Options.Instance.UseTimestamps ? "enabled" : "disabled",
-                Options.Instance.Use24HourTime ? "enabled" : "disabled");
+            var en = "Enabled";
+            var di = "Disabled";
+            var t = Table.Create()
+                .WithHeaders("Feature", "Status")
+                .FormatHeaders(HorizontalAlignment.Center)
+                .AddRow("Timestamps", Options.Instance.UseTimestamps ? en : di)
+                .AddRow("24 Hour Timestamps", Options.Instance.Use24HourTime ? en : di)
+                .AddRow("Debug Levels", Options.Instance.DebugLevels.ToString())
+                .FormatColumn(0, ConsoleBase.Colors.Progress, HorizontalAlignment.Right)
+                .FormatColumn(1, HorizontalAlignment.Left)
+                .ForEachCellInColumn(1, c => c.Color = c.Contents == en ? ConsoleBase.Colors.BrightGreen : ConsoleBase.Colors.BrightRed);
 
-            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "Debug Levels = '{0}'\r\n", Options.Instance.DebugLevels);
+            t.Rows[2][1].Color = ConsoleBase.Colors.Warning;
+
+            ConsoleBase.WriteCommandResponse(t.ToString());
        }
 
         /// <summary>
