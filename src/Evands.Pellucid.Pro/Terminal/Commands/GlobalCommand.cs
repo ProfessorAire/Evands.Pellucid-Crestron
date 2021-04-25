@@ -43,7 +43,7 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <summary>
         /// The regex to use for parsing parameters from console text commands.
         /// </summary>
-        private static Regex parametersRegex = new Regex("(?:-{2}(?:(?<name>\\w+)(?: +\"?(?<value>[^-\\r\\n\"]*))?\"?)){0,1}(?:-{1}(?<shortName>[a-zA-Z]+)){0,1}", RegexOptions.Compiled);
+        private static Regex parametersRegex = new Regex("-{2}(?:(?<name>\\w+)(?: +\"(?<value>[^\"]*)\"| +(?<value2>[^-][^ ]*)){0,1})|(?<!-)(?:-{1}(?<shortName>[a-zA-Z0-9]+))", RegexOptions.Compiled);
 
         /// <summary>
         /// Dictionary of <see cref="TerminalCommandBase"/> objects registered with this command.
@@ -333,10 +333,21 @@ namespace Evands.Pellucid.Terminal.Commands
                     {
                         if (result[i].Success && result[i].Groups["name"].Length > 0)
                         {
-                            var val = result[i].Groups["name"].Value.ToLower().Trim();
-                            if (!operands.ContainsKey(val))
+                            var key = result[i].Groups["name"].Value.ToLower().Trim();
+                            if (!operands.ContainsKey(key))
                             {
-                                operands.Add(val, result[i].Groups["value"].Value);
+                                if (!string.IsNullOrEmpty(result[i].Groups["value"].Value))
+                                {
+                                operands.Add(key, result[i].Groups["value"].Value);
+                                }
+                                else if (!string.IsNullOrEmpty(result[i].Groups["value2"].Value))
+                                {
+                                    operands.Add(key, result[i].Groups["value2"].Value);
+                                }
+                                else
+                                {
+                                    operands.Add(key, string.Empty);
+                                }
                             }
                             else
                             {

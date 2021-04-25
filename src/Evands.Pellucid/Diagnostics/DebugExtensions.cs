@@ -1,5 +1,5 @@
 ﻿#region copyright
-// <copyright file="DefaultVerbAttribute.cs" company="Christopher McNeely">
+// <copyright file="DebugExtensions.cs" company="Christopher McNeely">
 // The MIT License (MIT)
 // Copyright (c) Christopher McNeely
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,21 +18,22 @@
 // </copyright>
 #endregion
 
-using System;
-
-namespace Evands.Pellucid.Terminal.Commands.Attributes
+namespace Evands.Pellucid.Diagnostics
 {
     /// <summary>
-    /// Declares that a class should be treated as a console command.
+    /// Provides extension methods for easily checking the <see cref="DebugLevels"/> enumeration for flags.
     /// </summary>
-    [global::System.AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class DefaultVerbAttribute : Attribute
+    public static class DebugExtensions
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultVerbAttribute"/> class.
+        /// Determines if the specified flag is present in the <see cref="DebugLevels"/> enumeration.
         /// </summary>
-        public DefaultVerbAttribute()
+        /// <param name="levels">The object to check for flags.</param>
+        /// <param name="flagToFind">The flag to look for.</param>
+        /// <returns>A true or false value indicating the presence of the flag.</returns>
+        public static bool Contains(this DebugLevels levels, DebugLevels flagToFind)
         {
+            return (levels | flagToFind) == levels;
         }
     }
 }

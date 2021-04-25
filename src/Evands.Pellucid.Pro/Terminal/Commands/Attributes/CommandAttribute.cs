@@ -111,7 +111,7 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
         {
             get { return this.alias; }
 
-            set
+            private set
             {
                 if (alias != value)
                 {
