@@ -28,7 +28,7 @@ The [Releases](https://github.com/ProfessorAire/Evands.Pellucid-Crestron/release
 
 ### Options
 
-There are a variety of options available for the `ConsoleBase`, `Debug`, and `Logger` classes, all located in the `Evands.Pellucid.Options` class. These options are automatically saved and loaded from the file `pellucid.console-options.toml` in the application directory. In this manner your options are persisted across reboots. If you manually set any of these options in your code your selections will take effect after the program reboots, overriding whatever values were loaded from the configuration file.
+There are a variety of options available for the `ConsoleBase`, `Debug`, and `Logger` classes, all located in the `Evands.Pellucid.Options` class. Starting with `v1.1.0` these are no longer saved in the application directory. They are optionally saved and loaded from the file `pellucid.console-options#.toml` (where `#` == the application directory) in the `\USER\Pellucid` directory. In this manner your options are persisted across reboots. If you manually set any of these options in your code your selections will take effect after the program reboots, overriding whatever values were loaded from the configuration file.
 
 This also means that it's possible to provide a default configuration file with your program. Using your preferred method of configuration transformation you can create a different version for `Debug` and `Release` configurations and load them automatically with the code to the processor.
 
@@ -42,6 +42,7 @@ The available options are:
 | `DebugLevels`           | `DebugLevels`  | `DebugLevels.All` | Flagged enumeration indicating what debug messages should be printed.                                                                           |
 | `Suppressed`            | `List<string>` | Empty list        | List of strings matching suppressed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Debug` class methods, instead of the `Options` class. |
 | `Allowed`               | `List<string>` | Empty list        | List of strings matching allowed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Logger` class methods, instead of directly through the `Options` class.    |
+|`AutoSave`|`bool`|`true`| Indicates whether or not the file will be auto-saved on program shutdown.
 
 The default values saved to disk will look like:
 
@@ -53,6 +54,7 @@ debugging-shortTimestamps = "True"
 debugging-levels = "All"
 suppressed = [  ]
 allowed = [  ]
+autosave = "True"
 ```
 
 An alternative configured for release, might look like:
@@ -65,7 +67,10 @@ debugging-shortTimestamps = "True"
 debugging-levels = [ "Progress", "Notice", "Uncategorized" ]
 suppressed = [ "SomeClassName", "SomeOtherClassName" ]
 allowed = [  ]
+autosave = "True"
 ```
+
+To change the location that the file is loaded from you have to set the `static` property `FilePath` on the `Evands.Pellucid.Options` class. This defaults to the `\USER\Pellucid\pellucid.console-options#.toml` (where `#` is the application number).
 
 ### `Evands.Pellucid.ConsoleBase` and `Evands.Pellucid.ProConsole`
 
