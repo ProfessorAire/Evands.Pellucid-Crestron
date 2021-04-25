@@ -7,6 +7,13 @@ namespace Crestron.SimplSharp
 {
     public static class CrestronEnvironment
     {
+        static CrestronEnvironment()
+        {
+            ProgramCompatibility = eCrestronSeries.Series3;
+        }
+
+        public static eCrestronSeries ProgramCompatibility { get; set; }
+
         public static DateTime GetLocalTime()
         {
             return DateTime.Now;

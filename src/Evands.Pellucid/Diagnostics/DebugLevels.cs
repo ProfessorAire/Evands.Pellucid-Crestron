@@ -83,21 +83,4 @@ namespace Evands.Pellucid.Diagnostics
         /// </summary>
         AllButDebug = 508
     }
-
-    /// <summary>
-    /// Provides extension methods for easily checking the <see cref="DebugLevels"/> enumeration for flags.
-    /// </summary>
-    public static class DebugLevelsExtensions
-    {
-        /// <summary>
-        /// Determines if the specified flag is present in the <see cref="DebugLevels"/> enumeration.
-        /// </summary>
-        /// <param name="levels">The object to check for flags.</param>
-        /// <param name="flagToFind">The flag to look for.</param>
-        /// <returns>A true or false value indicating the presence of the flag.</returns>
-        public static bool Contains(this DebugLevels levels, DebugLevels flagToFind)
-        {
-            return (levels | flagToFind) == levels;
-        }
-    }
 }
