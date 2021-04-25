@@ -34,10 +34,10 @@ This library is for Crestron S# Pro programs and libraries ONLY and is not compa
         <tags>Crestron S# S#Pro Simpl# Simpl</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.7">
-                <dependency id="Evands.Pellucid" version="1.0.0" />
+                <dependency id="Evands.Pellucid" version="1.1.0" />
             </group>
             <group targetFramework="NETFramework3.5-CompactFramework">
-                <dependency id="Evands.Pellucid" version="1.0.0" />
+                <dependency id="Evands.Pellucid" version="1.1.0" />
             </group>
         </dependencies>
     </metadata>
