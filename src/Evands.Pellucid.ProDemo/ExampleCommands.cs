@@ -148,6 +148,7 @@ namespace Evands.Pellucid.ProDemo
             t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(8, "Item Name H", true));
             t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(9, "Eye", true, "Item I", "I", "Item Eye"));
             t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(10, "Jay", true));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(11, null, false, null));
 
             var nc = new Evands.Pellucid.ProDemo.Sample.NestedSample("Nested Container", t);
 

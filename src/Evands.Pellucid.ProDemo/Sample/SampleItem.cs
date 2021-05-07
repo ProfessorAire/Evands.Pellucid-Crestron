@@ -39,7 +39,10 @@ namespace Evands.Pellucid.ProDemo.Sample
             Id = id;
             Name = name;
             IsActive = isActive;
-            Nicknames = new List<string>(nicknames);
+            if (nicknames != null)
+            {
+                Nicknames = new List<string>(nicknames);
+            }
         }
 
         /// <summary>
