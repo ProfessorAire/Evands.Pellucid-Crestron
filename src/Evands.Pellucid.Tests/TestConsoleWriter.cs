@@ -14,6 +14,15 @@ namespace Evands.Pellucid
 
         public List<string> Messages { get; set; }
 
+        public bool Contains(string value)
+        {
+            return Messages.Any(m => m.Contains(value));
+        }
+
+        public string First() { return Messages.FirstOrDefault(); }
+
+        public string Last() { return Messages.LastOrDefault(); }
+
         public void Write(string message, params object[] args)
         {
             if (args != null && args.Length > 0)

@@ -22,6 +22,7 @@ using Evands.Pellucid;
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
 using Evands.Pellucid.Terminal.Formatting.Tables;
+using System;
 
 namespace Evands.Pellucid.ProDemo
 {
@@ -153,6 +154,20 @@ namespace Evands.Pellucid.ProDemo
             var nc = new Evands.Pellucid.ProDemo.Sample.NestedSample("Nested Container", t);
 
             nc.Dump();
+        }
+
+        [Verb("WriteEx", "wex", "Writes an exception to the console.")]
+        public void WriteEx()
+        {
+            var exString = "Formatted {0} string.";
+            try
+            {
+                Evands.Pellucid.Diagnostics.Debug.WriteLine(string.Format(exString));
+            }
+            catch (Exception ex)
+            {
+                Evands.Pellucid.Diagnostics.Debug.WriteException(this, ex, "Exception encountered.");
+            }
         }
     }
 }
