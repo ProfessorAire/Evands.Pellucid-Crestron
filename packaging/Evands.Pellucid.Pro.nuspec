@@ -13,23 +13,7 @@ This library is for Crestron S# Pro programs and libraries ONLY and is not compa
         <license type="expression">MIT</license>
         <icon>images\icon.png</icon>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <releaseNotes>
-* Feature (#5) Add the ability to output a table to the console.
-* Feature (#7) Add support for default commands without verbs.
-* Feature (#9) Add alias support for commands and verbs.
-* Feature (#10) Make the program slot header parameter customizable and optional.
-* Feature (#24) Added the ability to customize the file the options are saved to, as well as whether the options are auto-saved.
-* Fix (#14) Text written to debug with braces doesn't print.
-* Fix (#18) Console commands with hyphens in the values of operands are incorrectly parsed.
-* Fix (#20) WriteDebugLine doesn't properly add a debugging header.
-* Fix (#21) Debug methods `ForceWrite` and `ForceWriteLine` are public.
-* Fix (#24) The ProgLoad command blows away the TOML options file.
-* Fix (#26) The `Dump()` method does not use CRLF on 4 Series Processors.
-* As part of #26 the `Dump()` method has been revised and formatting improved.
-* Various console commands were updated to use Tables.
-* Additional example console commands were added.
-* Example console commands were updated to use new features.
-        </releaseNotes>
+        <releaseNotes>https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases</releaseNotes>
         <copyright>Christopher McNeely 2021</copyright>
         <tags>Crestron S# S#Pro Simpl# Simpl</tags>
         <dependencies>
