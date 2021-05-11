@@ -31,7 +31,7 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
         /// <summary>
         /// Backing field for the <see cref="Alias"/> property.
         /// </summary>
-        private string alias = string.Empty;
+        private string alias;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
@@ -41,7 +41,7 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
         /// <exception cref="ArgumentNullException">Thrown when the name parameter is null or an empty string.</exception>
         public CommandAttribute(string name, string help)
             : this(name, 0, help)
-        {            
+        {
         }
 
         /// <summary>

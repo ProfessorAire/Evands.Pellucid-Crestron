@@ -861,11 +861,12 @@ namespace Evands.Pellucid.Terminal.Commands
             sb.Append(FormatHelpTextMethod("-----"));
             sb.Append(ConsoleBase.NewLine);
 
-            var nameWidth = commands.Max(c => c.Key.Length);
+            var nameWidth = commands.Max(c => Helpers.GetCommandNameHelpFromAttribute(c.Value).Length);
 
             foreach (var command in commands)
             {
-                sb.Append(FormatHelpCommandMethod(command.Key.PadRight(nameWidth)));
+                var name = Helpers.GetCommandNameHelpFromAttribute(command.Value);
+                sb.Append(FormatHelpCommandMethod(name.PadRight(nameWidth)));
                 sb.Append(' ', 6);
                 var help = Helpers.GetCommandHelpFromAttribute(command.Value);
                 sb.Append(FormatHelpTextMethod(string.IsNullOrEmpty(help) ? "No help is available for this command." : help));
