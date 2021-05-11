@@ -17,6 +17,8 @@ namespace Evands.Pellucid.Terminal.Commands
 
         private TestCommand command;
 
+        private TestConsoleWriter writer;
+
         public TerminalCommandTests()
         {
             //
@@ -60,6 +62,10 @@ namespace Evands.Pellucid.Terminal.Commands
              global = null;
              command = null;
              CrestronConsole.Messages.Length = 0;
+             if (writer != null)
+             {
+                 ConsoleBase.UnregisterConsoleWriter(writer);
+             }
          }
 
         #region Additional test attributes
@@ -153,6 +159,18 @@ namespace Evands.Pellucid.Terminal.Commands
             global.ExecuteCommand("tc2");
 
             Assert.IsTrue(CrestronConsole.Messages.ToString().Contains(expected));
+        }
+
+        [TestMethod]
+        public void CommandAlias_Shows_InTopLevelHelp()
+        {
+            var expected = "(Test)";
+            Options.Instance.ColorizeConsoleOutput = false;
+            writer = new TestConsoleWriter();
+            ConsoleBase.RegisterConsoleWriter(writer);
+            global.ExecuteCommand("-h");
+            Assert.IsTrue(writer.Contains(expected));
+            Options.Instance.ColorizeConsoleOutput = true;
         }
     }
 }
