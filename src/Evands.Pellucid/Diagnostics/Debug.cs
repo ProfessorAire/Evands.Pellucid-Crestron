@@ -517,32 +517,35 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Exception) && IsValid(obj))
             {
+                var sb = new StringBuilder();
+                if (!isLastWriteALine)
+                {
+                    isLastWriteALine = true;
+                    ConsoleBase.WriteLine();
+                }
+
                 var headerColors = GetHeaderColors(obj);
                 var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
 
                 message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Exception, message, args);
 
-                var sb = new StringBuilder();
-
-                if (!isLastWriteALine)
-                {
-                    sb.Append("\r\n");
-                }
+                sb.AppendFormat("{0}{1}", header, message);
 
                 int exceptionIndex = 0;
+
+                var exFormat = ConsoleBase.Colors.Exception;
 
                 while (ex != null)
                 {
                     exceptionIndex++;
-                    sb.AppendFormat("--------Exception {0}--------{1}", exceptionIndex, ConsoleBase.NewLine);
-                    sb.AppendFormat("{0}{1}", ex.ToString(), ConsoleBase.NewLine);
-                    sb.AppendFormat("-----------------------------{0}", ConsoleBase.NewLine);
-                    sb.Append(ConsoleBase.NewLine);
-
+                    sb.Append(exFormat.FormatText(false, "{1}--------Exception {0}--------{1}", exceptionIndex, ConsoleBase.NewLine));
+                    sb.AppendFormat("{0}", ex.ToString().Replace(Environment.NewLine, ConsoleBase.NewLine));
+                    sb.Append(exFormat.FormatText(true,"{0}-----------------------------", ConsoleBase.NewLine));
                     ex = ex.InnerException;
                 }
 
-                ForceWriteLine("{0}{1}", header, message);
+                sb.Append(ConsoleBase.NewLine);
+
                 ForceWriteLine(
                     Formatters.GetColorFormattedString(ConsoleBase.Colors.Exception, sb.ToString()));
             }
