@@ -30,6 +30,9 @@ function Get-LibVersion {
     return [string]$ver.Replace("`"", "")
 }
 
+$libContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj"
+$libProContents  = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj"
+
 "Creating new Visual Studio DTE Object"
 $dte = New-Object -ComObject VisualStudio.DTE.9.0
 
@@ -42,12 +45,7 @@ $dte.Solution.Open($path)
 "Cleaning the solution."
 $dte.Solution.SolutionBuild.Clean($true)
 
-foreach ($item in $dte.Solution.SolutionBuild.SolutionConfigurations) {
-    if ($item.Name -eq "Release") {
-        $item.Activate()
-        break
-    }
-}
+$dte.Solution.SolutionBuild.SolutionConfigurations["Release"].Activate()
 
 "Active Configuration is " + $dte.Solution.SolutionBuild.ActiveConfiguration.Name
 if ($dte.Solution.SolutionBuild.ActiveConfiguration.Name -eq "Release") {
@@ -97,6 +95,9 @@ foreach ($proj in $dte.Solution.Projects) {
 $dte.Solution.Close($false)
 $dte.Quit()
 
+Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj" -Value $libContents
+Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj" -Value $libProContents
+
 $exitCode = 0
 
 if ($libVersion -eq "" -or $proVersion -eq "") {
@@ -120,11 +121,17 @@ else {
     }
     else {
         "Creating Nuget Package for Evands.Pellucid.Pro"
-        nuget pack Evands.Pellucid.Pro.nuspec -Version $ver2 -OutputDirectory ./releases
+        (Get-Content -Path "Evands.Pellucid.Pro.nuspec") -Replace "depVer", $ver1 | Set-Content -Path "Evands.Pellucid.Pro.temp.nuspec"
+        nuget pack Evands.Pellucid.Pro.temp.nuspec -Version $ver2 -OutputDirectory ./releases
         if ([System.IO.File]::Exists("$PSScriptRoot/releases/Evands.Pellucid.Pro.$ver2.nupkg") -eq $false)
         {
             Write-Warning "Unable to create nuget package for Evands.Pellucid.Pro"
             $exitCode = 1003
+        }
+
+        if ([System.IO.File]::Exists("$PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec") -eq $true)
+        {
+            Remove-Item -Path "Evands.Pellucid.Pro.temp.nuspec"
         }
     }
 }

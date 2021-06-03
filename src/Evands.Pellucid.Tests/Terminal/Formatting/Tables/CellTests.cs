@@ -218,5 +218,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
             Assert.IsTrue(UnderTest.GetLine(0, width, false) == text.PadLeft(width));
         }
+
+        [TestMethod]
+        public void SetNullValue_SetsCellContents_ToEmptyString()
+        {
+            UnderTest.Contents = null;
+            Assert.IsTrue(UnderTest.Contents == string.Empty);
+        }
     }
 }
