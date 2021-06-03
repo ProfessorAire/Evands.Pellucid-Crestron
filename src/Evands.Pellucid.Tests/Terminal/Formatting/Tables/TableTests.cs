@@ -736,5 +736,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var actual = t.ToString(17);
             Assert.IsTrue(actual == expected);
         }
+
+        [TestMethod]
+        public void ToString_WithNullCellContent_Prints_Correctly()
+        {
+            var t = Table.Create().AddRow((string)null, (string)null);
+            t.ToString();
+        }
     }
 }

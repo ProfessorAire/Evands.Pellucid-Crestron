@@ -5,6 +5,7 @@
 
 # Custom Release Files
 packaging/releases
+*.temp.nuspec
 
 # Custom Testing Files
 testing/*.trx

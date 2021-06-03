@@ -105,7 +105,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             {
                 if (contents != value)
                 {
-                    contents = value;
+                    contents = value ?? string.Empty;
                     lines = null;
                 }
             }
