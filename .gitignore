@@ -5,11 +5,13 @@
 
 # Custom Release Files
 packaging/releases
+.releases
 *.temp.nuspec
 
 # Custom Testing Files
 testing/*.trx
 testing/**/
+testing/coverageResults.xml
 
 # User-specific files
 *.rsuser

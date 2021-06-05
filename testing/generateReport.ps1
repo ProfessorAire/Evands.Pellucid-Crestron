@@ -53,8 +53,6 @@ if ($null -ne (Get-Item $resultPath -ErrorAction SilentlyContinue)) {
 & $openCover "-target:$testExe" "-targetargs:/testContainer:$sourcePath /resultsfile:$resultPath" -log:all -output:$coveragePath -filter:"+[Evands*]* -[Evands.Pellucid.Tests*]* -[Evands.Pellucid.Fakes*]*"
 & $reportGenerator -reports:$coveragePath -targetdir:$coverageHtmlPath -reporttypes:Html
 
-Remove-Item $coveragePath
-
 $dir = Get-ChildItem $PSScriptRoot -Directory
 
 foreach($item in $dir)
