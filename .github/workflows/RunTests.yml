@@ -22,7 +22,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - run: pwsh ".\$GITHUB_WORKSPACE\scripts\buildProject.ps1 -Mode Test"
+      - run: .\$GITHUB_WORKSPACE\scripts\buildProject.ps1 -Mode Test
       - uses: actions/upload-artifact@v2
         with:
           name: test-output
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: test-output
-      - run: pwsh ".\$GITHUB_WORKSPACE\testing\generateReport.ps1"
+      - run: .\$GITHUB_WORKSPACE\testing\generateReport.ps1
       - uses: actions/upload-artifact@v2
         with:
           name: coverage
