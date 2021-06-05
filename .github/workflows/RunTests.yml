@@ -22,15 +22,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - run: scripts/buildProject.ps1 -Mode Test
+      - run: $GITHUB_WORKSPACE/scripts/buildProject.ps1 -Mode Test
       - uses: actions/upload-artifact@v2
         with:
           name: test-output
           path: |
-            src/Evands.Pellucid/bin/Test/Evands.Pellucid.dll
-            src/Evands.Pellucid.Pro/bin/Test/Evands.Pellucid.Pro.dll
-            src/Evands.Pellucid.Tests/bin/Test/Evands.Pellucid.Tests.dll
-      
+            $GITHUB_WORKSPACE/src/Evands.Pellucid/bin/Test/Evands.Pellucid.dll
+            $GITHUB_WORKSPACE/src/Evands.Pellucid.Pro/bin/Test/Evands.Pellucid.Pro.dll
+            $GITHUB_WORKSPACE/src/Evands.Pellucid.Tests/bin/Test/Evands.Pellucid.Tests.dll      
   
   testCoverageReport:
     runs-on: self-hosted
@@ -40,4 +39,4 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: test-output
-      - run: testing/generateReport.ps1
+      - run: $GITHUB_WORKSPACE/testing/generateReport.ps1
