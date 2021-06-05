@@ -22,16 +22,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - run: $GITHUB_WORKSPACE/scripts/buildProject.ps1 -Mode Test
+      - run: pwsh ".\$GITHUB_WORKSPACE\scripts\buildProject.ps1 -Mode Test"
       - uses: actions/upload-artifact@v2
         with:
           name: test-output
           path: |
-            $GITHUB_WORKSPACE/src/Evands.Pellucid/bin/Test/Evands.Pellucid.dll
-            $GITHUB_WORKSPACE/src/Evands.Pellucid.Pro/bin/Test/Evands.Pellucid.Pro.dll
-            $GITHUB_WORKSPACE/src/Evands.Pellucid.Tests/bin/Test/Evands.Pellucid.Tests.dll      
+            $GITHUB_WORKSPACE\src\Evands.Pellucid/bin/Test/Evands.Pellucid.dll
+            $GITHUB_WORKSPACE\src\Evands.Pellucid.Pro/bin/Test/Evands.Pellucid.Pro.dll
+            $GITHUB_WORKSPACE\src\Evands.Pellucid.Tests/bin/Test/Evands.Pellucid.Tests.dll      
   
-  testCoverageReport:
+  generateReport:
     runs-on: self-hosted
     needs: build
     steps:
@@ -39,4 +39,32 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: test-output
-      - run: $GITHUB_WORKSPACE/testing/generateReport.ps1
+      - run: pwsh ".\$GITHUB_WORKSPACE\testing\generateReport.ps1"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: |
+            $GITHUB_WORKSPACE\testing\coverage\index.html
+            $GITHUB_WORKSPACE\testing\coverageResults.xml
+          
+  createCoverageBadges:
+    runs-on: self-hosted
+    needs: generateReport
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: coverage
+      - name: GetColor
+        run: |
+          $info = .\$GITHUB_WORKSPACE\testing\getCoverageValues.ps1
+          Write-Output "::set-env name=COLOR::$info[1]"
+      - uses: simon-k/dotnet-code-coverage-badge@v1.0.0
+        id: create_coverage_badge
+        with:
+          label: Test Coverage
+          color: env.COLOR
+          path: .\$GITHUB_WORKSPACE\testing\coverageResults.xml
+          gist-filename: Evands.Pellucid-CodeCoverage.json
+          gist-id: 511fb463532b10f6fca3eba9df658486
+          gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
