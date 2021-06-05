@@ -22,14 +22,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - run: .\$GITHUB_WORKSPACE\scripts\buildProject.ps1 -Mode Test
+      - name: Build Project
+        run: |
+          .\scripts\buildProject.ps1 -Mode Test
       - uses: actions/upload-artifact@v2
         with:
           name: test-output
           path: |
-            $GITHUB_WORKSPACE\src\Evands.Pellucid/bin/Test/Evands.Pellucid.dll
-            $GITHUB_WORKSPACE\src\Evands.Pellucid.Pro/bin/Test/Evands.Pellucid.Pro.dll
-            $GITHUB_WORKSPACE\src\Evands.Pellucid.Tests/bin/Test/Evands.Pellucid.Tests.dll      
+            .\src\Evands.Pellucid\bin\Test\Evands.Pellucid.dll
+            .\src\Evands.Pellucid.Pro\bin\Test\Evands.Pellucid.Pro.dll
+            .\src\Evands.Pellucid.Tests\bin\Test\Evands.Pellucid.Tests.dll      
   
   generateReport:
     runs-on: self-hosted
@@ -39,13 +41,14 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: test-output
-      - run: .\$GITHUB_WORKSPACE\testing\generateReport.ps1
+      - run: |
+          .\testing\generateReport.ps1
       - uses: actions/upload-artifact@v2
         with:
           name: coverage
           path: |
-            $GITHUB_WORKSPACE\testing\coverage\index.html
-            $GITHUB_WORKSPACE\testing\coverageResults.xml
+            .\testing\coverage\index.html
+            .\testing\coverageResults.xml
           
   createCoverageBadges:
     runs-on: self-hosted
@@ -57,7 +60,7 @@ jobs:
           name: coverage
       - name: GetColor
         run: |
-          $info = .\$GITHUB_WORKSPACE\testing\getCoverageValues.ps1
+          $info = .\testing\getCoverageValues.ps1
           Write-Output "::set-env name=COLOR::$info[1]"
       - uses: simon-k/dotnet-code-coverage-badge@v1.0.0
         id: create_coverage_badge
