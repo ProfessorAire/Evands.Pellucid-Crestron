@@ -59,8 +59,9 @@ jobs:
           name: coverage-results
           path: |
             .\testing\coverage\index.html
+            .\testing\testResults.trx
           
-  createCoverageBadges:
+  createBadges:
     runs-on: self-hosted
     needs: generateReport
     steps:
@@ -71,14 +72,21 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: coverage-results
-          path: ./testing
+          path: ./testing/
 
       - name: Get Coverage Info
         run: |
           $info = .\testing\getCoverageValues.ps1
-          echo $info[1]
           echo "COVERAGE=$info[0]" >> $GITHUB_ENV
           echo "COLOR=$info[1]" >> $GITHUB_ENV
+
+      - name: Get Test Results
+        run: |
+          $results = .\testing.getTestsResults.ps1
+          echo "PASSED=$info[0]" >> $GITHUB_ENV
+          echo "ERRORS=$info[1]" >> $GITHUB_ENV
+          echo "FAILED=$info[2]" >> $GITHUB_ENV
+          echo "TESTS_COLOR=$info[3]" >> $GITHUB_ENV
       
       - name: Create Coverage Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
@@ -88,5 +96,23 @@ jobs:
           filename: Evands.Pellucid-CodeCoverage.json
           label: Unit Test Coverage
           color: ${{ env.COLOR }}
-          path: ${{ env.COVERAGE }}
+          message: ${{ env.COVERAGE }}
           style: for-the-badge
+
+      - name: Create Tests Badge
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.GIST_AUTH_TOKEN }}
+          gistID: 511fb463532b10f6fca3eba9df658486
+          filename: Evands.Pellucid-Tests.json
+          label: Unit Tests
+          color: ${{ env.TESTS_COLOR }}
+          message: "${{ env.PASSED }} passing/${{ env.FAILED }} failing"
+          style: for-the-badge
+      
+      - name: Check For Failure
+        run: |
+          if($ERRORS -gt 0 -or $FAILED -gt 0)
+          {
+            exit 1
+          }
