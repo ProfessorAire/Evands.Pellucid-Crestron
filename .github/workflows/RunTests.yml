@@ -75,16 +75,16 @@ jobs:
       - name: Get Coverage Info
         run: |
           $info = .\testing\getCoverageValues.ps1
-          echo "COVERAGE=$info[0]" >> $GITHUB_ENV
-          echo "COLOR=$info[1]" >> $GITHUB_ENV
+          echo "COVERAGE=$info[0]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "COLOR=$info[1]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
       - name: Get Test Results
         run: |
           $results = .\testing\getTestsResults.ps1
-          echo "PASSED=$info[0]" >> $GITHUB_ENV
-          echo "ERRORS=$info[1]" >> $GITHUB_ENV
-          echo "FAILED=$info[2]" >> $GITHUB_ENV
-          echo "TESTS_COLOR=$info[3]" >> $GITHUB_ENV
+          echo "PASSED=$info[0]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "ERRORS=$info[1]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "FAILED=$info[2]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "TESTS_COLOR=$info[3]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       
       - name: Create Coverage Badge
         if: github.ref == 'refs/heads/main'
