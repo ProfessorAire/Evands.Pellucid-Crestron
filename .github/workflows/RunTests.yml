@@ -48,6 +48,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-output
+          path: .\src
       
       - name: Generate Coverage Report
         run: |
@@ -72,7 +73,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: coverage-results
-          path: ./testing/
+          path: .\testing
 
       - name: Get Coverage Info
         run: |
