@@ -35,7 +35,8 @@ jobs:
           path: |
             .\src\Evands.Pellucid\bin\Test\Evands.Pellucid.dll
             .\src\Evands.Pellucid.Pro\bin\Test\Evands.Pellucid.Pro.dll
-            .\src\Evands.Pellucid.Tests\bin\Test\Evands.Pellucid.Tests.dll      
+            .\src\Evands.Pellucid.Tests\bin\Test\Evands.Pellucid.Tests.dll
+            .\src\Evands.Pellucid.Fakes\bin\Test\Evands.Pellucid.Fakes.dll
   
   generateReport:
     runs-on: self-hosted
