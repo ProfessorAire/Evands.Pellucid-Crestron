@@ -76,7 +76,7 @@ jobs:
       - name: GetColor
         run: |
           $info = .\testing\getCoverageValues.ps1
-          Write-Output "::set-env name=COLOR::$info[1]"
+          echo COLOR=$info[1] >> $GITHUB_ENV
       
       - name: Create Coverage Badge
         uses: simon-k/dotnet-code-coverage-badge@v1.0.0
