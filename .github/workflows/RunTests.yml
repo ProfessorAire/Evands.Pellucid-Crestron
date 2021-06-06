@@ -21,11 +21,15 @@ jobs:
     runs-on: self-hosted
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
       - name: Build Project
         run: |
           .\scripts\buildProject.ps1 -Mode Test
-      - uses: actions/upload-artifact@v2
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: test-output
           path: |
@@ -37,12 +41,17 @@ jobs:
     runs-on: self-hosted
     needs: build
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v2
         with:
           name: test-output
       - run: |
           .\testing\generateReport.ps1
+
+      - name: Upload Test Artifacts
       - uses: actions/upload-artifact@v2
         with:
           name: coverage
@@ -54,15 +63,21 @@ jobs:
     runs-on: self-hosted
     needs: generateReport
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Download Test Artifacts
       - uses: actions/download-artifact@v2
         with:
           name: coverage
+
       - name: GetColor
         run: |
           $info = .\testing\getCoverageValues.ps1
           Write-Output "::set-env name=COLOR::$info[1]"
-      - uses: simon-k/dotnet-code-coverage-badge@v1.0.0
+      
+      - name: Create Coverage Badge
+        uses: simon-k/dotnet-code-coverage-badge@v1.0.0
         id: create_coverage_badge
         with:
           label: Test Coverage
