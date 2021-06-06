@@ -59,7 +59,7 @@ jobs:
             .\testing\coverage\index.html
             .\testing\testResults.trx
           
-  createBadges:
+  validateCoverage:
     runs-on: self-hosted
     needs: generateReport
     steps:
@@ -80,13 +80,14 @@ jobs:
 
       - name: Get Test Results
         run: |
-          $results = .\testing.getTestsResults.ps1
+          $results = .\testing\getTestsResults.ps1
           echo "PASSED=$info[0]" >> $GITHUB_ENV
           echo "ERRORS=$info[1]" >> $GITHUB_ENV
           echo "FAILED=$info[2]" >> $GITHUB_ENV
           echo "TESTS_COLOR=$info[3]" >> $GITHUB_ENV
       
       - name: Create Coverage Badge
+        if: github.ref == 'refs/heads/main'
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
           auth: ${{ secrets.GIST_AUTH_TOKEN }}
@@ -98,6 +99,7 @@ jobs:
           style: for-the-badge
 
       - name: Create Tests Badge
+        if: github.ref == 'refs/heads/main'
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
           auth: ${{ secrets.GIST_AUTH_TOKEN }}
@@ -110,7 +112,7 @@ jobs:
       
       - name: Check For Failure
         run: |
-          if($ERRORS -gt 0 -or $FAILED -gt 0)
+          if(${{ env.ERRORS }} -gt 0 -or ${{ env.FAILED }} -gt 0)
           {
             exit 1
           }
