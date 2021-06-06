@@ -32,11 +32,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-output
-          path: |
-            .\src\Evands.Pellucid\bin\Test\Evands.Pellucid.dll
-            .\src\Evands.Pellucid.Pro\bin\Test\Evands.Pellucid.Pro.dll
-            .\src\Evands.Pellucid.Tests\bin\Test\Evands.Pellucid.Tests.dll
-            .\src\Evands.Pellucid.Fakes\bin\Test\Evands.Pellucid.Fakes.dll
+          path: .\src\Evands.Pellucid.Tests\bin\Test\
   
   generateReport:
     runs-on: self-hosted
@@ -49,7 +45,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-output
-          path: .\src
+          path: .\src\Evands.Pellucid.Tests\bin\Test\
       
       - name: Generate Coverage Report
         run: |
