@@ -84,7 +84,7 @@ jobs:
         with:
           label: Test Coverage
           color: env.COLOR
-          path: .\$GITHUB_WORKSPACE\testing\coverageResults.xml
+          path: .\testing\coverageResults.xml
           gist-filename: Evands.Pellucid-CodeCoverage.json
           gist-id: 511fb463532b10f6fca3eba9df658486
           gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
