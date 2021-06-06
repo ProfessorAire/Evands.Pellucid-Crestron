@@ -56,10 +56,10 @@ jobs:
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage
+          name: coverage-results
           path: |
-            .\testing\coverage\index.html
             .\testing\coverageResults.xml
+            .\testing\coverage\index.html
           
   createCoverageBadges:
     runs-on: self-hosted
@@ -71,7 +71,7 @@ jobs:
       - name: Download Test Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: coverage
+          name: coverage-results
 
       - name: GetColor
         run: |
