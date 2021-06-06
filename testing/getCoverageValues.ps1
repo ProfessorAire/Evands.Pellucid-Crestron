@@ -1,4 +1,4 @@
-[String]$html = Get-Content -Path coverage/index.html
+[String]$html = Get-Content -Path $PSScriptRoot/coverage/index.html
 
 $result = $html -match '^.*Line coverage:</th><td>(\d{1,3}\.{0,1}\d{0,2})%.*$'
 
