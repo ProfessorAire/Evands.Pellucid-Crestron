@@ -75,16 +75,22 @@ jobs:
       - name: Get Coverage Info
         run: |
           $info = .\testing\getCoverageValues.ps1
-          echo "COVERAGE=$info[0]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "COLOR=$info[1]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          $cover = $info[0]
+          $color = $info[1]
+          echo "COVERAGE=$cover" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "COLOR=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
       - name: Get Test Results
         run: |
           $results = .\testing\getTestsResults.ps1
-          echo "PASSED=$info[0]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "ERRORS=$info[1]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "FAILED=$info[2]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "TESTS_COLOR=$info[3]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          $passed = $results[0]
+          $errors = $results[1]
+          $failed = $results[2]
+          $color = $results[3]
+          echo "PASSED=$passed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "ERRORS=$errors" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "FAILED=$failed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "TESTS_COLOR=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       
       - name: Create Coverage Badge
         if: github.ref == 'refs/heads/main'
