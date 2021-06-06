@@ -24,9 +24,10 @@ if ($result -eq $true)
         $color = "brightgreen"
     }
 
-    return $linePercent, $color
+    return "$linePercent%", $color
 }
 else
 {
-    return $invalid, $red
+    Write-Error "Unable to determine the code coverage from the HTML provided."
+    exit 1000
 }

@@ -58,7 +58,6 @@ jobs:
         with:
           name: coverage-results
           path: |
-            .\testing\coverageResults.xml
             .\testing\coverage\index.html
           
   createCoverageBadges:
@@ -74,18 +73,20 @@ jobs:
           name: coverage-results
           path: ./testing
 
-      - name: GetColor
+      - name: Get Coverage Info
         run: |
           $info = .\testing\getCoverageValues.ps1
-          echo COLOR=$info[1] >> $GITHUB_ENV
+          echo $info[1]
+          echo "COVERAGE=$info[0]" >> $GITHUB_ENV
+          echo "COLOR=$info[1]" >> $GITHUB_ENV
       
       - name: Create Coverage Badge
-        uses: simon-k/dotnet-code-coverage-badge@v1.0.0
-        id: create_coverage_badge
+        uses: schneegans/dynamic-badges-action@v1.0.0
         with:
-          label: Test Coverage
-          color: env.COLOR
-          path: .\testing\coverageResults.xml
-          gist-filename: Evands.Pellucid-CodeCoverage.json
-          gist-id: 511fb463532b10f6fca3eba9df658486
-          gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
+          auth: ${{ secrets.GIST_AUTH_TOKEN }}
+          gistID: 511fb463532b10f6fca3eba9df658486
+          filename: Evands.Pellucid-CodeCoverage.json
+          label: Unit Test Coverage
+          color: ${{ env.COLOR }}
+          path: ${{ env.COVERAGE }}
+          style: for-the-badge

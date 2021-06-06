@@ -1,3 +1,5 @@
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/professoraire/511fb463532b10f6fca3eba9df658486/raw/Evands.Pellucid-CodeCoverage.json)
+
 # Evands.Pellucid-Crestron
 
 ## Overview
