@@ -1,6 +1,6 @@
 name: CreateRelease
 
-on
+on:
   workflow_dispatch:
 
 jobs:
