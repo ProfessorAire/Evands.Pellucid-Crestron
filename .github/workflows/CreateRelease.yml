@@ -83,7 +83,7 @@ jobs:
       
       - name: Push Nuget Packages
         if: false
-        using: dansiegel/publish-nuget@v2
+        uses: dansiegel/publish-nuget@v2
         with:
           filename: packaging\*.nupkg
           apiKey: ${{ secrets.NUGET_API_KEY }}
