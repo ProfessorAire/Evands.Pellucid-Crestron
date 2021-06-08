@@ -75,9 +75,12 @@ jobs:
       - name: Create Packages
         run: |
           $paths = .\packaging\createPackages.ps1 ${{ needs.getVersions.outputs.libVer }} ${{ needs.getVersions.outputs.proVer }}
-          echo "LIBPATH=$paths[0]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "PROPATH=$paths[1]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "ZIPPATH=$paths[2]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          $lib = $paths[0]
+          $pro = $paths[1]
+          $zip = $paths[2]
+          echo "LIBPATH=$lib" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "PROPATH=$pro" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "ZIPPATH=$zip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
       - name: Create Github Release
         uses: marvinpinto/action-automatic-releases@v1.2.1
@@ -90,6 +93,7 @@ jobs:
           files: ${{ env.ZIPPATH }}
       
       - name: Push Nuget Packages
+        if: false
         uses: dansiegel/publish-nuget@v1.01
         with:
           filename: packaging\.releases\*.nupkg
