@@ -4,6 +4,15 @@ name: RunTests
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
+    paths-ignore:
+      - 'packaging/*'
+      - '.github/workflows/CreateRelease.yml'
+      - 'scripts/buildProject.ps1'
+      - '*.md'
+      - 'LICENSE'
+      - 'Settings.StyleCop'
+      - .gitignore
+      - *.png
   pull_request:
     branches: [ main ]
 
