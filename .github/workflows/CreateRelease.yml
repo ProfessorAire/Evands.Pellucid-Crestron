@@ -89,7 +89,7 @@ jobs:
           filename: packaging\*.nupkg
           apiKey: ${{ secrets.NUGET_API_KEY }}
 
-  createVersionBadge
+  createVersionBadge:
     runs-on: self-hosted
     needs: generateReleases
     steps:
