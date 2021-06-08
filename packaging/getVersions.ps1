@@ -107,11 +107,11 @@ else
     $ver1 = Get-LibVersion $libVersion
     $ver2 = Get-LibVersion $proVersion
 
-    $preRelease = $false
+    $preRelease = 'false'
 
     if ($ver1 -contains '-')
     {
-        $preRelease = $true
+        $preRelease = 'true'
     }
 
     return $ver1, $libVersion, $ver2, $proVersion, $preRelease
