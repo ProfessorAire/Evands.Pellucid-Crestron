@@ -54,7 +54,7 @@ if ($exitCode -eq 0)
     try
     {
         Compress-Archive $libDll, $libXml, $libProDll, $libProXml, $demo -DestinationPath $archivePath
-        Write-Host "Created release archive."
+        Write-Host "Created release archive '$archivePath'."
     }
     catch
     {
