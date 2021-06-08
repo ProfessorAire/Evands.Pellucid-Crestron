@@ -27,7 +27,7 @@ jobs:
 
       - name: Validate Versions
         run: |
-          if (${{ steps.contains_tag.outputs.exists }} -eq 'true')
+          if ("${{ steps.contains_tag.outputs.exists }}" -eq "true")
           {
             Write-Error "The tag 'v${{ env.VERSION }}' already exists."
             exit 1
