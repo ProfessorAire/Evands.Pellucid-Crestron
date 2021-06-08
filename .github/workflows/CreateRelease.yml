@@ -12,7 +12,7 @@ jobs:
           $versions = .\packaging\getVersions.ps1
           $libSemVer = $versions[0]
           $proSemVer = $versions[2]
-          $preRelease = $version[4]
+          $preRelease = $versions[4]
           echo "VERSION=$libSemVer" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
           echo "PRO_VERSION=$proSemVer" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 Append
           echo "PRE=$preRelease" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
