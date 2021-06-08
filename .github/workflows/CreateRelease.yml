@@ -18,15 +18,16 @@ jobs:
           echo "PRE=$preRelease" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
       - name: Check Version Tags
-        uses: rickstaa/action-contains-tag@v1
+        uses: mukunku/tag-exists-action@v1.0.0
         id: contains_tag
         with:
-          reference: "main"
           tag: "v${{ env.VERSION }}"
+        env:
+          GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
 
       - name: Validate Versions
         run: |
-          if (${{ steps.contains_tag.outputs.retval }} -eq 'true')
+          if (${{ steps.contains_tag.outputs.exists }} -eq 'true')
           {
             Write-Error "The tag 'v${{ env.VERSION }}' already exists."
             exit 1
