@@ -31,7 +31,10 @@ jobs:
           {
             Write-Error "The tag 'v${{ env.VERSION }}' already exists."
             exit 1
-          }
+          }    
+    outputs:
+      libVer: ${{ env.VERSION }}
+      proVer: ${{ env.PRO_VERSION }}
 
   build:
     runs-on: self-hosted
@@ -57,7 +60,7 @@ jobs:
   
   generateReleases:
     runs-on: self-hosted
-    needs: build
+    needs: [build, getVersions]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -70,7 +73,7 @@ jobs:
       
       - name: Create Packages
         run: |
-          .\packaging\createPackages.ps1 ${{ env.VERSION }} ${{ env.PRO_VERSION }}
+          .\packaging\createPackages.ps1 ${{ needs.getVersions.outputs.libVer }} ${{ needs.getVersions.outputs.proVer }}
 
       - name: Create Github Release
         uses: marvinpinto/action-automatic-releases@v1.2.1
