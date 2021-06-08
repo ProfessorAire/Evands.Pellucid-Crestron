@@ -83,12 +83,10 @@ jobs:
           automatic_release_tag: "v${{ needs.getVersions.outputs.libVer }}"
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
           title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
-          draft: true
-          files: |
-            .\packaging\.releases\Evands.Pellucid-Crestron-v${{ needs.getVersions.outputs.libVer }}.zip
+          draft: false
+          files: .\packaging\.releases\Evands.Pellucid-Crestron-v${{ needs.getVersions.outputs.libVer }}.zip
       
       - name: Push Nuget Packages
-        if: false
         uses: dansiegel/publish-nuget@v1.01
         with:
           filename: packaging\.releases\*.nupkg
