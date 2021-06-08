@@ -14,11 +14,14 @@ Write-Host "Evands.Pellucid Version: $libVersion"
 Write-Host "Evands.Pellucid.Pro Version: $proVersion"
 
 Write-Host "Creating Nuget Package for Evands.Pellucid"
-nuget pack $PSScriptRoot\Evands.Pellucid.nuspec -Version $libVersion -OutputDirectory $outPath
+nuget pack $PSScriptRoot\Evands.Pellucid.nuspec -Version $libVersion -OutputDirectory $outPath -Verbosity quiet
 
 $exitCode = 0
 
-if ([System.IO.File]::Exists("$outPath/Evands.Pellucid.$libVersion.nupkg") -eq $false)
+$libPath = "$outPath/Evands.Pellucid.$libVersion.nupkg"
+$proPath = "$outPath/Evands.Pellucid.Pro.$proVersion.nupkg"
+
+if ([System.IO.File]::Exists($libPath) -eq $false)
 {
     Write-Warning "Unable to create nuget package for Evands.Pellucid"
     $exitCode = 1002
@@ -27,8 +30,8 @@ else
 {
     Write-Host "Creating Nuget Package for Evands.Pellucid.Pro"
     (Get-Content -Path "$PSScriptRoot/Evands.Pellucid.Pro.nuspec") -Replace "depVer", $libVersion | Set-Content -Path "$PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec"
-    nuget pack $PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec -Version $proVersion -OutputDirectory $outPath
-    if ([System.IO.File]::Exists("$outPath/Evands.Pellucid.Pro.$proVersion.nupkg") -eq $false)
+    nuget pack $PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec -Version $proVersion -OutputDirectory $outPath -Verbosity quiet
+    if ([System.IO.File]::Exists($proPath) -eq $false)
     {
         Write-Warning "Unable to create nuget package for Evands.Pellucid.Pro"
         $exitCode = 1003
@@ -51,6 +54,12 @@ if ($exitCode -eq 0)
     $archivePath = "$outPath/Evands.Pellucid-Crestron-v$libVersion.zip"
     Write-Host "Creating release archive."
 
+    if ([System.IO.File]::Exists($archivePath) -eq $true)
+    {
+        Write-Host "Package already exists, deleting it now."
+        Remove-Item $archivePath
+    }
+
     try
     {
         Compress-Archive $libDll, $libXml, $libProDll, $libProXml, $demo -DestinationPath $archivePath
@@ -65,6 +74,11 @@ if ($exitCode -eq 0)
         Write-Host "Error creating the release archive."
         $exitCode = 1004
     }
+}
+
+if ($exitCode -eq 0)
+{
+    $libPath, $proPath, $archivePath
 }
 
 exit $exitCode

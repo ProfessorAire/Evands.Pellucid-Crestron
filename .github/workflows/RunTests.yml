@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - 'packaging/*'
       - '.github/workflows/CreateRelease.yml'
-      - 'scripts/buildProject.ps1'
+      - 'scripts/*'
       - '*.md'
       - 'LICENSE'
       - 'Settings.StyleCop'

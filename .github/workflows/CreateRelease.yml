@@ -74,7 +74,10 @@ jobs:
       
       - name: Create Packages
         run: |
-          .\packaging\createPackages.ps1 ${{ needs.getVersions.outputs.libVer }} ${{ needs.getVersions.outputs.proVer }}
+          $paths = .\packaging\createPackages.ps1 ${{ needs.getVersions.outputs.libVer }} ${{ needs.getVersions.outputs.proVer }}
+          echo "LIBPATH=$paths[0]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "PROPATH=$paths[1]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "ZIPPATH=$paths[2]" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
       - name: Create Github Release
         uses: marvinpinto/action-automatic-releases@v1.2.1
@@ -84,7 +87,7 @@ jobs:
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
           title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
           draft: true
-          files: packaging\.releases\Evands.Pellucid-Crestron-v${{ needs.getVersions.outputs.libVer }}.zip
+          files: ${{ env.ZIPPATH }}
       
       - name: Push Nuget Packages
         uses: dansiegel/publish-nuget@v1.01
