@@ -3,7 +3,7 @@ param(
 [Parameter(Mandatory=$true)][string]$proVersion
 )
 
-$outPath = "$PSScriptRoot/.releases"
+$outPath = "$PSScriptRoot\.releases"
 
 if ([System.IO.Directory]::Exists($outPath) -eq $false)
 {
@@ -19,8 +19,8 @@ nuget pack $PSScriptRoot\Evands.Pellucid.nuspec -Version $libVersion -OutputDire
 
 $exitCode = 0
 
-$libPath = "$outPath/Evands.Pellucid.$libVersion.nupkg"
-$proPath = "$outPath/Evands.Pellucid.Pro.$proVersion.nupkg"
+$libPath = "$outPath\Evands.Pellucid.$libVersion.nupkg"
+$proPath = "$outPath\Evands.Pellucid.Pro.$proVersion.nupkg"
 
 if ([System.IO.File]::Exists($libPath) -eq $false)
 {
@@ -30,17 +30,17 @@ if ([System.IO.File]::Exists($libPath) -eq $false)
 else
 {
     Write-Host "Creating Nuget Package for Evands.Pellucid.Pro"
-    (Get-Content -Path "$PSScriptRoot/Evands.Pellucid.Pro.nuspec") -Replace "depVer", $libVersion | Set-Content -Path "$PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec"
-    nuget pack $PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec -Version $proVersion -OutputDirectory $outPath -Verbosity quiet
+    (Get-Content -Path "$PSScriptRoot\Evands.Pellucid.Pro.nuspec") -Replace "depVer", $libVersion | Set-Content -Path "$PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec"
+    nuget pack $PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec -Version $proVersion -OutputDirectory $outPath -Verbosity quiet
     if ([System.IO.File]::Exists($proPath) -eq $false)
     {
         Write-Warning "Unable to create nuget package for Evands.Pellucid.Pro"
         $exitCode = 1003
     }
 
-    if ([System.IO.File]::Exists("$PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec") -eq $true)
+    if ([System.IO.File]::Exists("$PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec") -eq $true)
     {
-        Remove-Item -Path "$PSScriptRoot/Evands.Pellucid.Pro.temp.nuspec"
+        Remove-Item -Path "$PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec"
     }
 }
 
@@ -52,7 +52,7 @@ if ($exitCode -eq 0)
     $libProXml = "$PSScriptRoot/../src/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.xml"
     $demo = "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/bin/Release/Evands.Pellucid.ProDemo.cpz"
     
-    $archivePath = "$outPath/Evands.Pellucid-Crestron-v$libVersion.zip"
+    $archivePath = "$outPath\Evands.Pellucid-Crestron-v$libVersion.zip"
     Write-Host "Creating release archive."
 
     if ([System.IO.File]::Exists($archivePath) -eq $true)
