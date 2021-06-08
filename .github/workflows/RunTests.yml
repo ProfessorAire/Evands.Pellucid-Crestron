@@ -11,8 +11,8 @@ on:
       - '*.md'
       - 'LICENSE'
       - 'Settings.StyleCop'
-      - .gitignore
-      - *.png
+      - '.gitignore'
+      - '*.png'
   pull_request:
     branches: [ main ]
 
