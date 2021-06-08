@@ -35,6 +35,7 @@ jobs:
     outputs:
       libVer: ${{ env.VERSION }}
       proVer: ${{ env.PRO_VERSION }}
+      preRelease: ${{ env.PRE }}
 
   build:
     runs-on: self-hosted
@@ -79,12 +80,12 @@ jobs:
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: "${{ secrets.RELEASE_TOKEN }}"
-          automatic_release_tag: "v${{ env.RELEASE }}"
-          prerelease: ${{ env.PRE }}
-          title: "Evands.Pellucid-Crestron v${{ env.RELEASE }}"
+          automatic_release_tag: "v${{ needs.getVersions.outputs.libVer }}"
+          prerelease: ${{ needs.getVersions.outputs.preRelease }}
+          title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
           draft: true
           files: |
-            .\packaging\Evands.Pellucid-Crestron-v${{ env.RELEASE }}.zip
+            .\packaging\Evands.Pellucid-Crestron-v${{ needs.getVersions.outputs.libVer }}.zip
       
       - name: Push Nuget Packages
         if: false
@@ -95,7 +96,7 @@ jobs:
 
   createVersionBadge:
     runs-on: self-hosted
-    needs: generateReleases
+    needs: [generateReleases, getVersions]
     steps:
       - name: Create Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
@@ -105,5 +106,5 @@ jobs:
           filename: Evands.Pellucid-Version.json
           label: Latest Package Version
           color: blue
-          message: "Evands.Pellucid.${{ env.VERSION }}/Evands.Pellucid.Pro${{ env.PRO_VERSION }}"
+          message: "Evands.Pellucid.${{ needs.getVersions.outputs.libVer }}/Evands.Pellucid.Pro${{ needs.getVersions.outputs.proVer }}"
           style: for-the-badge
