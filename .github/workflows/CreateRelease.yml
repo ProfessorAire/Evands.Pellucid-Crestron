@@ -14,7 +14,7 @@ jobs:
           $proSemVer = $versions[2]
           $preRelease = $versions[4]
           echo "VERSION=$libSemVer" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "PRO_VERSION=$proSemVer" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 Append
+          echo "PRO_VERSION=$proSemVer" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
           echo "PRE=$preRelease" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
       - name: Check Version Tags
@@ -88,3 +88,18 @@ jobs:
         with:
           filename: packaging\*.nupkg
           apiKey: ${{ secrets.NUGET_API_KEY }}
+
+  createVersionBadge
+    runs-on: self-hosted
+    needs: generateReleases
+    steps:
+      - name: Create Badge
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.GIST_AUTH_TOKEN }}
+          gistID: 511fb463532b10f6fca3eba9df658486
+          filename: Evands.Pellucid-Version.json
+          label: Latest Package Version
+          color: blue
+          message: "Evands.Pellucid.${{ env.VERSION }}/Evands.Pellucid.Pro${{ env.PRO_VERSION }}"
+          style: for-the-badge
