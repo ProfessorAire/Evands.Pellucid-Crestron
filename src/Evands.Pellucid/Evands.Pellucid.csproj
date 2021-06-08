@@ -1,4 +1,5 @@
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -59,6 +60,39 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <Choose>
+    <When Condition=" '$(Configuration)' == 'Test' ">
+      <ItemGroup>
+        <ProjectReference Include="..\Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj">
+          <Project>{5A2D7A75-F172-43BE-AF04-18A89560D79E}</Project>
+          <Name>Evands.Pellucid.Fakes</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="SimplSharpCustomAttributesInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpCustomAttributesInterface.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="SimplSharpHelperInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpHelperInterface.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="SimplSharpPro, Version=1.5.3.17, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpPro.exe</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="SimplSharpReflectionInterface, Version=1.0.5583.25238, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpReflectionInterface.dll</HintPath>
+        </Reference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -113,7 +147,6 @@
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
-  <Import Project="..\references.targets" />
   <PropertyGroup>
     <PostBuildEvent>rem  S# preparation will execute after these operations</PostBuildEvent>
   </PropertyGroup>
