@@ -7,7 +7,8 @@ $outPath = "$PSScriptRoot/.releases"
 
 if ([System.IO.Directory]::Exists($outPath) -eq $false)
 {
-    [System.IO.Directory]::CreateDirectory($outPath)
+    $dir = [System.IO.Directory]::CreateDirectory($outPath)
+    Write-Host "Created Directory: $dir"
 }
 
 Write-Host "Evands.Pellucid Version: $libVersion"
