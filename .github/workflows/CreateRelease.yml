@@ -85,13 +85,13 @@ jobs:
           title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
           draft: true
           files: |
-            .\packaging\Evands.Pellucid-Crestron-v${{ needs.getVersions.outputs.libVer }}.zip
+            .\packaging\.releases\Evands.Pellucid-Crestron-v${{ needs.getVersions.outputs.libVer }}.zip
       
       - name: Push Nuget Packages
         if: false
         uses: dansiegel/publish-nuget@v1.01
         with:
-          filename: packaging\*.nupkg
+          filename: packaging\.releases\*.nupkg
           apiKey: ${{ secrets.NUGET_API_KEY }}
 
   createVersionBadge:
