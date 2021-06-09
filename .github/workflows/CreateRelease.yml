@@ -99,7 +99,7 @@ jobs:
       - name: Download Package Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: release-output
+          name: package-output
           path: .\packaging\.releases\
 
       - name: CreateChangelog
