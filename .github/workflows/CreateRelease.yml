@@ -120,7 +120,7 @@ jobs:
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
           body: ${{ steps.CreateChangelog.outputs.changelog }}
           draft: true
-          artifacts: "packaging/.releases/*.zip"
+          artifacts: "./packaging/.releases/*.zip"
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
