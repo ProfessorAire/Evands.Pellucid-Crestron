@@ -116,7 +116,6 @@ jobs:
           version: true
           hide-body: true
           hide-title: true
-          hide-unreleased: true
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1.8.6
