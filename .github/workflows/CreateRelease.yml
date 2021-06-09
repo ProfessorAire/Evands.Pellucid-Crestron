@@ -115,7 +115,7 @@ jobs:
           tag: "v${{ needs.getVersions.outputs.libVer }}"
           artifactErrorsFailBuild: testResults
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          body: ${{ step.CreateChangelog.outputs.changelog }}
+          body: ${{ steps.CreateChangelog.outputs.changelog }}
           draft: true
           artifacts: ${{ env.ZIPPATH }}
         env:
