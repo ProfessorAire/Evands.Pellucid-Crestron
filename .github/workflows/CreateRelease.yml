@@ -120,13 +120,13 @@ jobs:
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
           body: ${{ steps.CreateChangelog.outputs.changelog }}
           draft: true
-          artifacts: "packaging\.releases\*.zip"
+          artifacts: "packaging/.releases/*.zip"
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
         uses: dansiegel/publish-nuget@v1.01
         with:
-          filename: 'packaging\.releases\*.nupkg'
+          filename: 'packaging/.releases/*.nupkg'
           apiKey: ${{ secrets.NUGET_API_KEY }}
 
   createVersionBadge:
