@@ -130,7 +130,7 @@ jobs:
 
   createVersionBadge:
     runs-on: self-hosted
-    needs: [generateReleases, getVersions]
+    needs: [createRelease, getVersions]
     steps:
       - name: Create Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
