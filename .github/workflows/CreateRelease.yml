@@ -102,6 +102,13 @@ jobs:
           name: package-output
           path: .\packaging\.releases\
 
+      - name: CreateTag
+        uses: negz/create-tag@v1
+        with:
+          version: ${{ needs.getVersions.outputs.libVer }}
+          message: ""
+          token: ${{ secrets.RELEASE_TOKEN }}
+
       - name: CreateChangelog
         uses: AlexxNB/chalogen@v0.1.4
         with:
@@ -118,12 +125,13 @@ jobs:
           tag: "v${{ needs.getVersions.outputs.libVer }}"
           artifactErrorsFailBuild: true
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          body: ${{ steps.CreateChangelog.outputs.changelog }}
+          bodyFile: "changelog.md"
           draft: true
           artifacts: "./packaging/.releases/*.zip"
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
+      - if: true
         uses: dansiegel/publish-nuget@v1.01
         with:
           filename: 'packaging/.releases/*.nupkg'
