@@ -7,6 +7,11 @@ jobs:
   getVersions:
     runs-on: self-hosted
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Get Versions
         run: |
           $versions = .\packaging\getVersions.ps1
@@ -41,9 +46,6 @@ jobs:
     runs-on: self-hosted
     needs: getVersions
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-
       - name: Build Project
         run: |
           .\scripts\buildProject.ps1 -Mode Release
@@ -63,9 +65,6 @@ jobs:
     runs-on: self-hosted
     needs: [build, getVersions]
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-
       - name: Download Build Artifacts
         uses: actions/download-artifact@v2
         with:
@@ -95,11 +94,6 @@ jobs:
     runs-on: self-hosted
     needs: [createPackages, getVersions]
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
       - name: Download Package Artifacts
         uses: actions/download-artifact@v2
         with:
