@@ -9,8 +9,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Get Versions
         run: |
@@ -93,19 +91,22 @@ jobs:
     runs-on: self-hosted
     needs: [createPackages, getVersions]
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
       - name: Download Package Artifacts
         uses: actions/download-artifact@v2
         with:
           name: release-output
-          path: .\packages\.releases\
+          path: .\packaging\.releases\
 
       - name: CreateChangelog
         uses: AlexxNB/chalogen@v0.1.4
         with:
           title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
           list: feat,fix,perf,docs,other
-          version: true
-          hide-title: true
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1.8.6
@@ -117,8 +118,7 @@ jobs:
           body: ${{ steps.CreateChangelog.outputs.changelog }}
           draft: true
           artifacts: ${{ env.ZIPPATH }}
-        env:
-          GITHUB_TOKEN ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
         if: false
