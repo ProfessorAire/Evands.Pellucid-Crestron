@@ -90,13 +90,13 @@ jobs:
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
           title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
           draft: true
-          files: ${{ env.ZIPPATH }}
+          files: "${{ env.ZIPPATH }}"
       
       - name: Push Nuget Packages
         if: false
         uses: dansiegel/publish-nuget@v1.01
         with:
-          filename: packaging\.releases\*.nupkg
+          filename: 'packaging\.releases\*.nupkg'
           apiKey: ${{ secrets.NUGET_API_KEY }}
 
   createVersionBadge:
