@@ -59,7 +59,7 @@ jobs:
             .\src\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.xml
             .\src\Evands.Pellucid.ProDemo\bin\Release\Evands.Pellucid.ProDemo.cpz
   
-  generateReleases:
+  createPackages:
     runs-on: self-hosted
     needs: [build, getVersions]
     steps:
@@ -81,16 +81,45 @@ jobs:
           echo "LIBPATH=$lib" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
           echo "PROPATH=$pro" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
           echo "ZIPPATH=$zip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+      
+      - name: Upload Packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: package-output
+          path: |
+            {{ env.LIBPATH }}
+            {{ env.PROPATH }}
+            {{ env.ZIPPATH }}
+
+  createRelease
+    runs-on: self-hosted
+    needs: [createPackages, getVersions]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
+      - name: CreateChangelog
+        uses: AlexxNB/chalogen@v0.1.4
+        with:
+          title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
+          list: feat,fix,perf,docs,other
+          version: true
+          hide-title: true
 
       - name: Create Github Release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
+        uses: ncipollo/release-action@v1.8.6
         with:
-          repo_token: "${{ secrets.RELEASE_TOKEN }}"
-          automatic_release_tag: "v${{ needs.getVersions.outputs.libVer }}"
+          name: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
+          tag: "v${{ needs.getVersions.outputs.libVer }}"
+          artifactErrorsFailBuild: testResults
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
+          body: ${{ step.CreateChangelog.outputs.changelog }}
           draft: true
-          files: "${{ env.ZIPPATH }}"
+          artifacts: ${{ env.ZIPPATH }}
+        env:
+          GITHUB_TOKEN ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
         if: false
