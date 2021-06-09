@@ -105,23 +105,25 @@ jobs:
       - name: CreateChangelog
         uses: AlexxNB/chalogen@v0.1.4
         with:
-          title: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
           list: feat,fix,perf,docs,other
+          version: true
+          hide-body: true
+          hide-title: true
+          hide-unreleased: true
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1.8.6
         with:
           name: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
           tag: "v${{ needs.getVersions.outputs.libVer }}"
-          artifactErrorsFailBuild: testResults
+          artifactErrorsFailBuild: true
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
           body: ${{ steps.CreateChangelog.outputs.changelog }}
           draft: true
-          artifacts: ${{ env.ZIPPATH }}
+          artifacts: "packaging\.releases\*.zip"
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
-        if: false
         uses: dansiegel/publish-nuget@v1.01
         with:
           filename: 'packaging\.releases\*.nupkg'
