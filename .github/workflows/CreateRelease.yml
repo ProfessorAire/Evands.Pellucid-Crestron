@@ -86,9 +86,9 @@ jobs:
         with:
           name: package-output
           path: |
-            "{{ env.LIBPATH }}"
-            "{{ env.PROPATH }}"
-            "{{ env.ZIPPATH }}"
+            "$lib"
+            "$pro"
+            "$zip"
 
   createRelease:
     runs-on: self-hosted
