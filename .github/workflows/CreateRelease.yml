@@ -91,7 +91,7 @@ jobs:
             {{ env.PROPATH }}
             {{ env.ZIPPATH }}
 
-  createRelease
+  createRelease:
     runs-on: self-hosted
     needs: [createPackages, getVersions]
     steps:
