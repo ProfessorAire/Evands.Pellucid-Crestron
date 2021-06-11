@@ -106,17 +106,18 @@ jobs:
         uses: negz/create-tag@v1
         with:
           version: "v${{ needs.getVersions.outputs.libVer }}"
-          message: ""
+          message: "Automatic Tag"
           token: ${{ secrets.RELEASE_TOKEN }}
 
       - name: CreateChangelog
+        id: changelog
         uses: AlexxNB/chalogen@v0.1.4
         with:
           list: feat,fix,perf,docs,other
-          version: true
-          hide-body: true
+          version: false
+          hide-body: false
           hide-title: true
-          
+
       - name: Create Github Release
         uses: ncipollo/release-action@v1.8.6
         with:
@@ -124,7 +125,7 @@ jobs:
           tag: "v${{ needs.getVersions.outputs.libVer }}"
           artifactErrorsFailBuild: true
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          bodyFile: "changelog.md"
+          body: "${{ steps.changelog.outputs.changelog }}"
           draft: true
           artifacts: "./packaging/.releases/*.zip"
           token: ${{ secrets.RELEASE_TOKEN }}
