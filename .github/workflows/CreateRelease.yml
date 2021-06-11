@@ -125,8 +125,26 @@ jobs:
           if ("${{ steps.changelog.outputs.changelog }}" -eq "# Changelog")
           {
             Write-Error "The changelog failed to generate any content."
-            git tag -d v${{ needs.getVersions.outputs.libVer }}
-            git push origin :refs/tags/v${{ needs.getVersions.outputs.libVer }}
+            try
+            {
+              git tag -d v${{ needs.getVersions.outputs.libVer }}
+            }
+            catch
+            {
+              Write-Error "Failed to delete local tag, with the error: $PSItem"
+              exit 1002
+            }
+
+            try
+            {
+              git push origin :refs/tags/v${{ needs.getVersions.outputs.libVer }}
+            }
+            catch
+            {
+              Write-Error "Failed to delete remote tag, with the error: $PSItem"
+              exit 1003
+            }
+
             Write-Host "Deleted the tag v${{ needs.getVersions.outputs.libVer }}"
             exit 1001
           }
