@@ -120,7 +120,9 @@ jobs:
       
       - name: VerifyChangelog
         run: |
-          if ({{ steps.changelog.outputs.changelog }} -eq "")
+          Write-Host "The changelog contents are:"
+          Write-Host ${{ steps.changelog.outputs.changelog }}
+          if ([String]::IsNullOrWhiteSpace(${{ steps.changelog.outputs.changelog }}) -eq $true)
           {
             Write-Error "The changelog failed to generate any content."
             git push --delete origin v${{ needs.getVersions.outputs.libVer }}
