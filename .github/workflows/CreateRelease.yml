@@ -124,7 +124,7 @@ jobs:
           Write-Host "${{ steps.changelog.outputs.changelog }}"
           if ("${{ steps.changelog.outputs.changelog }}" -eq "# Changelog")
           {
-            Write-Error "The changelog failed to generate any content."
+            Write-Host "The changelog failed to generate any content."
             try
             {
               git tag -d v${{ needs.getVersions.outputs.libVer }}
@@ -146,6 +146,7 @@ jobs:
             }
 
             Write-Host "Deleted the tag v${{ needs.getVersions.outputs.libVer }}"
+            Write-Error "Changelog Generation Failed."
             exit 1001
           }
 
