@@ -125,7 +125,8 @@ jobs:
           if ("${{ steps.changelog.outputs.changelog }}" -eq "# Changelog")
           {
             Write-Error "The changelog failed to generate any content."
-            git push --delete origin v${{ needs.getVersions.outputs.libVer }}
+            git tag -d v${{ needs.getVersions.outputs.libVer }}
+            git push origin :refs/tags/v${{ needs.getVersions.outputs.libVer }}
             Write-Host "Deleted the tag v${{ needs.getVersions.outputs.libVer }}"
             exit 1001
           }
