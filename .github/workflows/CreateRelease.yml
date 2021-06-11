@@ -114,9 +114,19 @@ jobs:
         uses: AlexxNB/chalogen@v0.1.4
         with:
           list: feat,fix,perf,docs,other
-          version: false
+          version: true
           hide-body: false
           hide-title: true
+      
+      - name: VerifyChangelog
+        run: |
+          if ({{ steps.changelog.outputs.changelog }} -eq "")
+          {
+            Write-Error "The changelog failed to generate any content."
+            git push --delete origin v${{ needs.getVersions.outputs.libVer }}
+            Write-Host "Deleted the tag v${{ needs.getVersions.outputs.libVer }}"
+            exit 1001
+          }
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1.8.6
