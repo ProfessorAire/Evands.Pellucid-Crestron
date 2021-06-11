@@ -111,9 +111,9 @@ jobs:
 
       - name: CreateChangelog
         id: changelog
-        uses: loopwerk/tag-changelog@v1.0.1
+        uses: Helmisek/conventional-changelog-generator@v1.0.6-release
         with:
-          exclude_types: chore
+          commit-types: feat:Features,fix:Bug Fixes,bug:Bug Fixes,docs:Documentation Updates
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Github Release
@@ -123,7 +123,7 @@ jobs:
           tag: "v${{ needs.getVersions.outputs.libVer }}"
           artifactErrorsFailBuild: true
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          body: "steps.changelog.outputs.changes"
+          body: "steps.changelog.outputs.changelog"
           draft: true
           artifacts: "./packaging/.releases/*.zip"
           token: ${{ secrets.RELEASE_TOKEN }}
