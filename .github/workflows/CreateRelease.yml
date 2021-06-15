@@ -138,5 +138,5 @@ jobs:
           filename: Evands.Pellucid-Version.json
           label: Latest Package Version
           color: blue
-          message: "Evands.Pellucid.${{ needs.getVersions.outputs.libVer }}/Evands.Pellucid.Pro${{ needs.getVersions.outputs.proVer }}"
+          message: "Evands.Pellucid.${{ needs.getVersions.outputs.libVer }}/Evands.Pellucid.Pro.${{ needs.getVersions.outputs.proVer }}"
           style: for-the-badge
