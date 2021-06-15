@@ -125,7 +125,7 @@ if ($others.Length -gt 0)
 if ($document -ne "")
 {
     Write-Host "Generated Changelog."
-    Write-Host $document
+    $document
 }
 else
 {

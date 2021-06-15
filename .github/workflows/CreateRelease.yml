@@ -112,13 +112,13 @@ jobs:
         uses: ncipollo/release-action@v1.8.6
         with:
           name: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
-          tag: "v${{ needs.getVersions.outputs.libVer }}"
+          tag: v${{ needs.getVersions.outputs.libVer }}
           artifactErrorsFailBuild: true
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          body: "${{ env.CHANGES }}"
+          body: ${{ env.CHANGES }}
           draft: true
           artifacts: "./packaging/.releases/*.zip"
-          commit: "main"
+          commit: main
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
