@@ -102,53 +102,11 @@ jobs:
           name: package-output
           path: .\packaging\.releases\
 
-      - name: CreateTag
-        uses: negz/create-tag@v1
-        with:
-          version: "v${{ needs.getVersions.outputs.libVer }}"
-          message: "Automatic Tag"
-          token: ${{ secrets.RELEASE_TOKEN }}
-
       - name: CreateChangelog
         id: changelog
-        uses: AlexxNB/chalogen@v0.1.4
-        with:
-          list: feat,fix,perf,docs,other
-          version: true
-          hide-body: false
-          hide-title: true
-      
-      - name: VerifyChangelog
         run: |
-          Write-Host "The changelog contents are:"
-          Write-Host "${{ steps.changelog.outputs.changelog }}"
-          if ("${{ steps.changelog.outputs.changelog }}" -eq "# Changelog")
-          {
-            Write-Host "The changelog failed to generate any content."
-            try
-            {
-              git tag -d v${{ needs.getVersions.outputs.libVer }}
-            }
-            catch
-            {
-              Write-Error "Failed to delete local tag, with the error: $PSItem"
-              exit 1002
-            }
-
-            try
-            {
-              git push origin :refs/tags/v${{ needs.getVersions.outputs.libVer }}
-            }
-            catch
-            {
-              Write-Error "Failed to delete remote tag, with the error: $PSItem"
-              exit 1003
-            }
-
-            Write-Host "Deleted the tag v${{ needs.getVersions.outputs.libVer }}"
-            Write-Error "Changelog Generation Failed."
-            exit 1001
-          }
+          $changes = .\scripts\generateChangelog.ps1
+          echo "CHANGES=$changes" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
       - name: Create Github Release
         uses: ncipollo/release-action@v1.8.6
