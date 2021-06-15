@@ -121,7 +121,6 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
-        if: false
         uses: dansiegel/publish-nuget@v1.01
         with:
           filename: 'packaging/.releases/*.nupkg'
