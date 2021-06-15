@@ -115,9 +115,10 @@ jobs:
           tag: "v${{ needs.getVersions.outputs.libVer }}"
           artifactErrorsFailBuild: true
           prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          body: "${{ steps.changelog.outputs.changelog }}"
+          body: "${{ env.CHANGES }}"
           draft: true
           artifacts: "./packaging/.releases/*.zip"
+          commit: "main"
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
