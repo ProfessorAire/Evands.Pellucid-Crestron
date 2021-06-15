@@ -53,18 +53,18 @@ function WriteContent
         [Parameter()][string]$Message
     )
 
-    $document = ""
+    $content = ""
     Write-Host "$Type($Scope): $Message"
     if ($Scope -ne "")
     {
-        $document += "($Scope`): "
+        $content += "($Scope`): "
     }
 
-    $document += "$Message`r`n"
-    "* $document"
+    $content += "$Message`r`n"
+    "* $content"
 }
 
-$document = ""
+$document = "# Changelog`r`n`r`n"
 
 if ($breaks.Length -gt 0)
 {
@@ -122,10 +122,10 @@ if ($others.Length -gt 0)
     $document += "`r`n"
 }
 
-if ($document -ne "")
+if ($document -ne "# Changelog")
 {
     Write-Host "Generated Changelog."
-    $document
+    $document.TrimEnd() | Out-File changelog.md
 }
 else
 {
