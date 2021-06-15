@@ -102,21 +102,11 @@ jobs:
           name: package-output
           path: .\packaging\.releases\
 
-      - name: CreateTag
-        uses: negz/create-tag@v1
-        with:
-          version: "v${{ needs.getVersions.outputs.libVer }}"
-          message: ""
-          token: ${{ secrets.RELEASE_TOKEN }}
-
       - name: CreateChangelog
-        uses: AlexxNB/chalogen@v0.1.4
-        with:
-          list: feat,fix,perf,docs,other
-          version: true
-          hide-body: true
-          hide-title: true
-          
+        id: changelog
+        run: |
+          .\scripts\generateChangelog.ps1
+
       - name: Create Github Release
         uses: ncipollo/release-action@v1.8.6
         with:
@@ -127,10 +117,10 @@ jobs:
           bodyFile: "changelog.md"
           draft: true
           artifacts: "./packaging/.releases/*.zip"
+          commit: main
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
-        if: false
         uses: dansiegel/publish-nuget@v1.01
         with:
           filename: 'packaging/.releases/*.nupkg'
