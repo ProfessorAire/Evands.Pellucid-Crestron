@@ -49,6 +49,7 @@ namespace Evands.Pellucid.Terminal.Commands
          public void MyTestInitialize()
          {
              global = new GlobalCommand("app", "App Command", Access.Administrator);
+             global.AddToConsole();
              command = new TestCommand();
              global.AddCommand(command);
              global.AddCommand(new TestCommand2());
@@ -171,6 +172,24 @@ namespace Evands.Pellucid.Terminal.Commands
             global.ExecuteCommand("-h");
             Assert.IsTrue(writer.Contains(expected));
             Options.Instance.ColorizeConsoleOutput = true;
+        }
+
+        [TestMethod]
+        public void RegisterCommand_WithExistingName_Returns_CommandInUse()
+        {
+            var expected = RegisterResult.CommandNameAlreadyExists;
+            var gc = new GlobalCommand("temp", "temp", Access.Administrator);
+            gc.AddToConsole();
+            var c1 = new TestCommand();
+            var c2 = new TestCommand();
+
+            c1.RegisterCommand("temp");
+            var actual = c2.RegisterCommand("temp");
+            System.Diagnostics.Trace.WriteLine("Register result: '" + actual + "'");
+            Assert.IsTrue(expected == actual);
+
+            c1.UnregisterCommand();
+            gc = null;
         }
     }
 }

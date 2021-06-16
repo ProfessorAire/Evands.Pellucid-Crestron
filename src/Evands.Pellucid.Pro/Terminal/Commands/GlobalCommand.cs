@@ -96,6 +96,11 @@ namespace Evands.Pellucid.Terminal.Commands
         private Func<string, string> formatHelpTextMethod;
 
         /// <summary>
+        /// Synchronization object for command dictionaries.
+        /// </summary>
+        private CCriticalSection syncRoot = new CCriticalSection();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GlobalCommand"/> class.
         /// </summary>
         /// <param name="name">The name of the command, as it should appear in the processor console. Limited to 23 characters.</param>
@@ -234,14 +239,23 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <returns>True if it succeeds, false if it fails for any reason.</returns>
         public bool AddToConsole()
         {
-            ConsoleAccessLevelEnum level = (ConsoleAccessLevelEnum)CommandAccess;
+            this.syncRoot.Enter();
 
-            if (CrestronConsole.AddNewConsoleCommand(ExecuteCommand, Name, Help, level))
+            try
             {
-                return Manager.RegisterCrestronConsoleCommand(this);
-            }
+                ConsoleAccessLevelEnum level = (ConsoleAccessLevelEnum)CommandAccess;
 
-            return false;
+                if (CrestronConsole.AddNewConsoleCommand(ExecuteCommand, Name, Help, level))
+                {
+                    return Manager.RegisterCrestronConsoleCommand(this);
+                }
+
+                return false;
+            }
+            finally
+            {
+                syncRoot.Leave();
+            }
         }
 
         /// <summary>
@@ -250,7 +264,16 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <returns>True if it succeeds, false if it fails for any reason.</returns>
         public bool RemoveFromConsole()
         {
-            return Manager.RemoveCrestronConsoleCommand(Name);
+            syncRoot.Enter();
+
+            try
+            {
+                return Manager.RemoveCrestronConsoleCommand(Name);
+            }
+            finally
+            {
+                syncRoot.Leave();
+            }
         }
 
         /// <summary>
@@ -261,24 +284,35 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <returns><see cref="RegisterResult"/>.</returns>
         public RegisterResult AddCommand(TerminalCommandBase command)
         {
-            RegisterResult result;
+            syncRoot.Enter();
 
-            if (!commands.ContainsKey(command.Name.ToLower()) && !string.IsNullOrEmpty(command.Alias) ? !aliasedCommands.ContainsKey(command.Alias.ToLower()) : true)
+            try
             {
-                commands.Add(command.Name.ToLower(), command);
-                if (!string.IsNullOrEmpty(command.Alias))
+                RegisterResult result;
+                var commandName = command.Name.ToLower();
+                var commandAlias = !string.IsNullOrEmpty(command.Alias) ? command.Alias.ToLower() : string.Empty;
+
+                if (!commands.ContainsKey(commandName) && !aliasedCommands.ContainsKey(commandAlias))
                 {
-                    aliasedCommands.Add(command.Alias.ToLower(), command);
+                    commands.Add(commandName, command);
+                    if (!string.IsNullOrEmpty(commandAlias))
+                    {
+                        aliasedCommands.Add(commandAlias, command);
+                    }
+
+                    result = RegisterResult.Success;
+                }
+                else
+                {
+                    result = RegisterResult.CommandNameAlreadyExists;
                 }
 
-                result = RegisterResult.Success;
+                return result;
             }
-            else
+            finally
             {
-                result = RegisterResult.CommandNameAlreadyExists;
+                syncRoot.Leave();
             }
-
-            return result;
         }
 
         /// <summary>
@@ -288,13 +322,22 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <returns>True if a command was removed, false if no command existed with that name.</returns>
         public bool RemoveCommand(TerminalCommandBase command)
         {
-            if (IsCommandRegistered(command))
-            {
-                aliasedCommands.Remove(command.Alias);
-                return commands.Remove(command.Name);
-            }
+            syncRoot.Enter();
 
-            return false;
+            try
+            {
+                if (IsCommandRegistered(command))
+                {
+                    aliasedCommands.Remove(command.Alias.ToLower());
+                    return commands.Remove(command.Name.ToLower());
+                }
+
+                return false;
+            }
+            finally
+            {
+                syncRoot.Leave();
+            }
         }
 
         /// <summary>
@@ -304,7 +347,16 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <returns><see langword="True"/> if the command is registered.</returns>
         public bool IsCommandRegistered(TerminalCommandBase command)
         {
-            return this.commands.ContainsKey(command.Name) && this.commands[command.Name] == command;
+            syncRoot.Enter();
+
+            try
+            {
+                return this.commands.ContainsKey(command.Name.ToLower()) && this.commands[command.Name.ToLower()] == command;
+            }
+            finally
+            {
+                syncRoot.Leave();
+            }
         }
 
         /// <summary>

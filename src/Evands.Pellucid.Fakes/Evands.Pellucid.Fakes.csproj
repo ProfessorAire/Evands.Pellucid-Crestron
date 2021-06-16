@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crestron\SimplSharp\CCriticalSection.cs" />
     <Compile Include="Crestron\SimplSharp\ConsoleAccessLevelEnum.cs" />
     <Compile Include="Crestron\SimplSharp\CrestronConsole.cs" />
     <Compile Include="Crestron\SimplSharp\CrestronEnvironment.cs" />
