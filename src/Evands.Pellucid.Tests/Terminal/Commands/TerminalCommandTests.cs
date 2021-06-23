@@ -177,6 +177,7 @@ namespace Evands.Pellucid.Terminal.Commands
         [TestMethod]
         public void RegisterCommand_WithExistingName_Returns_CommandInUse()
         {
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
             var expected = RegisterResult.CommandNameAlreadyExists;
             var gc = new GlobalCommand("temp", "temp", Access.Administrator);
             gc.AddToConsole();

@@ -33,7 +33,7 @@ namespace Evands.Pellucid.Terminal.Commands
     /// Global console command that is registered with the <see cref="CrestronConsole"/> or other console service on startup.
     /// <para>Without a global command registered with the console no commands will be available to execute.</para>
     /// </summary>
-    public class GlobalCommand
+    public class GlobalCommand : IDisposable
     {
         /// <summary>
         /// The regex to use for parsing command details from console text input.
@@ -108,6 +108,11 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <param name="access">The user access level the command should be given.</param>
         public GlobalCommand(string name, string help, Access access)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentOutOfRangeException("name", "The name must be non-empty and non-null.");
+            }
+
             if (name.Length >= 23)
             {
                 throw new ArgumentOutOfRangeException("name", "The name can be no longer than 23 characters.");
@@ -115,7 +120,7 @@ namespace Evands.Pellucid.Terminal.Commands
 
             Name = name;
             Help = help.Substring(0, Math.Min(help.Length, 76));
-            if (Help.Length == 76)
+            if (Help.Length == 76 && help.Length != 76)
             {
                 Help = Help + "...";
             }
@@ -290,6 +295,12 @@ namespace Evands.Pellucid.Terminal.Commands
             {
                 RegisterResult result;
                 var commandName = command.Name.ToLower();
+
+                if (string.IsNullOrEmpty(commandName))
+                {
+                    return RegisterResult.NoCommandAttributeFound;
+                }
+
                 var commandAlias = !string.IsNullOrEmpty(command.Alias) ? command.Alias.ToLower() : string.Empty;
 
                 if (!commands.ContainsKey(commandName) && !aliasedCommands.ContainsKey(commandAlias))
@@ -360,6 +371,16 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         /// <summary>
+        /// Disposes of internal resources.
+        /// </summary>
+        public void Dispose()
+        {
+            aliasedCommands.Clear();
+            commands.Clear();
+            this.RemoveFromConsole();
+        }
+
+        /// <summary>
         /// Attempts to execute a command with the specified argument text.
         /// <para>This text should be the contents of the command line, without this <see cref="GlobalCommand"/>'s command name.</para>
         /// <para>Example: 'sampleCommand verb defaultValue --flag --operand operandValue'</para>
@@ -390,7 +411,7 @@ namespace Evands.Pellucid.Terminal.Commands
                             {
                                 if (!string.IsNullOrEmpty(result[i].Groups["value"].Value))
                                 {
-                                operands.Add(key, result[i].Groups["value"].Value);
+                                    operands.Add(key, result[i].Groups["value"].Value);
                                 }
                                 else if (!string.IsNullOrEmpty(result[i].Groups["value2"].Value))
                                 {
@@ -418,6 +439,12 @@ namespace Evands.Pellucid.Terminal.Commands
                                 {
                                     operands.Add(values[j].ToString(), string.Empty);
                                 }
+                                else
+                                {
+                                    WriteErrorMethod(string.Format("The '{0}' operand or flag was used more than once.\r\n", result[i].Groups["name"].Value));
+                                    WriteErrorMethod(string.Format("Duplicate operand or flag names are not allowed!"));
+                                    return;
+                                }
                             }
                         }
                     }
@@ -431,18 +458,6 @@ namespace Evands.Pellucid.Terminal.Commands
                 else
                 {
                     WriteErrorMethod("You must enter the name of a command. Enter '--help' for a list of available commands.");
-                }
-            }
-            catch (TerminalCommandException e)
-            {
-                var cee = CommandExceptionEncountered;
-                if (cee != null)
-                {
-                    cee.Invoke(this, new TerminalCommandExceptionEventArgs(e, args));
-                }
-                else
-                {
-                    throw e;
                 }
             }
             catch (Exception ex)
@@ -471,12 +486,6 @@ namespace Evands.Pellucid.Terminal.Commands
         private void ProcessCommand(string commandName, string verb, string defaultValue, Dictionary<string, string> operandsAndFlags)
         {
             TerminalCommandBase command = null;
-
-            if (string.IsNullOrEmpty(commandName) && (operandsAndFlags.ContainsKey("help") || operandsAndFlags.ContainsKey("h")))
-            {
-                PrintGlobalCommandsHelp();
-                return;
-            }
 
             if (!commands.ContainsKey(commandName))
             {
@@ -575,15 +584,16 @@ namespace Evands.Pellucid.Terminal.Commands
                                         var index = oa.Key.Position;
                                         var type = oa.Key.ParameterType;
 
-                                        var operandName = operandsAndFlags[oa.Value.Name.ToLower()];
-                                        var value = PrepareParameterValue(type, operandName);
-                                        if (value != null)
+                                        var operandName = oa.Value.Name.ToLower();
+                                        var operandValue = operandsAndFlags[operandName];
+                                        object value = null;
+                                        if(TryPrepareParameterValue(type, operandValue, out value))
                                         {
                                             parameterList[index] = value;
                                         }
                                         else
                                         {
-                                            WriteErrorMethod(string.Format("Unable to convert the operand '{0}' with the value '{1}' to the expected type value '{2}'.", operandName, operandsAndFlags[operandName], type.ToString()));
+                                            WriteErrorMethod(string.Format("Unable to convert the operand '{0}' with the value '{1}' to the expected type value '{2}'.", operandName, operandValue, type.ToString()));
                                             return;
                                         }
                                     }
@@ -637,32 +647,38 @@ namespace Evands.Pellucid.Terminal.Commands
             return formatter != null ? formatter : msg => msg;
         }
 
-        private object PrepareParameterValue(CType type, string value)
+        private bool TryPrepareParameterValue(CType type, string value, out object result)
         {
+            result = null;
             if (type == typeof(bool))
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    return false;
+                    result = false;
+                    return true;
                 }
                 else if (value.Equals("yes", StringComparison.InvariantCultureIgnoreCase) ||
                         value.Equals("on", StringComparison.InvariantCultureIgnoreCase))
                 {
+                    result = true;
                     return true;
                 }
                 else if (value.Equals("no", StringComparison.InvariantCultureIgnoreCase) ||
                         value.Equals("off", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return false;
+                    result = false;
+                    return true;
                 }
                 else
                 {
                     try
                     {
-                        return Convert.ToBoolean(value);
+                        result = Convert.ToBoolean(value);
+                        return true;
                     }
                     catch (FormatException)
                     {
+                        result = null;
                         return false;
                     }
                 }
@@ -671,55 +687,65 @@ namespace Evands.Pellucid.Terminal.Commands
             {
                 try
                 {
-                    return Convert.ToInt32(value);
+                    result = Convert.ToInt32(value);
+                    return true;
                 }
                 catch (FormatException)
                 {
-                    return 0;
+                    result = 0;
+                    return false;
                 }
             }
             else if (type == typeof(ushort))
             {
                 try
                 {
-                    return Convert.ToUInt16(value);
+                    result = Convert.ToUInt16(value);
+                    return true;
                 }
                 catch (FormatException)
                 {
-                    return (ushort)0;
+                    result = 0;
+                    return false;
                 }
             }
             else if (type == typeof(uint))
             {
                 try
                 {
-                    return Convert.ToUInt32(value);
+                    result = Convert.ToUInt32(value);
+                    return true;
                 }
                 catch (FormatException)
                 {
-                    return (uint)0;
+                    result = 0;
+                    return false;
                 }
             }
             else if (type == typeof(double))
             {
                 try
                 {
-                    return Convert.ToDouble(value);
+                    result = Convert.ToDouble(value);
+                    return true;
                 }
                 catch (FormatException)
                 {
-                    return (double)0;
+                    result = 0;
+                    return false;
                 }
             }
             else
             {
                 try
                 {
-                    return Convert.ChangeType(value, type, System.Globalization.CultureInfo.InvariantCulture);
+                    result = Convert.ChangeType(value, type, System.Globalization.CultureInfo.InvariantCulture);
+                    return true;
                 }
                 catch
                 {
-                    return null;
+                    result = null;
+                    return false;
                 }
             }
         }
