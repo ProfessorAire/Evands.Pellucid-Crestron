@@ -201,8 +201,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Uncategorized))
             {
-                isLastWriteALine = true;
-                ConsoleBase.WriteLine(message, args);
+                ForceWriteLine(message, args);
             }
         }
 

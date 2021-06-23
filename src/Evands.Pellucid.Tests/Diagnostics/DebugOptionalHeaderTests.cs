@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Evands.Pellucid;
+using System.Diagnostics;
 
 namespace Evands.Pellucid.Diagnostics
 {
@@ -82,13 +83,16 @@ namespace Evands.Pellucid.Diagnostics
         [TestMethod]
         public void When_ConsoleBaseOptionalHeader_IsNotEmpty_PrefixWritten()
         {
-            var expectedStart = "[OptionalHeader]";
-            ConsoleBase.OptionalHeader = expectedStart;
+            ConsoleBase.WriteLine();
+            var expectedHeader = "[OptionalHeader]";
+            ConsoleBase.OptionalHeader = expectedHeader;
             var expectedContents = "Test Message";
-            Debug.WriteLine(expectedContents);
+            Debug.WriteLine("");
+            Debug.WriteLine(this, Evands.Pellucid.Terminal.ColorCode.None, expectedContents);
             var msg = writer.Messages.Last();
-
-            Assert.IsTrue(msg.StartsWith(expectedStart) && msg.Contains(expectedContents));
+            Trace.WriteLine(msg);
+            Assert.IsTrue(msg.Contains(expectedHeader), "Starts incorrectly.");
+            Assert.IsTrue(msg.Contains(expectedContents), "Doesn't contain message.");
         }
     }
 }

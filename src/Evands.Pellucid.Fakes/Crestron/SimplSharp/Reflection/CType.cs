@@ -119,5 +119,10 @@ namespace Crestron.SimplSharp.Reflection
         {
             return internalType.Equals(other.internalType);
         }
+
+        public override string ToString()
+        {
+            return internalType.ToString();
+        }
     }
 }
