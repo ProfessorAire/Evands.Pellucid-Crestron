@@ -577,42 +577,35 @@ namespace Evands.Pellucid.Terminal.Commands
                             {
                                 var parameterList = new object[parameterCount];
 
-                                try
+                                foreach (var oa in operandAttributes)
                                 {
-                                    foreach (var oa in operandAttributes)
-                                    {
-                                        var index = oa.Key.Position;
-                                        var type = oa.Key.ParameterType;
+                                    var index = oa.Key.Position;
+                                    var type = oa.Key.ParameterType;
 
-                                        var operandName = oa.Value.Name.ToLower();
-                                        var operandValue = operandsAndFlags[operandName];
-                                        object value = null;
-                                        if(TryPrepareParameterValue(type, operandValue, out value))
-                                        {
-                                            parameterList[index] = value;
-                                        }
-                                        else
-                                        {
-                                            WriteErrorMethod(string.Format("Unable to convert the operand '{0}' with the value '{1}' to the expected type value '{2}'.", operandName, operandValue, type.ToString()));
-                                            return;
-                                        }
+                                    var operandName = oa.Value.Name.ToLower();
+                                    var operandValue = operandsAndFlags[operandName];
+                                    object value = null;
+                                    if (TryPrepareParameterValue(type, operandValue, out value))
+                                    {
+                                        parameterList[index] = value;
                                     }
-
-                                    foreach (var fa in flagAttributes)
+                                    else
                                     {
-                                        if (operandsAndFlags.ContainsKey(fa.Value.Name.ToLower()) || (fa.Value.ShortName.HasValue && operandsAndFlags.ContainsKey(fa.Value.ShortName.ToString().ToLower())))
-                                        {
-                                            parameterList[fa.Key.Position] = true;
-                                        }
-                                        else
-                                        {
-                                            parameterList[fa.Key.Position] = false;
-                                        }
+                                        WriteErrorMethod(string.Format("Unable to convert the operand '{0}' with the value '{1}' to the expected type value '{2}'.", operandName, operandValue, type.ToString()));
+                                        return;
                                     }
                                 }
-                                catch
+
+                                foreach (var fa in flagAttributes)
                                 {
-                                    success = false;
+                                    if (operandsAndFlags.ContainsKey(fa.Value.Name.ToLower()) || (fa.Value.ShortName.HasValue && operandsAndFlags.ContainsKey(fa.Value.ShortName.ToString().ToLower())))
+                                    {
+                                        parameterList[fa.Key.Position] = true;
+                                    }
+                                    else
+                                    {
+                                        parameterList[fa.Key.Position] = false;
+                                    }
                                 }
 
                                 if (success)
@@ -639,7 +632,7 @@ namespace Evands.Pellucid.Terminal.Commands
 
         private Action<string> ValidateWriter(Action<string> writer)
         {
-            return writer != null ? writer : msg => CrestronConsole.ConsoleCommandResponse(msg);
+            return writer != null ? writer : msg => ConsoleBase.WriteCommandResponse(msg);
         }
 
         private Func<string, string> ValidateFormatter(Func<string, string> formatter)
@@ -851,7 +844,7 @@ namespace Evands.Pellucid.Terminal.Commands
                     var value = string.Format("--{0}", flag.Name);
                     if (flag.ShortName.HasValue)
                     {
-                        value = string.Format("{0}, -{1}", value, flag.ShortName);
+                        value = string.Format("{0}, -{1}{2}", value, flag.ShortName, flag.IsOptional ? " (optional)" : string.Empty);
                     }
 
                     value = FormatHelpFlagMethod(value.PadRight(nameWidth));
@@ -860,10 +853,6 @@ namespace Evands.Pellucid.Terminal.Commands
                     sb.Append(FormatHelpTextMethod(flag.Help));
                     sb.Append(ConsoleBase.NewLine);
                 }
-            }
-            else
-            {
-                sb.Append(FormatHelpTextMethod(string.Format("There is no help available for '{0}'", verbName)));
             }
 
             WriteHelpMethod(sb.ToString());

@@ -690,7 +690,7 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         [TestMethod]
-        public void GlobalHelp_IsPrinted_WhenHelpRequested()
+        public void GlobalHelp_IsPrinted_When_LongHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
@@ -702,7 +702,7 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         [TestMethod]
-        public void GlobalHelp_IsPrinted_WhenShortHelpRequested()
+        public void GlobalHelp_IsPrinted_When_ShortHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
@@ -711,6 +711,148 @@ namespace Evands.Pellucid.Terminal.Commands
             Assert.IsTrue(
                 testWriter.Contains("TestCommand (Test)") &&
                 testWriter.Contains("Test command help."));
+        }
+
+        [TestMethod]
+        public void VerbHelp_Sample_IsPrinted_When_LongHelp_Requested()
+        {
+            var c = new TestCommand();
+            underTest.AddCommand(c);
+            underTest.ExecuteCommand("TestCommand test --help");
+
+            Assert.IsTrue(
+                testWriter.Contains("TestCommand test --fluff") &&
+                testWriter.Contains("Sample One"),
+                "Sample One Not Found");
+
+            Assert.IsTrue(
+                testWriter.Contains("TestCommand t -f") &&
+                testWriter.Contains("Sample Two"),
+                "Sample Two Not Found");
+        }
+
+        [TestMethod]
+        public void VerbHelp_Sample_IsPrinted_When_ShortHelp_Requested()
+        {
+            var c = new TestCommand();
+            underTest.AddCommand(c);
+            underTest.ExecuteCommand("TestCommand test -h");
+
+            Assert.IsTrue(
+                testWriter.Contains("TestCommand test --fluff") &&
+                testWriter.Contains("Sample One"),
+                "Sample One Not Found");
+
+            Assert.IsTrue(
+                testWriter.Contains("TestCommand t -f") &&
+                testWriter.Contains("Sample Two"),
+                "Sample Two Not Found");
+        }
+
+        [TestMethod]
+        public void VerbHelp_Operands_ArePrinted_When_LongHelp_Requested()
+        {
+            var c = new TestCommand();
+            underTest.AddCommand(c);
+            underTest.ExecuteCommand("TestCommand t2 --help");
+
+            Assert.IsTrue(
+                testWriter.Contains("--fluff") &&
+                testWriter.Contains("Provides fluff."),
+                "Fluff operand help not found.");
+
+            Assert.IsTrue(
+                testWriter.Contains("--stuff") &&
+                testWriter.Contains("Provides stuff."),
+                "Stuff operand help not found.");
+        }
+
+        [TestMethod]
+        public void VerbHelp_Operands_ArePrinted_When_ShortHelp_Requested()
+        {
+            var c = new TestCommand();
+            underTest.AddCommand(c);
+            underTest.ExecuteCommand("TestCommand t2 -h");
+
+            Assert.IsTrue(
+                testWriter.Contains("--fluff") &&
+                testWriter.Contains("Provides fluff."),
+                "Fluff operand help not found.");
+
+            Assert.IsTrue(
+                testWriter.Contains("--stuff") &&
+                testWriter.Contains("Provides stuff."),
+                "Stuff operand help not found.");
+        }
+
+        [TestMethod]
+        public void VerbHelp_Flags_ArePrinted_When_LongHelp_Requested()
+        {
+            var c = new TestCommand();
+            underTest.AddCommand(c);
+            underTest.ExecuteCommand("TestCommand t3 --help");
+
+            Assert.IsTrue(
+                testWriter.Contains("--fluff") &&
+                testWriter.Contains("Indicates fluff."),
+                "Fluff flag help not found.");
+
+            Assert.IsTrue(
+                testWriter.Contains("--stuff, -s (optional)") &&
+                testWriter.Contains("Indicates stuff."),
+                "Stuff flag help not found.");
+        }
+
+        [TestMethod]
+        public void VerbHelp_Flags_ArePrinted_When_ShortHelp_Requested()
+        {
+            var c = new TestCommand();
+            underTest.AddCommand(c);
+            underTest.ExecuteCommand("TestCommand t3 -h");
+
+            Assert.IsTrue(
+                testWriter.Contains("--fluff") &&
+                testWriter.Contains("Indicates fluff."),
+                "Fluff flag help not found.");
+
+            Assert.IsTrue(
+                testWriter.Contains("--stuff, -s (optional)") &&
+                testWriter.Contains("Indicates stuff."),
+                "Stuff flag help not found.");
+        }
+
+        [TestMethod]
+        public void CommandHelp_Verbs_WithNoName_Show_FormattedNone()
+        {
+            var c = new TestCommand();
+            underTest.AddCommand(c);
+            underTest.ExecuteCommand("TestCommand --help");
+
+            Assert.IsTrue(testWriter.Contains("<none>"));
+        }
+
+        [TestMethod]
+        public void ValidateWriter_DoesNothing_When_NewValidator_IsNull()
+        {
+            underTest.WriteErrorMethod = (s) => { ConsoleBase.Write(s); };
+            underTest.WriteErrorMethod("temp");
+            Assert.IsTrue(testWriter.Contains("temp") && !testWriter.Contains("temp" + ConsoleBase.NewLine));
+
+            underTest.WriteErrorMethod = null;
+            underTest.WriteErrorMethod("Error");
+            Assert.IsTrue(testWriter.Contains("Error"));
+        }
+
+        [TestMethod]
+        public void ValidateFormatter_DoesNothing_When_NewValidator_IsNull()
+        {
+            underTest.FormatHelpCommandMethod = (s) => s + "1";
+            var result = underTest.FormatHelpCommandMethod("temp");
+            Assert.IsTrue(result == "temp1");
+
+            underTest.FormatHelpCommandMethod = null;
+            result = underTest.FormatHelpCommandMethod("temp");
+            Assert.IsTrue(result == "temp");
         }
     }
 }
