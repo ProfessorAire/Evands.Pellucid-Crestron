@@ -50,13 +50,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleBaseTests.cs" />
+    <Compile Include="ConsoleCommandsTests.cs" />
     <Compile Include="Diagnostics\DebugWriteDebugLineTests.cs" />
     <Compile Include="Diagnostics\DebugBraceTests.cs" />
     <Compile Include="Diagnostics\DebugOptionalHeaderTests.cs" />
     <Compile Include="Diagnostics\DebugWriteExceptionTests.cs" />
     <Compile Include="DumpTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Terminal\Commands\Attributes\CommandAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\VerbAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\SampleAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\OperandAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\FlagAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\TerminalCommandBaseTests.cs" />
     <Compile Include="Terminal\Commands\GlobalCommandTests.cs" />
+    <Compile Include="Terminal\Commands\ManagerTests.cs" />
+    <Compile Include="Terminal\Commands\TerminalCommandBaseOfTTests.cs" />
     <Compile Include="Terminal\Commands\TestCommand.cs" />
     <Compile Include="Terminal\Commands\TerminalCommandTests.cs" />
     <Compile Include="Terminal\Formatting\Tables\CellTests.cs" />
