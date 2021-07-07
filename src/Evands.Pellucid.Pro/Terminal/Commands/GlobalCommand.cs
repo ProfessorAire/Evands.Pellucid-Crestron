@@ -238,6 +238,15 @@ namespace Evands.Pellucid.Terminal.Commands
         public Access CommandAccess { get; private set; }
 
         /// <summary>
+        /// Gets all the registered global commands.
+        /// </summary>
+        /// <returns>All the registered global commands.</returns>
+        public static System.Collections.ObjectModel.ReadOnlyCollection<GlobalCommand> GetAllGlobalCommands()
+        {
+            return new System.Collections.ObjectModel.ReadOnlyCollection<GlobalCommand>(Manager.GetAllGlobalCommands());
+        }
+
+        /// <summary>
         /// Attempts to add the command to the console.
         /// <para>This must be done in the Control System Constructor.</para>
         /// </summary>
@@ -250,7 +259,7 @@ namespace Evands.Pellucid.Terminal.Commands
             {
                 ConsoleAccessLevelEnum level = (ConsoleAccessLevelEnum)CommandAccess;
 
-                if (CrestronConsole.AddNewConsoleCommand(ExecuteCommand, Name, Help, level))
+                if (CrestronConsole.AddNewConsoleCommand(ExecuteCommand, Name, Help, level) || CrestronEnvironment.DevicePlatform == eDevicePlatform.Server)
                 {
                     return Manager.RegisterCrestronConsoleCommand(this);
                 }

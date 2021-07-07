@@ -117,7 +117,8 @@ namespace Evands.Pellucid.Terminal.Commands
             underTest.RemoveFromConsole();
             underTest.Dispose();
             underTest = null;
-            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = false;
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
+            Crestron.SimplSharp.CrestronEnvironment.DevicePlatform = Crestron.SimplSharp.eDevicePlatform.Appliance;
             ConsoleBase.UnregisterConsoleWriter(testWriter);
             testWriter = null;
         }
@@ -327,6 +328,18 @@ namespace Evands.Pellucid.Terminal.Commands
 
             Assert.IsTrue(expected == actual);
             gc.RemoveFromConsole();
+        }
+
+        [TestMethod]
+        public void AddToConsole_ReturnsTrue_WhenServer_AndConsoleReturnsFalse()
+        {
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = false;
+            Crestron.SimplSharp.CrestronEnvironment.DevicePlatform = Crestron.SimplSharp.eDevicePlatform.Server;
+
+            var gc = new GlobalCommand("spa", "Help", Access.Administrator);
+            var actual = gc.AddToConsole();
+
+            Assert.IsTrue(actual);
         }
 
         [TestMethod]
@@ -853,6 +866,23 @@ namespace Evands.Pellucid.Terminal.Commands
             underTest.FormatHelpCommandMethod = null;
             result = underTest.FormatHelpCommandMethod("temp");
             Assert.IsTrue(result == "temp");
+        }
+
+        [TestMethod]
+        public void GetAllGlobalCommands_ReturnsAllGlobalCommands()
+        {
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
+            var gc2 = new GlobalCommand("sap", "Test", Access.Administrator);
+            gc2.AddToConsole();
+
+            var gc3 = new GlobalCommand("spsa", "Test", Access.Operator);
+            gc3.AddToConsole();
+
+            var values = GlobalCommand.GetAllGlobalCommands();
+
+            Assert.IsTrue(values.Contains(gc2));
+            Assert.IsTrue(values.Contains(gc3));
+            Assert.IsTrue(values.Contains(underTest));
         }
     }
 }
