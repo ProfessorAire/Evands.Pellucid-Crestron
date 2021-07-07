@@ -53,6 +53,15 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         /// <summary>
+        /// Gets all the registered global commands.
+        /// </summary>
+        /// <returns>All the registered global commands.</returns>
+        public static GlobalCommand[] GetAllGlobalCommands()
+        {
+            return consoleCommandNames.Values.ToArray();
+        }
+
+        /// <summary>
         /// Gets an array of <see cref="GlobalCommand"/> objects that the specified <see cref="TerminalCommandBase"/> is registered to.
         /// </summary>
         /// <param name="command">The <see cref="TerminalCommandBase"/> to check for registrations.</param>
