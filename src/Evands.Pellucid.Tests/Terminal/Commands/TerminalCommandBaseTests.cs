@@ -146,8 +146,63 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
             Assert.IsTrue(added);
             var reg = t.RegisterCommand("SomethingTest");
             Assert.IsTrue(reg == RegisterResult.Success);
-            Crestron.SimplSharp.CrestronConsole.Messages.Capacity = 0;
+            Crestron.SimplSharp.CrestronConsole.Messages = new StringBuilder();
             gc.ExecuteCommand("NewName Test");
+            Assert.IsTrue(Crestron.SimplSharp.CrestronConsole.Messages.ToString().Contains("Default test command executed."));
+
+            gc.RemoveFromConsole();
+            gc.Dispose();
+        }
+
+        [TestMethod]
+        public void SetAlias_Throws_InvalidOperationException_When_Registered()
+        {
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
+            var t = new TestCommand2();
+            var gc = new GlobalCommand("SomethingTest", "t", Access.Administrator);
+            var added = gc.AddToConsole();
+            Assert.IsTrue(added);
+            var reg = t.RegisterCommand("SomethingTest");
+            Assert.IsTrue(reg == RegisterResult.Success);
+            var threw = false;
+            try
+            {
+                t.Alias = "Throws Exception";
+            }
+            catch (InvalidOperationException)
+            {
+                threw = true;
+            }
+
+            gc.RemoveFromConsole();
+            gc.Dispose();
+
+            Assert.IsTrue(threw);
+        }
+
+        [TestMethod]
+        public void SetAlias_SetsAlias_When_NotRegistered()
+        {
+            var t = new TestCommand2();
+            Assert.IsTrue(t.Name == "TestCommand2");
+            var expected = "NewAlias";
+            t.Alias = expected;
+            Assert.IsTrue(t.Alias == expected);
+        }
+
+        [TestMethod]
+        public void CommandExecute_When_AliasSetManually()
+        {
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
+            var t = new TestCommand2();
+            t.Alias = "NN";
+            var gc = new GlobalCommand("SomethingTest", "t", Access.Administrator);
+            var added = gc.AddToConsole();
+            Assert.IsTrue(added);
+            var reg = t.RegisterCommand("SomethingTest");
+            Assert.IsTrue(reg == RegisterResult.Success);
+            Crestron.SimplSharp.CrestronConsole.Messages = new StringBuilder();
+            gc.ExecuteCommand("NN Test");
             Assert.IsTrue(Crestron.SimplSharp.CrestronConsole.Messages.ToString().Contains("Default test command executed."));
 
             gc.RemoveFromConsole();

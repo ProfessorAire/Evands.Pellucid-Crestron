@@ -727,6 +727,20 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         [TestMethod]
+        public void GlobalHelp_Prints_CommandNamesWithSuffix_When_SuffixPresent()
+        {
+            var c1 = new TestCommand3("string", "s1");
+            var c2 = new TestCommand3("string", "s2");
+            underTest.AddCommand(c1);
+            underTest.AddCommand(c2);
+
+            underTest.ExecuteCommand("-h");
+            Assert.IsTrue(
+                testWriter.Contains("TestCommand3s1 (TC3s1)") &&
+                testWriter.Contains("TestCommand3s2 (TC3s2)"));
+        }
+
+        [TestMethod]
         public void VerbHelp_Sample_IsPrinted_When_LongHelp_Requested()
         {
             var c = new TestCommand();

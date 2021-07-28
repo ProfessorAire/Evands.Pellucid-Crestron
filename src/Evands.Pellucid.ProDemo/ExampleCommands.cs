@@ -33,6 +33,23 @@ namespace Evands.Pellucid.ProDemo
     public class ExampleCommands : TerminalCommandBase
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ExampleCommands"/> class.
+        /// </summary>        
+        public ExampleCommands()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExampleCommands"/> class.
+        /// </summary>
+        /// <param name="suffix">The suffix to append to the command name.</param>        
+        public ExampleCommands(string suffix)
+            : base(suffix)
+        {
+        }
+
+        /// <summary>
         /// Echoes a message to the console.
         /// </summary>
         /// <param name="message">The message to echo.</param>
@@ -156,6 +173,9 @@ namespace Evands.Pellucid.ProDemo
             nc.Dump();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>        
         [Verb("WriteEx", "wex", "Writes an exception to the console.")]
         public void WriteEx()
         {
