@@ -18,6 +18,7 @@
 // </copyright>
 #endregion
 
+using System;
 namespace Evands.Pellucid.Terminal.Commands
 {
     /// <summary>
@@ -60,7 +61,10 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         /// <summary>
-        /// Gets the name of the command.
+        /// Gets or sets the name of the command.
+        /// <para>
+        /// When setting the name this must be set prior to registering the command.
+        /// </para>
         /// </summary>
         public string Name
         {
@@ -72,6 +76,18 @@ namespace Evands.Pellucid.Terminal.Commands
                 }
 
                 return name;
+            }
+
+            set
+            {
+                if (GetCommandsRegisteredWith().Length == 0)
+                {
+                    name = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("You cannot set the name of a terminal command after it has been registered with a global command.");
+                }
             }
         }
 

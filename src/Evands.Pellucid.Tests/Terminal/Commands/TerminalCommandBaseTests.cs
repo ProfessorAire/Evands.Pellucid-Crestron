@@ -98,5 +98,60 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
             gc.RemoveFromConsole();
             gc.Dispose();
         }
+
+        [TestMethod]
+        public void SetName_Throws_InvalidOperationException_When_Registered()
+        {
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
+            var t = new TestCommand2();
+            var gc = new GlobalCommand("SomethingTest", "t", Access.Administrator);
+            var added = gc.AddToConsole();
+            Assert.IsTrue(added);
+            var reg = t.RegisterCommand("SomethingTest");
+            Assert.IsTrue(reg == RegisterResult.Success);
+            var threw = false;
+            try
+            {
+                t.Name = "Throws Exception";
+            }
+            catch (InvalidOperationException)
+            {
+                threw = true;
+            }
+
+            gc.RemoveFromConsole();
+            gc.Dispose();
+
+            Assert.IsTrue(threw);
+        }
+
+        [TestMethod]
+        public void SetName_SetsName_When_NotRegistered()
+        {
+            var t = new TestCommand2();
+            Assert.IsTrue(t.Name == "TestCommand2");
+            var expected = "NewName";
+            t.Name = expected;
+            Assert.IsTrue(t.Name == expected);
+        }
+
+        [TestMethod]
+        public void CommandExecute_When_NameSetManually()
+        {
+            Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
+            var t = new TestCommand2();
+            t.Name = "NewName";
+            var gc = new GlobalCommand("SomethingTest", "t", Access.Administrator);
+            var added = gc.AddToConsole();
+            Assert.IsTrue(added);
+            var reg = t.RegisterCommand("SomethingTest");
+            Assert.IsTrue(reg == RegisterResult.Success);
+            Crestron.SimplSharp.CrestronConsole.Messages.Capacity = 0;
+            gc.ExecuteCommand("NewName Test");
+            Assert.IsTrue(Crestron.SimplSharp.CrestronConsole.Messages.ToString().Contains("Default test command executed."));
+
+            gc.RemoveFromConsole();
+            gc.Dispose();
+        }
     }
 }
