@@ -136,7 +136,7 @@ jobs:
           auth: ${{ secrets.GIST_AUTH_TOKEN }}
           gistID: 511fb463532b10f6fca3eba9df658486
           filename: Evands.Pellucid-Version.json
-          label: Latest Package Version
+          label: Nuget
           color: blue
-          message: "Evands.Pellucid.${{ needs.getVersions.outputs.libVer }}/Evands.Pellucid.Pro.${{ needs.getVersions.outputs.proVer }}"
-          style: for-the-badge
+          message: "${{ needs.getVersions.outputs.libVer }}"
+          style: flat
