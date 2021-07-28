@@ -1,7 +1,8 @@
 # Evands.Pellucid-Crestron
 
-![badge](https://img.shields.io/badge/License-MIT-blueviolet?style=for-the-badge) ![Custom badge](https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fgist.githubusercontent.com%2FProfessorAire%2F511fb463532b10f6fca3eba9df658486%2Fraw%2F0bcb8577a878bd22f35ac0c4760352f1ce7b87c0%2FEvands.Pellucid-Version.json)
-![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/professoraire/511fb463532b10f6fca3eba9df658486/raw/Evands.Pellucid-Tests.json) ![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/professoraire/511fb463532b10f6fca3eba9df658486/raw/Evands.Pellucid-CodeCoverage.json)
+![badge](https://img.shields.io/badge/License-MIT-blueviolet?style=flat)
+![Custom badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fgist.githubusercontent.com%2FProfessorAire%2F511fb463532b10f6fca3eba9df658486%2Fraw%2FEvands.Pellucid-Version.json)
+![badge](https://img.shields.io/endpoint?style=flat&url=https://gist.githubusercontent.com/professoraire/511fb463532b10f6fca3eba9df658486/raw/Evands.Pellucid-Tests.json) ![badge](https://img.shields.io/endpoint?style=flat&url=https://gist.githubusercontent.com/professoraire/511fb463532b10f6fca3eba9df658486/raw/Evands.Pellucid-CodeCoverage.json)
 
 
 ## Overview

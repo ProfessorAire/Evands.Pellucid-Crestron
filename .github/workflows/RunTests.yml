@@ -107,7 +107,7 @@ jobs:
           label: Unit Test Coverage
           color: ${{ env.COLOR }}
           message: ${{ env.COVERAGE }}
-          style: for-the-badge
+          style: flat
 
       - name: Create Tests Badge
         if: github.ref == 'refs/heads/main'
@@ -119,7 +119,7 @@ jobs:
           label: Unit Tests
           color: ${{ env.TESTS_COLOR }}
           message: "${{ env.PASSED }} passing/${{ env.FAILED }} failing"
-          style: for-the-badge
+          style: flat
       
       - name: Check For Failure
         run: |
