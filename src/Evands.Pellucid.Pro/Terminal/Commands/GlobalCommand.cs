@@ -876,7 +876,7 @@ namespace Evands.Pellucid.Terminal.Commands
             var sb = new StringBuilder();
             var help = Helpers.GetCommandHelpFromAttribute(command);
             sb.Append(ConsoleBase.NewLine);
-            sb.Append(FormatHelpCommandMethod(Helpers.GetCommandNameHelpFromAttribute(command)));
+            sb.Append(FormatHelpCommandMethod(Helpers.GetCommandNameHelp(command)));
             if (!string.IsNullOrEmpty(help))
             {
                 sb.AppendFormat(" - {0}{1}", FormatHelpTextMethod(help), ConsoleBase.NewLine);
@@ -937,11 +937,11 @@ namespace Evands.Pellucid.Terminal.Commands
             sb.Append(FormatHelpTextMethod("-----"));
             sb.Append(ConsoleBase.NewLine);
 
-            var nameWidth = commands.Max(c => Helpers.GetCommandNameHelpFromAttribute(c.Value).Length);
+            var nameWidth = commands.Max(c => Helpers.GetCommandNameHelp(c.Value).Length);
 
             foreach (var command in commands)
             {
-                var name = Helpers.GetCommandNameHelpFromAttribute(command.Value);
+                var name = Helpers.GetCommandNameHelp(command.Value);
                 sb.Append(FormatHelpCommandMethod(name.PadRight(nameWidth)));
                 sb.Append(' ', 6);
                 var help = Helpers.GetCommandHelpFromAttribute(command.Value);

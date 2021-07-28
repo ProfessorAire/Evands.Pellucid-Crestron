@@ -37,6 +37,11 @@ namespace Evands.Pellucid.Terminal.Commands
         private string alias;
 
         /// <summary>
+        /// Tracks the suffix provided with the command.
+        /// </summary>
+        private string suffix = string.Empty;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TerminalCommandBase"/> class.
         /// </summary>
         public TerminalCommandBase()
@@ -52,11 +57,8 @@ namespace Evands.Pellucid.Terminal.Commands
         {
             if (!string.IsNullOrEmpty(suffix))
             {
+                this.suffix = suffix;
                 this.name = string.Format("{0}{1}", Name, suffix);
-                if (!string.IsNullOrEmpty(this.Alias))
-                {
-                    this.alias = string.Format("{0}{1}", Alias, suffix);
-                }
             }
         }
 
@@ -78,7 +80,7 @@ namespace Evands.Pellucid.Terminal.Commands
                 return name;
             }
 
-            set
+            protected internal set
             {
                 if (GetCommandsRegisteredWith().Length == 0)
                 {
@@ -101,9 +103,25 @@ namespace Evands.Pellucid.Terminal.Commands
                 if (string.IsNullOrEmpty(alias))
                 {
                     alias = Helpers.GetCommandAliasFromAttribute(this);
+                    if (!string.IsNullOrEmpty(alias))
+                    {
+                        alias = string.Format("{0}{1}", alias, suffix);
+                    }
                 }
 
                 return alias;
+            }
+
+            protected internal set
+            {
+                if (GetCommandsRegisteredWith().Length == 0)
+                {
+                    alias = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("You cannot set the alias of a terminal command after it has been registered with a global command.");
+                }
             }
         }
 

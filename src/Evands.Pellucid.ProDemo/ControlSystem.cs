@@ -82,8 +82,11 @@ namespace Evands.Pellucid.ProDemo
                 var csc = new ControlSystemCommands();
                 csc.RegisterCommand("app");
 
-                var exc = new ExampleCommands();
-                exc.RegisterCommand("app");
+                var exc1 = new ExampleCommands("1");
+                exc1.RegisterCommand("app");
+
+                var exc2 = new ExampleCommands("2");
+                exc2.RegisterCommand("app");
 
                 // Register log writers.
                 Logger.RegisterLogWriter(new CrestronLogWriter());

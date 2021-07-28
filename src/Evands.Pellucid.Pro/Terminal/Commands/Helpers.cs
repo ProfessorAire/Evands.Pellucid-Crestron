@@ -70,18 +70,23 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         /// <summary>
-        /// Gets the command help formatted name from the <see cref="CommandAttribute"/> associated with a <see cref="TerminalCommandBase"/> object.
+        /// Gets the command help formatted name from a <see cref="TerminalCommandBase"/> object.
         /// </summary>
         /// <param name="command">The <see cref="TerminalCommandBase"/> to get the help formatted name for.</param>
         /// <returns>A <see langword="string"/> with the name retrieved.</returns>
-        internal static string GetCommandNameHelpFromAttribute(TerminalCommandBase command)
+        internal static string GetCommandNameHelp(TerminalCommandBase command)
         {
             var nameHelp = string.Empty;
-            var ca = command.GetType().GetCType().GetCustomAttributes(false).OfType<CommandAttribute>().FirstOrDefault();
 
-            if (ca != null)
+            nameHelp = string.Format("{0}{1}", command.Name, string.IsNullOrEmpty(command.Alias) ? string.Empty : string.Format(" ({0})", command.Alias));
+
+            if (string.IsNullOrEmpty(nameHelp))
             {
-                nameHelp = ca.HelpFormattedName;
+                var ca = command.GetType().GetCType().GetCustomAttributes(false).OfType<CommandAttribute>().FirstOrDefault();
+                if (ca != null)
+                {
+                    nameHelp = ca.HelpFormattedName;
+                }
             }
 
             return nameHelp;
