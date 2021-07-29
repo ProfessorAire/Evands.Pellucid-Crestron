@@ -103,7 +103,7 @@ namespace Evands.Pellucid.Terminal.Commands
         [TestMethod]
         public void Command_WithAlias_AskedForHelp_PrintsAliasCorrectly()
         {
-            var expected = "TestCommand (Test)";
+            var expected = "testCommand (test)";
             global.ExecuteCommand("test -h");
             Assert.IsTrue(CrestronConsole.Messages.ToString().Contains(expected));
         }
@@ -165,7 +165,7 @@ namespace Evands.Pellucid.Terminal.Commands
         [TestMethod]
         public void CommandAlias_Shows_InTopLevelHelp()
         {
-            var expected = "(Test)";
+            var expected = "(test)";
             Options.Instance.ColorizeConsoleOutput = false;
             writer = new TestConsoleWriter();
             ConsoleBase.RegisterConsoleWriter(writer);

@@ -118,11 +118,11 @@ namespace Evands.Pellucid.Terminal.Commands.Attributes
                     alias = value;
                     if (!string.IsNullOrEmpty(alias))
                     {
-                        HelpFormattedName = string.Format("{0} ({1})", Name, Alias);
+                        HelpFormattedName = string.Format("{0} ({1})", Helpers.SanitizeHelpName(Name), Alias.ToLower());
                     }
                     else
                     {
-                        HelpFormattedName = Name;
+                        HelpFormattedName = Helpers.SanitizeHelpName(Name);
                     }
                 }
             }

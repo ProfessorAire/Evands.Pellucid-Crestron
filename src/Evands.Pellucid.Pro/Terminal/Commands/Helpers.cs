@@ -78,7 +78,7 @@ namespace Evands.Pellucid.Terminal.Commands
         {
             var nameHelp = string.Empty;
 
-            nameHelp = string.Format("{0}{1}", command.Name, string.IsNullOrEmpty(command.Alias) ? string.Empty : string.Format(" ({0})", command.Alias));
+            nameHelp = string.Format("{0}{1}", SanitizeHelpName(command.Name), string.IsNullOrEmpty(command.Alias) ? string.Empty : string.Format(" ({0})", command.Alias.ToLower()));
 
             if (string.IsNullOrEmpty(nameHelp))
             {
@@ -90,6 +90,45 @@ namespace Evands.Pellucid.Terminal.Commands
             }
 
             return nameHelp;
+        }
+
+        /// <summary>
+        /// Sanitizes a command's name to help make commands somewhat consistent.
+        /// </summary>
+        /// <param name="name">The name to sanitize.</param>
+        /// <returns>A string with a guaranteed lower-case character/s to start.</returns>
+        internal static string SanitizeHelpName(string name)
+        {
+            if (name.ToCharArray().All(c => char.IsUpper(c)))
+            {
+                return name.ToLower();
+            }
+
+            var index = -1;
+            for (var i = 0; i < name.Length; i++)
+            {
+                if (char.IsLower(name[i]))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            var count = name.Length - index;
+
+            if (index > 0)
+            {
+                index--;
+            }
+
+            if (count == name.Length)
+            {
+                return name;
+            }
+            else
+            {
+                return string.Format("{0}{1}", name.Substring(0, name.Length - count).ToLower(), name.Substring(name.Length - count, count));
+            }
         }
 
         /// <summary>
