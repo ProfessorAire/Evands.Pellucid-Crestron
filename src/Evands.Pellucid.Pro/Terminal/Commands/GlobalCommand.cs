@@ -939,7 +939,7 @@ namespace Evands.Pellucid.Terminal.Commands
 
             var nameWidth = commands.Max(c => Helpers.GetCommandNameHelp(c.Value).Length);
 
-            foreach (var command in commands)
+            foreach (var command in commands.OrderBy(c => c.Key))
             {
                 var name = Helpers.GetCommandNameHelp(command.Value);
                 sb.Append(FormatHelpCommandMethod(name.PadRight(nameWidth)));

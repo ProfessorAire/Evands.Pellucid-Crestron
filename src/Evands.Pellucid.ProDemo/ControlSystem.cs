@@ -88,6 +88,12 @@ namespace Evands.Pellucid.ProDemo
                 var exc2 = new ExampleCommands("2");
                 exc2.RegisterCommand("app");
 
+                var cn1 = new CustomNameCommand("XCommand");
+                cn1.RegisterCommand("app");
+
+                var cn2 = new CustomNameCommand("ZedCommand");
+                cn2.RegisterCommand("app");
+
                 // Register log writers.
                 Logger.RegisterLogWriter(new CrestronLogWriter());
 

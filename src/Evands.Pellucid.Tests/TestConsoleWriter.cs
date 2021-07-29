@@ -80,5 +80,16 @@ namespace Evands.Pellucid
             this.Write(message);
             System.Diagnostics.Debug.Write(message);
         }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach (var m in Messages)
+            {
+                sb.Append(m);
+            }
+
+            return sb.ToString();
+        }
     }
 }

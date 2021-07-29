@@ -93,4 +93,18 @@ namespace Evands.Pellucid.Terminal.Commands
         {
         }
     }
+
+    [Command("TestCommand4", "Test command 4 help.")]
+    public class TestCommand4 : TerminalCommandBase
+    {
+        public TestCommand4(string name)
+        {
+            this.Name = name;
+        }
+
+        [Verb("Test", 2, "Help")]
+        public void Test()
+        {
+        }
+    }
 }

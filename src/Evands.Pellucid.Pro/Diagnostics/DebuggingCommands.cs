@@ -27,7 +27,7 @@ namespace Evands.Pellucid.Diagnostics
     /// <summary>
     /// Console commands for configuring debugging.
     /// </summary>
-    [Command("Debug", "Provides methods for configuring program debugging.")]
+    [Command("debug", "Provides methods for configuring program debugging.")]
     public class DebuggingCommands : TerminalCommandBase
     {
         /// <summary>

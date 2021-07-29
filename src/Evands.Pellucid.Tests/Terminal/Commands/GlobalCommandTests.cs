@@ -395,6 +395,17 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         [TestMethod]
+        public void AddCommand_AllowsMultiple_CustomName()
+        {
+            var expected = RegisterResult.Success;
+            var c1 = new TestCommand4("CustomName1");
+            var c2 = new TestCommand4("ADifferentName");
+
+            Assert.IsTrue(underTest.AddCommand(c1) == expected);
+            Assert.IsTrue(underTest.AddCommand(c2) == expected);
+        }
+
+        [TestMethod]
         public void RemoveCommand_Returns_True_When_CommandRemoved()
         {
             var expected = true;
@@ -710,7 +721,7 @@ namespace Evands.Pellucid.Terminal.Commands
 
             underTest.ExecuteCommand("--help");
             Assert.IsTrue(
-                testWriter.Contains("TestCommand (Test)") &&
+                testWriter.Contains("testCommand (test)") &&
                 testWriter.Contains("Test command help."));
         }
 
@@ -722,7 +733,7 @@ namespace Evands.Pellucid.Terminal.Commands
 
             underTest.ExecuteCommand("-h");
             Assert.IsTrue(
-                testWriter.Contains("TestCommand (Test)") &&
+                testWriter.Contains("testCommand (test)") &&
                 testWriter.Contains("Test command help."));
         }
 
@@ -736,8 +747,37 @@ namespace Evands.Pellucid.Terminal.Commands
 
             underTest.ExecuteCommand("-h");
             Assert.IsTrue(
-                testWriter.Contains("TestCommand3s1 (TC3s1)") &&
-                testWriter.Contains("TestCommand3s2 (TC3s2)"));
+                testWriter.Contains("testCommand3s1 (tc3s1)") &&
+                testWriter.Contains("testCommand3s2 (tc3s2)"));
+        }
+
+        [TestMethod]
+        public void GlobalHelp_Prints_CommandNames_Alphabetically()
+        {
+            var c3 = new TestCommand4("Zed");
+            var c1 = new TestCommand();
+            var c2 = new TestCommand2();
+
+            underTest.AddCommand(c3);
+            underTest.AddCommand(c2);
+            underTest.AddCommand(c1);
+
+            Options.Instance.ColorizeConsoleOutput = false;
+
+            underTest.ExecuteCommand("-h");
+
+            var expected = @"Listing the commands available for 'app'
+-----
+testCommand (test)      Test command help.
+testCommand2 (tc2)      Test command 2 help.
+zed                     Test command 4 help.
+-----
+";
+
+            Assert.IsTrue(
+                testWriter.ToString() == expected);
+
+            Options.Instance.ColorizeConsoleOutput = true;
         }
 
         [TestMethod]
