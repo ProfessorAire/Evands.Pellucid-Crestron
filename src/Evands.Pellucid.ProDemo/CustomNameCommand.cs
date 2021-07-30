@@ -23,6 +23,7 @@ using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
 using Evands.Pellucid.Terminal.Formatting.Tables;
 using System;
+using Evands.Pellucid.Diagnostics;
 
 namespace Evands.Pellucid.ProDemo
 {
@@ -48,33 +49,19 @@ namespace Evands.Pellucid.ProDemo
         }
 
         /// <summary>
-        /// Echoes a message to the console.
+        /// Logs a message to the console.
         /// </summary>
-        /// <param name="message">The message to echo.</param>
-        /// <param name="caps">When true will print the message in all caps.</param>
-        [Verb("echo", 2, "Echoes the message provided back to the console.")]
-        [Sample("echo --message \"Just a test.\" -c", "Prints the message \"JUST A TEST.\" to the console.")]
-        public void EchoMessage(
-            [Operand("message", "The message to echo.")] string message,
-            [Flag("caps", 'c', "When present prints the message in all caps.", true)] bool caps)
-        {
-            ConsoleBase.WriteCommandResponse(caps ? message.ToUpper() : message);
-        }
-
-        /// <summary>
-        /// Echoes a message to the console.
-        /// </summary>
-        /// <param name="message">The message to echo.</param>
+        /// <param name="message">The message to log.</param>
         /// <param name="caps">When true will print the message in all caps.</param>
         /// <param name="red">When true will print the message in red.</param>
-        [Verb("echo", 2, "Echoes the message provided back to the console in a specified color.")]
-        [Sample("echo --message \"Just a test.\" -cr", "Prints the message \"JUST A TEST.\" to the console in red.")]
+        [Verb("log", 2, "Logs and echoes the message provided back to the console in a specified color.")]
+        [Sample("log --message \"Just a test.\" -cr", "Logs and prints the message \"JUST A TEST.\" to the console in red.")]
         public void EchoRedMessage(
-            [Operand("message", "The message to echo.")] string message,
+            [Operand("message", "The message to log.")] string message,
             [Flag("caps", 'c', "When present prints the message in all caps.", true)] bool caps,
             [Flag("red", 'r', "When present prints the message in red.")] bool red)
         {
-            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.BrightRed, caps ? message.ToUpper() : message);
+            Logger.LogMessage(this.Name, red ? ConsoleBase.Colors.BrightRed : ConsoleBase.Colors.White, caps ? message.ToUpper() : message);
         }
 
         /// <summary>

@@ -51,10 +51,14 @@
   <ItemGroup>
     <Compile Include="ConsoleBaseTests.cs" />
     <Compile Include="ConsoleCommandsTests.cs" />
+    <Compile Include="Diagnostics\LoggerExtensionsTests.cs" />
+    <Compile Include="TestLogWriter.cs" />
+    <Compile Include="Diagnostics\EnumExtensionsTests.cs" />
     <Compile Include="Diagnostics\DebugWriteDebugLineTests.cs" />
     <Compile Include="Diagnostics\DebugBraceTests.cs" />
     <Compile Include="Diagnostics\DebugOptionalHeaderTests.cs" />
     <Compile Include="Diagnostics\DebugWriteExceptionTests.cs" />
+    <Compile Include="Diagnostics\LoggerTests.cs" />
     <Compile Include="DumpTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Terminal\Commands\Attributes\CommandAttributeTests.cs" />

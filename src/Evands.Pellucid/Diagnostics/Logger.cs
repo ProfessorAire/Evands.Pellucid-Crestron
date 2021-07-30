@@ -59,6 +59,11 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Debug))
             {
+                if (loggers.Count == 0)
+                {
+                    loggers.Add(new CrestronLogWriter());
+                }
+
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteNotice(msg));
             }           
@@ -76,8 +81,68 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Notice))
             {
+                if (loggers.Count == 0)
+                {
+                    loggers.Add(new CrestronLogWriter());
+                }
+
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteNotice(msg));
+            }
+        }
+
+        /// <summary>
+        /// Logs a message to the error log as a notice, also writing it to the console with the specified color.
+        /// </summary>
+        /// <param name="obj">The object the message originated from.</param>
+        /// <param name="color">The color to write the message to the console using.</param>
+        /// <param name="message">The message to prefix the log entry with.</param>
+        /// <param name="args">Optional array of objects to format the message prefix with.</param>
+        public static void LogMessage(object obj, Evands.Pellucid.Terminal.Formatting.ColorFormat color, string message, params object[] args)
+        {
+            LogMessage(obj, LogLevels.Notice, color, message, args);
+        }
+
+        /// <summary>
+        /// Logs a message to the error log at the specified level, also writing it to the console with the specified color.
+        /// </summary>
+        /// <param name="obj">The object the message originated from.</param>
+        /// <param name="logLevel">The <see cref="LogLevels"/> level to write to the log using.</param>
+        /// <param name="color">The color to write the message to the console using.</param>
+        /// <param name="message">The message to prefix the log entry with.</param>
+        /// <param name="args">Optional array of objects to format the message prefix with.</param>
+        public static void LogMessage(object obj, LogLevels logLevel, Evands.Pellucid.Terminal.Formatting.ColorFormat color, string message, params object[] args)
+        {
+            Debug.WriteLine(obj, color, message, args);
+
+            if (Options.Instance.LogLevels.Contains(logLevel))
+            {
+                if (loggers.Count == 0)
+                {
+                    loggers.Add(new CrestronLogWriter());
+                }
+
+                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
+                switch (logLevel)
+                {
+                    case LogLevels.Notice:
+                        loggers.ForEach(l => l.WriteNotice(msg));
+                        break;
+                    case LogLevels.Warning:
+                        loggers.ForEach(l => l.WriteWarning(msg));
+                        break;
+                    case LogLevels.Error:
+                        loggers.ForEach(l => l.WriteError(msg));
+                        break;
+                    case LogLevels.Debug:
+                        loggers.ForEach(l => l.WriteDebug(msg));
+                        break;
+                    case LogLevels.Exception:
+                        loggers.ForEach(l => l.WriteError(msg));
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -93,6 +158,11 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Warning))
             {
+                if (loggers.Count == 0)
+                {
+                    loggers.Add(new CrestronLogWriter());
+                }
+
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteWarning(message));
             }
@@ -110,6 +180,11 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Error))
             {
+                if (loggers.Count == 0)
+                {
+                    loggers.Add(new CrestronLogWriter());
+                }
+
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteError(message));
             }
@@ -128,6 +203,11 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.LogLevels.Contains(LogLevels.Exception))
             {
+                if (loggers.Count == 0)
+                {
+                    loggers.Add(new CrestronLogWriter());
+                }
+
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
                 var sb = new StringBuilder(message.Length + (ex.Message.Length * 2));
 
