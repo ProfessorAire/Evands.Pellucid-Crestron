@@ -164,7 +164,7 @@ namespace Evands.Pellucid.Diagnostics
             [Flag("exception", 'x', "Include to enable printing exception messages. Exclude to disable.", true)] bool exception,
             [Flag("uncat", 'u', "Include to enable printing uncategorized debugging messages. Exclude to disable.", true)] bool uncat,
             [Flag("all", 'a', "Include to enable printing all messages. Exclude to disable.", true)] bool all,
-            [Flag("none", 'n', "Include to disable printing all messages. Exclude to disable.", true)] bool none)
+            [Flag("none", "Include to disable printing all messages. Exclude to disable.", true)] bool none)
         {
             if (all && none)
             {

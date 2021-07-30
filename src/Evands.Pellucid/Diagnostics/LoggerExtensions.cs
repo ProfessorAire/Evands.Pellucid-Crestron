@@ -29,6 +29,31 @@ namespace Evands.Pellucid.Diagnostics
     public static class LoggerExtensions
     {
         /// <summary>
+        /// Logs a message to the error log as a notice, also writing it to the console with the specified color.
+        /// </summary>
+        /// <param name="obj">The object the message originated from.</param>
+        /// <param name="color">The color to write the message to the console using.</param>
+        /// <param name="message">The message to prefix the log entry with.</param>
+        /// <param name="args">Optional array of objects to format the message prefix with.</param>
+        public static void LogMessage(this object obj, Evands.Pellucid.Terminal.Formatting.ColorFormat color, string message, params object[] args)
+        {
+            Logger.LogMessage(obj, color, message, args);
+        }
+        
+        /// <summary>
+        /// Logs a message to the error log at the specified level, also writing it to the console with the specified color.
+        /// </summary>
+        /// <param name="obj">The object the message originated from.</param>
+        /// <param name="logLevel">The <see cref="LogLevels"/> level to write to the log using.</param>
+        /// <param name="color">The color to write the message to the console using.</param>
+        /// <param name="message">The message to prefix the log entry with.</param>
+        /// <param name="args">Optional array of objects to format the message prefix with.</param>
+        public static void LogMessage(this object obj, LogLevels logLevel, Evands.Pellucid.Terminal.Formatting.ColorFormat color, string message, params object[] args)
+        {
+            Logger.LogMessage(obj, logLevel, color, message, args);
+        }
+
+        /// <summary>
         /// Writes a debug notice to the error log.
         /// </summary>
         /// <param name="obj">The object sending the message.</param>

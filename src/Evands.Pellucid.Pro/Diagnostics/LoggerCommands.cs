@@ -43,11 +43,11 @@ namespace Evands.Pellucid.Diagnostics
         [Sample("logging toggle --notices --warnings --errors", "Toggles logging of notices, warnings, and errors.")]
         [Sample("logging toggle", "Prints the current logging configuration to the console.")]
         public void ToggleLevels(
-            [Flag("Debug", "Include to toggle logging debug messages.", true)] bool debug,
-            [Flag("Notices", "Include to toggle logging notices.", true)] bool notices,
-            [Flag("Warnings", "Include to toggle logging warnings.", true)] bool warnings,
-            [Flag("Errors", "Include to toggle logging errors.", true)] bool errors,
-            [Flag("Exceptions", "Include to toggle logging exceptions.", true)] bool exceptions)
+            [Flag("Debug", 'd', "Include to toggle logging debug messages.", true)] bool debug,
+            [Flag("Notices", 'n', "Include to toggle logging notices.", true)] bool notices,
+            [Flag("Warnings", 'w', "Include to toggle logging warnings.", true)] bool warnings,
+            [Flag("Errors", 'e', "Include to toggle logging errors.", true)] bool errors,
+            [Flag("Exceptions", 'x', "Include to toggle logging exceptions.", true)] bool exceptions)
         {
             if (debug)
             {
@@ -92,12 +92,12 @@ namespace Evands.Pellucid.Diagnostics
         [Sample("logging levels --debug", "Enable logging of debug messages and disables all other logging.")]
         [Sample("logging levels", "Prints the current logging configuration to the console.")]
         public void ConfigureLevels(
-            [Flag("Debug", "Include to enable logging debug messages.", true)] bool debug,
-            [Flag("Notices", "Include to enable logging notices.", true)] bool notices,
-            [Flag("Warnings", "Include to enable logging warnings.", true)] bool warnings,
-            [Flag("Errors", "Include to enable logging errors.", true)] bool errors,
-            [Flag("Exceptions", "Include to enable logging exceptions.", true)] bool exceptions,
-            [Flag("All", "Include to enable logging all messages.", true)] bool all,
+            [Flag("Debug", 'd', "Include to enable logging debug messages.", true)] bool debug,
+            [Flag("Notices", 'n', "Include to enable logging notices.", true)] bool notices,
+            [Flag("Warnings", 'w', "Include to enable logging warnings.", true)] bool warnings,
+            [Flag("Errors", 'e', "Include to enable logging errors.", true)] bool errors,
+            [Flag("Exceptions", 'x', "Include to enable logging exceptions.", true)] bool exceptions,
+            [Flag("All", 'a', "Include to enable logging all messages.", true)] bool all,
             [Flag("None", "Include to disable logging all messages.", true)] bool none)
         {
             if (all && none)
