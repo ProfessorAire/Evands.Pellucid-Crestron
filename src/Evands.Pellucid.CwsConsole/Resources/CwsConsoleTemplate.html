@@ -1,0 +1,89 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Evands.Pellucid CWS Console</title>
+    <style type="text/css">
+        {{ CSS }}
+    </style>
+</head>
+
+<body>
+    <div class="flex-page">
+        <div id="header" class="invert">
+            <span>
+                Evands.Pellucid > CWS > Console
+            </span>
+            <span class='right'>
+                Status: <span id="status">Disconnected</span>
+            </span>
+        </div>
+        <div id="console-wrapper">
+            <!-- <textarea id="consoleOutput" readonly="true"></textarea> -->
+            <div id="consoleOutput">
+
+            </div>
+        </div>
+        <div id="entry">
+            <form id="entryForm" class="flex-input">
+                <label id="commandLabel" for="consoleInput">Command ></label>
+                <input type="text" id="consoleInput" />
+                <input type="button" class="btn" onclick="clearContents()" value="Clear Contents" />
+            </form>
+        </div>
+    </div>
+    <script>
+        const output = document.getElementById('consoleOutput');
+        const input = document.getElementById('consoleInput');
+        const entryForm = document.getElementById('entryForm');
+        const response = document.getElementById('response');
+        const status = document.getElementById('status');
+        
+        var isStarted = false;
+        var ws;
+
+        function start() {
+            ws = new WebSocket('wss://{{ HOST }}:{{ PORT }}/');
+            ws.onopen = function (e) {
+                status.innerHTML = 'Connected';
+                console.info("CONNECTED");
+                ws.send('');
+            }
+
+            ws.onclose = function (e) {
+                ws = null;
+                status.innerHTML = 'Disconnected';
+                console.info("CLOSED");
+                start();
+            }
+
+            ws.onmessage = function (e) {
+                output.innerHTML = output.innerHTML + e.data.replace('\r\n', '<br/>').replace('\r', '<br/>').replace('\n', '<br/>');
+                output.scrollTop = output.scrollHeight;
+                output.scrollIntoView(false);
+            }
+
+            if (isStarted === false) {
+                document.addEventListener('submit', (e) => {
+                    console.info('in method');
+                    output.innerHTML = output.innerHTML + input.value + "<br/>";
+                    e.preventDefault();
+                    ws.send(input.value);
+                    input.value = '';
+                });
+
+                isStarted = true;
+            }
+        }
+
+        start();
+
+        function clearContents() {
+            output.innerHTML = '';
+        }
+    </script>
+</body>
+
+</html>
