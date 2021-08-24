@@ -1,0 +1,76 @@
+body {
+    background-color: rgb(245, 245, 245);
+    color: #000000;
+    padding: 0;
+    margin: 0;
+}
+
+#consoleOutput {
+    box-sizing: border-box;
+    padding: 8px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#consoleInput {
+    margin-left: 4px;
+    flex-grow: 1;
+    align-self: center;
+}
+
+.flex-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    align-items: stretch;
+}
+
+.flex-input {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-wrap:wrap;
+}
+
+#header {
+    height: auto;
+    padding: 8px;
+    margin: 0;
+    background-color: #71deff;
+}
+
+#console-wrapper {
+    flex-grow: 1;
+    border: 3px solid #71deff;
+    overflow-y: auto;            
+    background-color:rgb(56, 56, 56);
+    color: #FFFFFF;
+}
+
+#entry {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding: 12px;
+}
+
+.btn {
+    margin: 4px;
+    padding: 8px;
+    text-decoration: none;
+    border: none;
+    background-color: #3bd0fd;
+    color: #FFFFFF;
+}
+
+.btn:active {
+    background-color: #71deff;
+}
+
+#commandLabel {
+    font-weight: bold;
+    align-self: center;
+}
+
+.right {
+    float:right;
+}

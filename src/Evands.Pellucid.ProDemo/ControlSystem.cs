@@ -44,6 +44,11 @@ namespace Evands.Pellucid.ProDemo
         private readonly string header = "Control Processor";
 
         /// <summary>
+        /// Holds a reference to the CWS server so it can be disposed of.
+        /// </summary>
+        private Crestron.SimplSharp.WebScripting.HttpCwsServer cws;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ControlSystem"/> class.
         /// </summary>
         public ControlSystem()
@@ -59,10 +64,6 @@ namespace Evands.Pellucid.ProDemo
                 // Setup the path the options are saved to and loaded from.
                 Options.FilePath = "/USER/pellucid.console-options.toml";
 
-                // Setup the global command(s).
-                var appCommand = new GlobalCommand("app", "Application commands.", Access.Programmer);
-                var regResult = appCommand.AddToConsole();
-
                 // Add a console writer to the console.
                 // This could be done with the ProConsole class as well, or your own
                 // implementation extending the ConsoleBase class.
@@ -70,6 +71,23 @@ namespace Evands.Pellucid.ProDemo
                 // gets registered by default, precluding the need for this, but it shows
                 // how to hook your own console writers into the system.
                 ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Terminal.CrestronConsoleWriter());
+                cws = new Crestron.SimplSharp.WebScripting.HttpCwsServer("/pellucid/");
+                cws.Register();
+
+                // This is the optional CwsConsoleWriter, usually used for something like VC-4 console access.
+                if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Server)
+                {
+                    ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, string.Format("console/{0}", InitialParametersClass.RoomId), 53000, false));
+                }
+                else
+                {
+                    ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, 53000, false));
+                }
+
+                // Setup the global command(s).
+                var appCommand = new GlobalCommand("app", "Application commands.", Access.Programmer);
+                var regResult = appCommand.AddToConsole();
+                appCommand.CommandExceptionEncountered += (o, a) => appCommand.LogException(a.Exception, "Exception while executing command '{0}'.", a.CommandContent);
 
                 if (!regResult)
                 {
@@ -208,11 +226,11 @@ namespace Evands.Pellucid.ProDemo
                     // The program has been resumed. Resume all the user threads/timers as needed.
                     break;
                 case eProgramStatusEventType.Stopping:
-                    // The program has been stopped.
-                    // Close all threads. 
-                    // Shutdown all Client/Servers in the system.
-                    // General cleanup.
-                    // Unsubscribe to all System Monitor events
+                    if (cws != null)
+                    {
+                        cws.Dispose();
+                        cws = null;
+                    }
                     break;
             }
         }

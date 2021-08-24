@@ -1,0 +1,94 @@
+body {
+    background-color: black;
+    color: #00FF00;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0;
+    margin: 0;
+}
+
+#consoleOutput {
+    box-sizing: border-box;
+    padding: 8px;
+}
+
+#consoleInput {
+    border: 1px dashed #00FF00;
+    border-radius: 0;
+    margin-left: 4px;
+    flex-grow: 1;
+    outline: none;
+    align-self: center;
+}
+
+#consoleInput:focus {
+    border: 1px solid #00FF00;
+}
+
+.flex-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    align-items: stretch;
+}
+
+.flex-input {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+#header {
+    height: auto;
+    padding: 8px;
+    margin: 0;
+}
+
+#console-wrapper {
+    flex-grow: 1;
+    border: 3px solid #00FF00;
+    overflow-y: auto;
+}
+
+#entry {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding: 12px;
+}
+
+.invert {
+    background-color: #00FF00;
+    color: black;
+}
+
+.btn {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 4px;
+    padding: 8px;
+    background-color: #00FF00;
+    color: black;
+    text-decoration: none;
+    border: none;
+}
+
+.btn:active {
+    background-color: black;
+    color: #00FF00;
+}
+
+#commandLabel {
+    font-weight: bold;
+    align-self: center;
+}
+
+textarea {
+    background-color: black;
+    color: #00FF00;
+    border: none;
+    resize: none;
+}
+
+input {
+    background-color: black;
+    color: #00FF00;
+}
