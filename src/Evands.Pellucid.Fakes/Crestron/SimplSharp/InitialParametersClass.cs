@@ -10,8 +10,11 @@ namespace Crestron.SimplSharp
         static InitialParametersClass()
         {
             ApplicationNumber = 1;
+            RoomId = string.Empty;
         }
 
         public static int ApplicationNumber { get; set; }
+
+        public static string RoomId { get; set; }
     }
 }

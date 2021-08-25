@@ -23,5 +23,10 @@ namespace Crestron.SimplSharp
         {
             logMessages.AppendFormat("Error: {0}\r\n", message);
         }
+
+        public static void Exception(string message, Exception ex)
+        {
+            logMessages.AppendFormat("Exception: {0}\r\n{1}\r\n", message, ex);
+        }
     }
 }
