@@ -52,6 +52,7 @@
     <Compile Include="ConsoleBaseTests.cs" />
     <Compile Include="ConsoleCommandsTests.cs" />
     <Compile Include="Diagnostics\LoggerExtensionsTests.cs" />
+    <Compile Include="OptionsTests.cs" />
     <Compile Include="TestLogWriter.cs" />
     <Compile Include="Diagnostics\EnumExtensionsTests.cs" />
     <Compile Include="Diagnostics\DebugWriteDebugLineTests.cs" />

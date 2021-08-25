@@ -33,11 +33,6 @@ namespace Evands.Pellucid
     public class Options
     {
         /// <summary>
-        /// The default file name for the options file.
-        /// </summary>
-        private static string fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
-
-        /// <summary>
         /// Backing field for the <see cref="Instance"/> property.
         /// </summary>
         private static Options instance;
@@ -48,21 +43,10 @@ namespace Evands.Pellucid
         private bool autoSave = true;
 
         /// <summary>
-        /// Initializes static members of the <see cref="Options"/> class.
-        /// </summary>        
-        static Options()
-        {
-            FilePath = Path.Combine(Path.Combine("/USER", "Pellucid"), fileName);
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Options"/> class.
         /// </summary>        
         public Options()
         {
-#if !TEST
-            CrestronEnvironment.ProgramStatusEventHandler += HandleAutoLoad;
-#endif
         }
 
         /// <summary>
@@ -82,7 +66,7 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
-        /// Gets or sets the file path to save the options file to.
+        /// Gets or sets the path to save the options file to.
         /// </summary>
         public static string FilePath { get; set; }
 
@@ -163,7 +147,8 @@ namespace Evands.Pellucid
         /// </summary>        
         public void Save()
         {
-#if !TEST
+            ValidateFilePath();
+
             try
             {
                 MinimalTomlParser.SerializeToDisk(this, FilePath);
@@ -173,22 +158,46 @@ namespace Evands.Pellucid
                 ErrorLog.Exception("Pellucid.Options", ex);
                 Debug.WriteException(this, ex, "Exception while saving Pellucid.Options to disk.");
             }
-#endif
+        }
+
+        /// <summary>
+        /// Overrides the <see cref="Instance"/> property with a new instance of the <see cref="Options"/> class,
+        /// with the default values and auto-save set to <see langword="false"/>. If called before accessing the
+        /// <see cref="Instance"/> property this will prevent the program from attempting to load an existing file
+        /// from disk.
+        /// <para>
+        /// This can be useful when writing unit-tests for items that call into this class.
+        /// </para>
+        /// </summary>
+        public static void UseDefault()
+        {
+            instance = new Options().WithDefaults();
+            instance.autoSave = false;
         }
 
         /// <summary>
         /// Loads the options from a TOML file in the directory specified in the <see cref="FilePath"/> property.
+        /// If the <see cref="FilePath"/> property is null or empty will default to "/USER/Pellucid/pellucid.console-options[id].toml",
+        /// where the "01" is the application number, padded to 2 places on a processor and the RoomId on a server.
         /// <para>If it exists, this file is automatically loaded when the application first starts.</para>
         /// </summary>
         /// <returns>An <see cref="Options"/> object.</returns>        
         private static Options Load()
         {
-#if !TEST
+            ValidateFilePath();
+
             if (File.Exists(FilePath))
             {
                 try
                 {
                     var options = MinimalTomlParser.DeserializeFromDisk<Options>(FilePath);
+                    CrestronEnvironment.ProgramStatusEventHandler -= options.HandleAutoLoad;
+                    
+                    if (options.AutoSave)
+                    {
+                        CrestronEnvironment.ProgramStatusEventHandler += options.HandleAutoLoad;
+                    }
+
                     return options;
                 }
                 catch (Exception ex)
@@ -201,9 +210,27 @@ namespace Evands.Pellucid
             {
                 return new Options().WithDefaults();
             }
-#else
-            return new Options().WithDefaults();
-#endif
+        }
+
+        /// <summary>
+        /// Validates that the FilePath is not an empty string, setting it to the default value if it is.
+        /// </summary>
+        private static void ValidateFilePath()
+        {
+            if (string.IsNullOrEmpty(FilePath))
+            {
+                var fileName = string.Empty;
+                if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance)
+                {
+                    fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
+                }
+                else
+                {
+                    fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.RoomId);
+                }
+
+                FilePath = Path.Combine(Path.Combine("/USER", "Pellucid"), fileName);
+            }
         }
 
         /// <summary>
