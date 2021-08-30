@@ -45,7 +45,7 @@
         var ws;
 
         function start() {
-            ws = new WebSocket('wss://{{ HOST }}:{{ PORT }}/');
+            ws = new WebSocket('{{ PROTOCOL }}{{ HOST }}:{{ PORT }}/');
             ws.onopen = function (e) {
                 status.innerHTML = 'Connected';
                 console.info("CONNECTED");

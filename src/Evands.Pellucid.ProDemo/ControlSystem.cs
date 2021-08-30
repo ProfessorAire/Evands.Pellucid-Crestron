@@ -81,7 +81,14 @@ namespace Evands.Pellucid.ProDemo
                 }
                 else
                 {
-                    ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, 53000, false));
+                    if (CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Series3)
+                    {
+                        ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, true, 53000, false));
+                    }
+                    else
+                    {
+                        ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, 53000, false));
+                    }
                 }
 
                 // Setup the global command(s).
