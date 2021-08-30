@@ -147,7 +147,7 @@ namespace Evands.Pellucid.Cws
         {
             if (Validate())
             {
-                server.Send(message.Replace("\r\n", "<br/>").Replace("\r", "<br/>").Replace("\n", "<br/>").Replace(" ", "&nbsp;").OptionalFormat(args), true);
+                server.Send(string.Format(message.Replace("\r\n", "<br/>").Replace("\r", "<br/>").Replace("\n", "<br/>").Replace(" ", "&nbsp;"), args), true);
             }
         }
 
