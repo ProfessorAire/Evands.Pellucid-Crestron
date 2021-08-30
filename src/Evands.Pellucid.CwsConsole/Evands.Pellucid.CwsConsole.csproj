@@ -74,7 +74,7 @@
   <ItemGroup>
     <Compile Include="Cws\ConsoleRoute.cs" />
     <Compile Include="Cws\CwsConsoleWriter.cs" />
-    <Compile Include="Cws\SocketListener.cs" />
+    <Compile Include="Cws\WebSocketListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Resources\CwsConsoleTemplate.html" />
     <None Include="Properties\ControlSystem.cfg" />
