@@ -93,8 +93,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (IsValid(obj))
             {
-                var headerColors = GetHeaderColors(obj);
-                var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                var header = GetMessageHeader(obj, true, true);
 
                 message = Formatters.GetColorFormattedString(colors, message, args);
 
@@ -156,8 +155,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     WriteLine("{0}{1}", header, message);
                 }
                 else
@@ -219,8 +217,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWrite("{0}{1}", header, message);
                 }
                 else
@@ -244,8 +241,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWriteLine("{0}{1}", header, message);
                 }
                 else
@@ -269,8 +265,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWrite("{0}{1}", header, message);
                 }
                 else
@@ -294,8 +289,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWriteLine("{0}{1}", header, message);
                 }
                 else
@@ -319,8 +313,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWrite("{0}{1}", header, message);
                 }
                 else
@@ -344,8 +337,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWriteLine("{0}{1}", header, message);
                 }
                 else
@@ -369,8 +361,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWrite("{0}{1}", header, message);
                 }
                 else
@@ -394,8 +385,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWriteLine("{0}{1}", header, message);
                 }
                 else
@@ -419,8 +409,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWrite("{0}{1}", header, message);
                 }
                 else
@@ -444,8 +433,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWriteLine("{0}{1}", header, message);
                 }
                 else
@@ -469,8 +457,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWrite("{0}{1}", header, message);
                 }
                 else
@@ -494,8 +481,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 if (isLastWriteALine)
                 {
-                    var headerColors = GetHeaderColors(obj);
-                    var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                    var header = GetMessageHeader(obj, true, true);
                     ForceWriteLine("{0}{1}", header, message);
                 }
                 else
@@ -523,8 +509,7 @@ namespace Evands.Pellucid.Diagnostics
                     ConsoleBase.WriteLine();
                 }
 
-                var headerColors = GetHeaderColors(obj);
-                var header = Formatters.GetColorFormattedString(headerColors, GetMessageHeaderWithTimestamp(obj));
+                var header = GetMessageHeader(obj, true, true);
 
                 message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Exception, message, args);
 
@@ -539,7 +524,7 @@ namespace Evands.Pellucid.Diagnostics
                     exceptionIndex++;
                     sb.Append(exFormat.FormatText(false, "{1}--------Exception {0}--------{1}", exceptionIndex, ConsoleBase.NewLine));
                     sb.AppendFormat("{0}", ex.ToString().Replace(Environment.NewLine, ConsoleBase.NewLine));
-                    sb.Append(exFormat.FormatText(true,"{0}-----------------------------", ConsoleBase.NewLine));
+                    sb.Append(exFormat.FormatText(true, "{0}-----------------------------", ConsoleBase.NewLine));
                     ex = ex.InnerException;
                 }
 
@@ -617,112 +602,73 @@ namespace Evands.Pellucid.Diagnostics
         /// </summary>
         /// <param name="obj">The object to use when formatting the header.<para>Can be null.</para></param>
         /// <returns>A string with header information for a terminal message.</returns>
+        [Obsolete("This method has been deprecated and will be removed in a future version.", false)]
         public static string GetMessageHeaderWithTimestamp(object obj)
         {
-            if (isLastWriteALine)
-            {
-                if (!Options.Instance.UseTimestamps)
-                {
-                    return GetMessageHeader(obj);
-                }
+            return GetMessageHeader(obj, true, true);
+        }
 
-                if (obj == null)
-                {
-                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
-                    {
-                        return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, GetTimestamp());
-                    }
-
-                    return string.Format("[{0}] ", GetTimestamp());
-                }
-                else if (obj as string != null)
-                {
-                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
-                    {
-                        return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj);
-                    }
-
-                    return string.Format("[{0}][{1}] ", GetTimestamp(), obj);
-                }
-                else
-                {
-                    var debugObject = obj as IDebugData;
-                    if (debugObject != null)
-                    {
-                        if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
-                        {
-                            return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), debugObject.Header);
-                        }
-
-                        return string.Format("[{0}][{1}] ", GetTimestamp(), debugObject.Header);
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
-                {
-                    return string.Format("{0}[{1}][{2}] ", ConsoleBase.OptionalHeader, GetTimestamp(), obj.GetType().Name);
-                }
-
-                return string.Format("[{0}][{1}] ", GetTimestamp(), obj.GetType().Name);
-            }
-            else
-            {
-                return string.Empty;
-            }
+        /// <summary>
+        /// Returns a header snippet based on the object provided. Has no timestamp and no color.
+        /// </summary>
+        /// <param name="obj">The object to use when formatting the header.<para>Can be null.</para></param>
+        /// <returns>A string with header information for a terminal message.</returns>
+        public static string GetMessageHeader(object obj)
+        {
+            return GetMessageHeader(obj, false, false);
         }
 
         /// <summary>
         /// Returns a header snippet based on the object provided.
         /// </summary>
         /// <param name="obj">The object to use when formatting the header.<para>Can be null.</para></param>
+        /// <param name="withTimestamp">Indicates whether to get a timestamp, provided the <see cref="Options.UseTimestamps"/> property is true.</param>
+        /// <param name="withColor">Indicates whether to get a colored header, provided the <see cref="Options.ColorizeConsoleOutput"/> property is true.</param>
         /// <returns>A string with header information for a terminal message.</returns>
-        public static string GetMessageHeader(object obj)
+        public static string GetMessageHeader(object obj, bool withTimestamp, bool withColor)
         {
+            var header = string.Empty;
+
             if (isLastWriteALine)
             {
+                var stamp = (withTimestamp && Options.Instance.UseTimestamps) ? GetTimestamp() : string.Empty;
+                var optional = !string.IsNullOrEmpty(ConsoleBase.OptionalHeader) ? ConsoleBase.OptionalHeader : string.Empty;
                 if (obj == null)
                 {
-                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
-                    {
-                        return string.Format("{0} ", ConsoleBase.OptionalHeader);
-                    }
-
-                    return string.Empty;
+                    header = string.Format("{0}{1}", optional, stamp);
                 }
                 else if (obj as string != null)
                 {
-                    if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
-                    {
-                        return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj);
-                    }
-
-                    return string.Format("[{0}] ", obj);
+                    header = string.Format("{0}{1}[{2}]", optional, stamp, obj);
                 }
                 else
                 {
                     var debugObject = obj as IDebugData;
                     if (debugObject != null)
                     {
-                        if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
-                        {
-                            return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, debugObject.Header);
-                        }
-
-                        return string.Format("[{0}] ", debugObject.Header);
+                        header = string.Format("{0}{1}[{2}]", optional, stamp, debugObject.Header);
+                    }
+                    else
+                    {
+                        header = string.Format("{0}{1}[{2}]", optional, stamp, obj.GetType().Name);
                     }
                 }
 
-                if (!string.IsNullOrEmpty(ConsoleBase.OptionalHeader))
+                if (!string.IsNullOrEmpty(header))
                 {
-                    return string.Format("{0}[{1}] ", ConsoleBase.OptionalHeader, obj.GetType().Name);
+                    if (withColor && Options.Instance.ColorizeConsoleOutput)
+                    {
+                        var colors = GetHeaderColors(obj);
+                        header = string.Format("{0} ", colors.FormatText(header));
+                    }
+                    else
+                    {
+                        header = string.Format("{0} ", header);
+                    }
                 }
+            }
 
-                return string.Format("[{0}] ", obj.GetType().Name);
-            }
-            else
-            {
-                return string.Empty;
-            }
+            return header;
         }
 
         /// <summary>
@@ -778,12 +724,17 @@ namespace Evands.Pellucid.Diagnostics
         /// <returns>A <see langword="string"/> with a properly formatted timestamp.</returns>
         private static string GetTimestamp()
         {
-            if (Options.Instance.Use24HourTime)
+            if (!Options.Instance.UseTimestamps)
             {
-                return CrestronEnvironment.GetLocalTime().ToString("HH:mm:ss");
+                return string.Empty;
             }
 
-            return CrestronEnvironment.GetLocalTime().ToLongTimeString();
+            if (Options.Instance.Use24HourTime)
+            {
+                return string.Format("[{0}]", CrestronEnvironment.GetLocalTime().ToString("HH:mm:ss"));
+            }
+
+            return string.Format("[{0}]", CrestronEnvironment.GetLocalTime().ToLongTimeString());
         }
 
         /// <summary>
