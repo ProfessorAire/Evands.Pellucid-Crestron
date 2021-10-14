@@ -64,7 +64,7 @@ namespace Evands.Pellucid.Diagnostics
                     loggers.Add(new CrestronLogWriter());
                 }
 
-                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
+                var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj, false, false), message.OptionalFormat(args));
                 loggers.ForEach(l => l.WriteNotice(msg));
             }           
         }

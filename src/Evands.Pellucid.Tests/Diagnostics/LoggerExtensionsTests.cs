@@ -97,7 +97,7 @@ namespace Evands.Pellucid.Diagnostics
 
             for (var i = 0; i < linesToTest.Length; i++)
             {
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31m{0}\x1b[0m", linesToTest[i])));
+                Assert.IsTrue(writer.Messages[i].Contains(ConsoleBase.Colors.Red.FormatText(linesToTest[i])));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Notice][LoggerExtensionsTests] {0}", linesToTest[i]));
             }
         }
