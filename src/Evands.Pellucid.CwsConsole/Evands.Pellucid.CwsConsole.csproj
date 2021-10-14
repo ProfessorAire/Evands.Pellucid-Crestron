@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -44,6 +44,7 @@
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
+    <DocumentationFile>bin\Release\Evands.Pellucid.CwsConsole.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

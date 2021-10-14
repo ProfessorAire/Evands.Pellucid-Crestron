@@ -38,6 +38,7 @@ function Get-LibVersion
 $libContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj"
 $libProContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj"
 $libProDemoContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj"
+$libCwsContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.CwsConsole/Evands.Pellucid.CwsConsole.csproj"
 
 Write-Host "Creating new Visual Studio DTE Object"
 $dte = New-Object -ComObject VisualStudio.DTE.9.0
@@ -50,6 +51,7 @@ $dte.Solution.Open($path)
 
 $libVersion = ""
 $proVersion = ""
+$cwsVersion = ""
 
 Write-Host "Looking for version information"
 foreach ($proj in $dte.Solution.Projects)
@@ -81,6 +83,11 @@ foreach ($proj in $dte.Solution.Projects)
                                     Write-Host "Evands.Pellucid.Pro version found: $ver"
                                     $proVersion = $ver
                                 }
+                                elseif ($proj.Name -eq "Evands.Pellucid.CwsConsole")
+                                {
+                                    Write-Host "Evands.Pellucid.CwsConsole version found: $ver"
+                                    $cwsVersion = $ver
+                                }
                             }
                         }
                     }
@@ -96,6 +103,7 @@ $dte.Quit()
 Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj" -Value $libContents
 Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj" -Value $libProContents
 Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj" -Value $libProDemoContents
+Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.CwsConsole/Evands.Pellucid.CwsConsole.csproj" -Value $libCwsContents
 
 if ($libVersion -eq "" -or $proVersion -eq "")
 {
@@ -106,13 +114,22 @@ else
 {
     $ver1 = Get-LibVersion $libVersion
     $ver2 = Get-LibVersion $proVersion
+    $ver3 = Get-LibVersion $cwsVersion
+
+    Write-Host "Cws Version Found: $ver3"
 
     $preRelease = "false"
+    $cwsPre = "false"
 
-    if ($ver1 -contains "-")
+    if ($ver1.IndexOf("-") -gt -1)
     {
         $preRelease = "true"
     }
 
-    return $ver1, $libVersion, $ver2, $proVersion, $preRelease
+    if ($ver3.IndexOf("-") -gt -1)
+    {
+        $cwsPre = "true"
+    }
+
+    return $ver1, $libVersion, $ver2, $proVersion, $preRelease, $ver3, $cwsVersion, $cwsPre
 }

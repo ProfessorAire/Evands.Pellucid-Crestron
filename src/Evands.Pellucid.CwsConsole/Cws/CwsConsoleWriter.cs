@@ -143,13 +143,20 @@ namespace Evands.Pellucid.Cws
 
             this.server = cwsServer;
 
-            if (CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Series3 || CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Unspecified)
+            try
+            {
+                if (CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Series3 || CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Unspecified)
+                {
+                    consoleRoute = new HttpCwsRoute(routePath);
+                }
+                else
+                {
+                    consoleRoute = new HttpCwsRoute(routePath, authenticateRoute);
+                }
+            }
+            catch
             {
                 consoleRoute = new HttpCwsRoute(routePath);
-            }
-            else
-            {
-                consoleRoute = new HttpCwsRoute(routePath, authenticateRoute);
             }
 
             consoleRouteHandler = new ConsoleRoute(websocketPort, secureWebsocket);
