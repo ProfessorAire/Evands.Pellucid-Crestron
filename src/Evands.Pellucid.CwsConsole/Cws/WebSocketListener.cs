@@ -62,7 +62,7 @@ namespace Evands.Pellucid.Cws
         private List<uint> connectedSocketIndexes = new List<uint>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SocketListener"/> class.
+        /// Initializes a new instance of the <see cref="WebSocketListener"/> class.
         /// </summary>
         /// <param name="useSecureServer"></param>        
         public WebSocketListener(bool useSecureServer)
@@ -143,7 +143,7 @@ namespace Evands.Pellucid.Cws
         /// </summary>
         /// <param name="data">The data to send.</param>
         /// <param name="clientIndex">The index of the client to send the data to.</param>
-        /// <param name="createFrame">A value indicating whether to create a websocket frame to wrap the data in.   
+        /// <param name="createFrame">A value indicating whether to create a websocket frame to wrap the data in.</param>
         public void Send(string data, uint clientIndex, bool createFrame)
         {
             if (createFrame)
@@ -158,7 +158,7 @@ namespace Evands.Pellucid.Cws
         /// Attempts to send the specified data to all the connected clients.
         /// </summary>
         /// <param name="data">The data to send.</param>
-        /// <param name="createFrame">A value indicating whether to create a websocket frame to wrap the data in.   
+        /// <param name="createFrame">A value indicating whether to create a websocket frame to wrap the data in.</param>
         public void Send(byte[] data, bool createFrame)
         {
             if (!useSecureServer)
@@ -205,7 +205,7 @@ namespace Evands.Pellucid.Cws
         /// Attempts to send the specified data to all the connected clients.
         /// </summary>
         /// <param name="data">The data to send.</param>
-        /// <param name="createFrame">A value indicating whether to create a websocket frame to wrap the data in.       
+        /// <param name="createFrame">A value indicating whether to create a websocket frame to wrap the data in.</param>
         public void Send(string data, bool createFrame)
         {
             if (createFrame)
