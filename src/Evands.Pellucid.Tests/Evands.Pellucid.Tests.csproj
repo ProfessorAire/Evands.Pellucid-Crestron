@@ -54,6 +54,9 @@
     <Compile Include="Diagnostics\DebugTests.cs" />
     <Compile Include="Diagnostics\LoggerExtensionsTests.cs" />
     <Compile Include="OptionsTests.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpCollectionTests.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpObjectTests.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpNodeTests.cs" />
     <Compile Include="TestLogWriter.cs" />
     <Compile Include="Diagnostics\EnumExtensionsTests.cs" />
     <Compile Include="Diagnostics\DebugWriteDebugLineTests.cs" />

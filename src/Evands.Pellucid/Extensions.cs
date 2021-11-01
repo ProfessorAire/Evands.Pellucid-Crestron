@@ -29,7 +29,7 @@ namespace Evands.Pellucid
         /// <summary>
         /// Dumps the specified object to the console.
         /// </summary>
-        /// <param name="obj">The object to dump to the console.</param>
+        /// <param name="obj">The object to format details about.</param>
         public static void Dump(this object obj)
         {
             if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
@@ -38,6 +38,62 @@ namespace Evands.Pellucid
             }
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj));
+        }
+
+        /// <summary>
+        /// Dumps the specified object to the console.
+        /// </summary>
+        /// <param name="obj">The object to format details about.</param>
+        /// <param name="maxDepth">The maximum number of times to recurse on complex objects.
+        /// <para>A value of 1 would indicate dumping the top-level properties on the object provided,
+        /// while ignoring properties that are complex objects with additional properties of their own.</para>
+        /// <para>A value of 0 indicates no max depth.</para>
+        /// </param>
+        public static void Dump(this object obj, int maxDepth)
+        {
+            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
+            {
+                ConsoleBase.WriteLine();
+            }
+
+            ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, maxDepth));
+        }
+
+        /// <summary>
+        /// Dumps the specified object to the console.
+        /// </summary>
+        /// <param name="obj">The object to format details about.</param>
+        /// <param name="useFullTypeNames"><see langword="true"/> to use an object's fully qualified
+        /// name, otherwise just the short name.</param>
+        public static void Dump(this object obj, bool useFullTypeNames)
+        {
+            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
+            {
+                ConsoleBase.WriteLine();
+            }
+
+            ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, useFullTypeNames));
+        }
+
+        /// <summary>
+        /// Dumps the specified object to the console.
+        /// </summary>
+        /// <param name="obj">The object to format details about.</param>
+        /// <param name="maxDepth">The maximum number of times to recurse on complex objects.
+        /// <para>A value of 1 would indicate dumping the top-level properties on the object provided,
+        /// while ignoring properties that are complex objects with additional properties of their own.</para>
+        /// <para>A value of 0 indicates no max depth.</para>
+        /// </param>
+        /// <param name="useFullTypeNames"><see langword="true"/> to use an object's fully qualified
+        /// name, otherwise just the short name.</param>
+        public static void Dump(this object obj, int maxDepth, bool useFullTypeNames)
+        {
+            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
+            {
+                ConsoleBase.WriteLine();
+            }
+
+            ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, maxDepth, useFullTypeNames));
         }
 
         /// <summary>

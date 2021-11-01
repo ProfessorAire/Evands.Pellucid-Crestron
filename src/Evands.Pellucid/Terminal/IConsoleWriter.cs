@@ -22,7 +22,7 @@ namespace Evands.Pellucid.Terminal
 {
     /// <summary>
     /// Defines the requirements for an object that allows writing to a console of some sort.
-    /// <para>Typically this will be the default <see cref="CrestronConsoleWriter"/>, but additional writers can be
+    /// <para>Typically this will be the default <see cref="CrestronConsoleWriter"/>, but additional nodes can be
     /// created for writing to something like an open network port, for example.</para>
     /// </summary>
     public interface IConsoleWriter
@@ -60,7 +60,7 @@ namespace Evands.Pellucid.Terminal
 
         /// <summary>
         /// Writes a console command response to the console.
-        /// <para>Most writers will recycle their normal console writer commands for this.
+        /// <para>Most nodes will recycle their normal console writer commands for this.
         /// This is provided specifically to accommodate the Crestron console class.</para>
         /// </summary>
         /// <param name="message">The message response to write to the console.</param>
@@ -69,7 +69,7 @@ namespace Evands.Pellucid.Terminal
 
         /// <summary>
         /// Writes a console command response to the console.
-        /// <para>Most writers will recycle their normal console writer commands for this.
+        /// <para>Most nodes will recycle their normal console writer commands for this.
         /// This is provided specifically to accommodate the Crestron console class.</para>
         /// </summary>
         /// <param name="message">The message response to write to the console.</param>
