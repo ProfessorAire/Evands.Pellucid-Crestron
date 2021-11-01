@@ -69,7 +69,7 @@ namespace Evands.Pellucid.ProDemo
                 // implementation extending the ConsoleBase class.
                 // Technically if no writer is registered then the CrestronConsoleWriter
                 // gets registered by default, precluding the need for this, but it shows
-                // how to hook your own console writers into the system.
+                // how to hook your own console nodes into the system.
                 ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Terminal.CrestronConsoleWriter());
                 cws = new Crestron.SimplSharp.WebScripting.HttpCwsServer("/pellucid/");
                 cws.Register();
@@ -119,7 +119,7 @@ namespace Evands.Pellucid.ProDemo
                 var cn2 = new CustomNameCommand("ZedCommand");
                 cn2.RegisterCommand("app");
 
-                // Register log writers.
+                // Register log nodes.
                 Logger.RegisterLogWriter(new CrestronLogWriter());
 
                 // In addition to the CrestronLogWriter we're registering an additional writer that targets another file.

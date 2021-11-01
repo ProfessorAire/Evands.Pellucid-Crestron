@@ -44,7 +44,7 @@ namespace Evands.Pellucid
     public abstract class ConsoleBase
     {
         /// <summary>
-        /// Holds the writers registered with the <see cref="ConsoleBase"/>.
+        /// Holds the nodes registered with the <see cref="ConsoleBase"/>.
         /// </summary>
         private static List<IConsoleWriter> writers;
 

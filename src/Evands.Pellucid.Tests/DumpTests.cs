@@ -140,6 +140,8 @@ namespace Evands.Pellucid
                     { 1, new TestWithSameName() { Name = "Nothing" } },
                     { 2, new TestWithSameName() { Name = "Much" } }
                 };
+
+                SameName = new TestWithSameName() { Name = "ThirdLevel" };
             }
 
             public string Name { get; set; }
@@ -171,11 +173,55 @@ namespace Evands.Pellucid
             public static Dictionary<int, string> TestDictionary { get; set; }
 
             public static Dictionary<int, TestWithSameName> TestDictionary2 { get; set; }
+
+            public TestWithSameName SameName { get; set; }
+        }
+
+        private class TestDepthOne
+        {
+            public string TestValue { get { return "TestValue"; } }
+            public TestObject TestObject {  get { return new TestObject("testName"); } }
         }
 
         private bool ContainsText(string value)
         {
             return this.writer.Messages.Any(m => m.Contains(value));
+        }
+
+        [TestMethod]
+        public void Dump_WritesCorrectDepth_One()
+        {
+            Options.Instance.ColorizeConsoleOutput = false;
+            var d1 = new TestDepthOne();
+            d1.Dump(1);
+            Assert.IsTrue(ContainsText("TestValue") && !ContainsText("42"));
+        }
+
+        [TestMethod]
+        public void Dump_WritesCorrectDepth_Two()
+        {
+            Options.Instance.ColorizeConsoleOutput = false;
+            var d1 = new TestDepthOne();
+            d1.Dump(2);
+            Assert.IsTrue(ContainsText("TestValue") && ContainsText("42") && !ContainsText("ThirdLevel"));
+        }
+
+        [TestMethod]
+        public void Dump_WritesCorrectDepth_Three()
+        {
+            Options.Instance.ColorizeConsoleOutput = false;
+            var d1 = new TestDepthOne();
+            d1.Dump(3);
+            Assert.IsTrue(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel"));
+        }
+
+        [TestMethod]
+        public void Dump_WritesCorrectDepth_Zero()
+        {
+            Options.Instance.ColorizeConsoleOutput = false;
+            var d1 = new TestDepthOne();
+            d1.Dump(0);
+            Assert.IsTrue(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel"));
         }
 
         [TestMethod]
@@ -210,20 +256,16 @@ namespace Evands.Pellucid
                 };
 
             var expected =
-@"Key0      = 1
-Value0    = Evands.Pellucid.DumpTests+TestWithSameName
-            ------------------------------------------
-            TestWithSameName
-            ----------------
-            Name    =    Nothing
-            ------------------------------------------
-Key1      = 2
-Value1    = Evands.Pellucid.DumpTests+TestWithSameName
-            ------------------------------------------
-            TestWithSameName
-            ----------------
-            Name    =    Much
-            ------------------------------------------";
+@"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Evands.Pellucid.DumpTests+TestWithSameName, Evands.Pellucid.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Key0   = 1
+Value0 = Evands.Pellucid.DumpTests+TestWithSameName
+         ------------------------------------------
+         Name = ""Nothing""
+Key1   = 2
+Value1 = Evands.Pellucid.DumpTests+TestWithSameName
+         ------------------------------------------
+         Name = ""Much""";
             testValue.Dump();
 
             Assert.IsTrue(ContainsText(expected), "Complex Object Dictionary Failed.");
@@ -233,12 +275,14 @@ Value1    = Evands.Pellucid.DumpTests+TestWithSameName
             var testValue2 = new Dictionary<int, string>() { { 1, "Value 1" }, { 2, "Value 2" }, { 3, "Value 3" } };
 
             expected =
-@"Key0      = 1
-Value0    = Value 1
-Key1      = 2
-Value1    = Value 2
-Key2      = 3
-Value2    = Value 3";
+@"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Key0   = 1
+Value0 = ""Value 1""
+Key1   = 2
+Value1 = ""Value 2""
+Key2   = 3
+Value2 = ""Value 3""";
 
             testValue2.Dump();
 

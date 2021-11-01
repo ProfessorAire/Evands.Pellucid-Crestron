@@ -142,18 +142,23 @@ namespace Evands.Pellucid.ProDemo
         /// <summary>
         /// Dumps the <see cref="Evands.Pellucid.Options.Instance"/> value to the console.
         /// </summary>
+        /// <param name="full">Optional parameter specifying whether to use full type names.</param>
         [Verb("DumpOptions", 4, "Dumps the Evands.Pellucid.Options class to the console.")]
-        public void DumpOptions()
+        public void DumpOptions(
+            [Flag("full", 'f', "Writes type names with their full name.", true)] bool full)
         {
             ConsoleBase.WriteLine();
-            Evands.Pellucid.Options.Instance.Dump();
+            Evands.Pellucid.Options.Instance.Dump(full);
         }
 
         /// <summary>
         /// Dumps a list of objects to the console.
         /// </summary>
-        [Verb("DumpClassList", 5, "Dump a list of class objects to the console.")]
-        public void DumpObjectList()
+        /// <param name="full">Optional parameter specifying whether to use full type names.</param>
+        [Verb("DumpClassListPartial", "dump-partial", "Dump a list of class objects to the console.")]
+        public void DumpObjectList(
+            [Operand("max", "When provided, indicates the maximum number of times the object being dumped should be recursed.")] int max,
+            [Flag("full", 'f', "Writes type names with their full name.", true)] bool full)
         {
             var t = new System.Collections.Generic.List<Evands.Pellucid.ProDemo.Sample.SampleItem>();
             t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(1, "Item A", true, "IA"));
@@ -170,11 +175,37 @@ namespace Evands.Pellucid.ProDemo
 
             var nc = new Evands.Pellucid.ProDemo.Sample.NestedSample("Nested Container", t);
 
-            nc.Dump();
+            nc.Dump(max, full);
         }
 
         /// <summary>
-        /// 
+        /// Dumps a list of objects to the console.
+        /// </summary>
+        /// <param name="full">Optional parameter specifying whether to use full type names.</param>
+        [Verb("DumpClassList", 5, "Dump a list of class objects to the console.")]
+        public void DumpObjectList(
+            [Flag("full", 'f', "Writes type names with their full name.", true)] bool full)
+        {
+            var t = new System.Collections.Generic.List<Evands.Pellucid.ProDemo.Sample.SampleItem>();
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(1, "Item A", true, "IA"));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(2, "Item B", true));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(3, "Item C", true));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(4, "Item 4", true, "Four", "Item Four"));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(5, "Item 5", true, "Five", "Item Five", "Item 5"));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(6, "Item F", true));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(7, "Item G", true, "Item G", "Item Gee", "Item Jee"));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(8, "Item Name H", true));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(9, "Eye", true, "Item I", "I", "Item Eye"));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(10, "Jay", true));
+            t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(11, null, false, null));
+
+            var nc = new Evands.Pellucid.ProDemo.Sample.NestedSample("Nested Container", t);
+
+            nc.Dump(full);
+        }
+
+        /// <summary>
+        /// Writes an exception to the console.
         /// </summary>        
         [Verb("WriteEx", "wex", "Writes an exception to the console.")]
         public void WriteEx()
