@@ -30,7 +30,9 @@ namespace Evands.Pellucid
         /// Dumps the specified object to the console.
         /// </summary>
         /// <param name="obj">The object to format details about.</param>
-        public static void Dump(this object obj)
+        /// <typeparam name="T">The type of the object being dumped.</typeparam>
+        /// <returns>The object being dumped.</returns>
+        public static T Dump<T>(this T obj)
         {
             if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
             {
@@ -38,6 +40,7 @@ namespace Evands.Pellucid
             }
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj));
+            return obj;
         }
 
         /// <summary>
@@ -49,7 +52,9 @@ namespace Evands.Pellucid
         /// while ignoring properties that are complex objects with additional properties of their own.</para>
         /// <para>A value of 0 indicates no max depth.</para>
         /// </param>
-        public static void Dump(this object obj, int maxDepth)
+        /// <typeparam name="T">The type of the object being dumped.</typeparam>
+        /// <returns>The object being dumped.</returns>
+        public static T Dump<T>(this T obj, int maxDepth)
         {
             if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
             {
@@ -57,6 +62,7 @@ namespace Evands.Pellucid
             }
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, maxDepth));
+            return obj;
         }
 
         /// <summary>
@@ -65,7 +71,9 @@ namespace Evands.Pellucid
         /// <param name="obj">The object to format details about.</param>
         /// <param name="useFullTypeNames"><see langword="true"/> to use an object's fully qualified
         /// name, otherwise just the short name.</param>
-        public static void Dump(this object obj, bool useFullTypeNames)
+        /// <typeparam name="T">The type of the object being dumped.</typeparam>
+        /// <returns>The object being dumped.</returns>
+        public static T Dump<T>(this T obj, bool useFullTypeNames)
         {
             if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
             {
@@ -73,6 +81,7 @@ namespace Evands.Pellucid
             }
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, useFullTypeNames));
+            return obj;
         }
 
         /// <summary>
@@ -86,7 +95,9 @@ namespace Evands.Pellucid
         /// </param>
         /// <param name="useFullTypeNames"><see langword="true"/> to use an object's fully qualified
         /// name, otherwise just the short name.</param>
-        public static void Dump(this object obj, int maxDepth, bool useFullTypeNames)
+        /// <typeparam name="T">The type of the object being dumped.</typeparam>
+        /// <returns>The object being dumped.</returns>
+        public static T Dump<T>(this T obj, int maxDepth, bool useFullTypeNames)
         {
             if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
             {
@@ -94,6 +105,7 @@ namespace Evands.Pellucid
             }
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, maxDepth, useFullTypeNames));
+            return obj;
         }
 
         /// <summary>

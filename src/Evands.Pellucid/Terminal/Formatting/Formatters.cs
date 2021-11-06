@@ -32,6 +32,32 @@ namespace Evands.Pellucid.Terminal.Formatting
     public static class Formatters
     {
         /// <summary>
+        /// Backing field for the <see cref="Chrome"/> property.
+        /// </summary>
+        private static IChromeCollection chrome = new BasicChrome();
+
+        /// <summary>
+        /// Gets or sets the collection of chrome to use for console formatting.
+        /// </summary>
+        public static IChromeCollection Chrome
+        {
+            get
+            {
+                if (chrome == null)
+                {
+                    chrome = new BasicChrome();
+                }
+
+                return chrome;
+            }
+
+            set
+            {
+                chrome = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value containing the method to use to get the message to print to the console when using the
         /// Dump extension method. When not <see langword="null"/> this overrides the default implementation and
         /// can be used to customize the way in which objects are dumped to console.
@@ -51,7 +77,7 @@ namespace Evands.Pellucid.Terminal.Formatting
             }
             else
             {
-                return DumpHelpers.DumpFactory.GetNode(obj).ToString();
+                return DumpHelpers.DumpFactory.GetNode(obj).ToString(20, Options.Instance.UseFullTypeNamesWhenDumping);
             }
         }
 

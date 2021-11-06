@@ -517,18 +517,16 @@ namespace Evands.Pellucid.Diagnostics
 
                 int exceptionIndex = 0;
 
-                var exFormat = ConsoleBase.Colors.Exception;
+                var exceptionFormat = ConsoleBase.Colors.Exception;
 
                 while (ex != null)
                 {
                     exceptionIndex++;
-                    sb.Append(exFormat.FormatText(false, "{1}--------Exception {0}--------{1}", exceptionIndex, ConsoleBase.NewLine));
+                    sb.Append(exceptionFormat.FormatText(false, "{1}--------Exception {0}--------{1}", exceptionIndex, ConsoleBase.NewLine));
                     sb.AppendFormat("{0}", ex.ToString().Replace(Environment.NewLine, ConsoleBase.NewLine));
-                    sb.Append(exFormat.FormatText(true, "{0}-----------------------------", ConsoleBase.NewLine));
+                    sb.Append(exceptionFormat.FormatText(true, "{0}-----------------------------", ConsoleBase.NewLine));
                     ex = ex.InnerException;
                 }
-
-                sb.Append(ConsoleBase.NewLine);
 
                 ForceWriteLine(
                     Formatters.GetColorFormattedString(ConsoleBase.Colors.Exception, sb.ToString()));

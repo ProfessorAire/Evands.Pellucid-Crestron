@@ -14,6 +14,8 @@ namespace Crestron.SimplSharp.Reflection
             internalType = type;
         }
 
+        public static Queue<Exception> GetPropertiesExceptions { get; set; }
+
         public string FullName { get { return internalType.FullName; } }
 
         public bool IsEnum { get { return internalType.IsEnum; } }
@@ -56,6 +58,15 @@ namespace Crestron.SimplSharp.Reflection
 
         public PropertyInfo[] GetProperties(BindingFlags flags)
         {
+            if (GetPropertiesExceptions != null && GetPropertiesExceptions.Count > 0)
+            {
+                var ex = GetPropertiesExceptions.Dequeue();
+                if (ex != null)
+                {
+                    throw (ex);
+                }
+            }
+
             var props = internalType.GetProperties((System.Reflection.BindingFlags)flags);
             var newProps = new PropertyInfo[props.Length];
 

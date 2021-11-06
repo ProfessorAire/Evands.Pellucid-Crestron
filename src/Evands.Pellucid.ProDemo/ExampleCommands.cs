@@ -18,11 +18,12 @@
 // </copyright>
 #endregion
 
+using System;
 using Evands.Pellucid;
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
+using Evands.Pellucid.Terminal.Formatting;
 using Evands.Pellucid.Terminal.Formatting.Tables;
-using System;
 
 namespace Evands.Pellucid.ProDemo
 {
@@ -154,6 +155,7 @@ namespace Evands.Pellucid.ProDemo
         /// <summary>
         /// Dumps a list of objects to the console.
         /// </summary>
+        /// <param name="max">The max number of times an item can recurse.</param>
         /// <param name="full">Optional parameter specifying whether to use full type names.</param>
         [Verb("DumpClassListPartial", "dump-partial", "Dump a list of class objects to the console.")]
         public void DumpObjectList(
@@ -174,7 +176,6 @@ namespace Evands.Pellucid.ProDemo
             t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(11, null, false, null));
 
             var nc = new Evands.Pellucid.ProDemo.Sample.NestedSample("Nested Container", t);
-
             nc.Dump(max, full);
         }
 
@@ -182,6 +183,7 @@ namespace Evands.Pellucid.ProDemo
         /// Dumps a list of objects to the console.
         /// </summary>
         /// <param name="full">Optional parameter specifying whether to use full type names.</param>
+        /// <param name="extended">When true use the <see cref="RoundedChrome"/> chrome collection.</param>
         [Verb("DumpClassList", 5, "Dump a list of class objects to the console.")]
         public void DumpObjectList(
             [Flag("full", 'f', "Writes type names with their full name.", true)] bool full)
@@ -200,7 +202,6 @@ namespace Evands.Pellucid.ProDemo
             t.Add(new Evands.Pellucid.ProDemo.Sample.SampleItem(11, null, false, null));
 
             var nc = new Evands.Pellucid.ProDemo.Sample.NestedSample("Nested Container", t);
-
             nc.Dump(full);
         }
 
@@ -210,10 +211,10 @@ namespace Evands.Pellucid.ProDemo
         [Verb("WriteEx", "wex", "Writes an exception to the console.")]
         public void WriteEx()
         {
-            var exString = "Formatted {0} string.";
+            var exceptionString = "Formatted {0} string.";
             try
             {
-                Evands.Pellucid.Diagnostics.Debug.WriteLine(string.Format(exString));
+                Evands.Pellucid.Diagnostics.Debug.WriteLine(string.Format(exceptionString));
             }
             catch (Exception ex)
             {

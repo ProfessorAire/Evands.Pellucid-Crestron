@@ -21,6 +21,7 @@
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
 using Evands.Pellucid.Terminal.Formatting.Tables;
+using Evands.Pellucid.Terminal.Formatting;
 
 namespace Evands.Pellucid.Diagnostics
 {
@@ -284,7 +285,7 @@ namespace Evands.Pellucid.Diagnostics
             t.Rows[2][1].Color = ConsoleBase.Colors.Warning;
 
             ConsoleBase.WriteCommandResponse(t.ToString());
-       }
+        }
 
         /// <summary>
         /// Adds a suppression.
@@ -417,6 +418,57 @@ namespace Evands.Pellucid.Diagnostics
             else
             {
                 ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "There are no names in the allowed list.\r\n");
+            }
+        }
+
+        /// <summary>
+        /// Sets the chrome used for printing to the console.
+        /// </summary>
+        /// <param name="basic">Use the basic chrome.</param>
+        /// <param name="round">Use the round chrome.</param>
+        /// <param name="thick">Use thick headers if appliccable.</param>
+        /// <param name="square">Use the square chrome.</param>
+        [Verb("chrome", "Allows you to swap between the standard instances of chrome used when printing information to the console.")]
+        [Sample("debug chrome -b", "Sets the chrome to be the basic chrome.")]
+        [Sample("debug chrome -r", "Sets the chrome to be the rounded chrome.")]
+        [Sample("debug chrome -s", "Sets the chrome to be the square chrome.")]
+        [Sample("debug chrome -rt", "Sets the chrome to be the rounded chrome with thick headers.")]
+        [Sample("debug chrome -st", "Sets the chrome to be the square chrome with thick headers.")]
+        public void SetChrome(
+            [Flag("Basic", 'b', "Selects the basic chrome option.", true)] bool basic,
+            [Flag("Round", 'r', "Selects the round chrome option.", true)] bool round,
+            [Flag("Thick", 't', "Specifies to use thick headers when possible.", true)] bool thick,
+            [Flag("Square", 's', "Selects the square chrome option.", true)] bool square)
+        {
+            if (basic || round || square)
+            {
+                if (round)
+                {
+                    Formatters.Chrome = new RoundedChrome(thick);
+                }
+                else if (square)
+                {
+                    Formatters.Chrome = new SquareChrome(thick);
+                }
+                else
+                {
+                    Formatters.Chrome = new BasicChrome();
+                }
+            }
+
+            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "The current selected chrome is: '{0}'.", Formatters.Chrome.GetType().FullName);
+            var rnd = Formatters.Chrome as RoundedChrome;
+            if (rnd != null)
+            {
+                ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "{1}Using thick headers: '{0}'.", rnd.ThickHeaders, ConsoleBase.NewLine);
+            }
+            else
+            {
+                var sqr = Formatters.Chrome as SquareChrome;
+                if (sqr != null)
+                {
+                    ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "{1}Using thick headers: '{0}'.", sqr.ThickHeaders, ConsoleBase.NewLine);
+                }
             }
         }
     }

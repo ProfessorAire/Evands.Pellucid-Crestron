@@ -68,18 +68,6 @@ namespace Evands.Pellucid.Cws
             server.Start(port);
         }
 
-        /// <summary>
-        /// Disposes of resources.
-        /// </summary>        
-        public void Dispose()
-        {
-            if (server != null)
-            {
-                server.Dispose();
-                server = null;
-            }
-        }
-
         /// <inheritdoc/>     
         string IDebugData.Header
         {
@@ -93,6 +81,18 @@ namespace Evands.Pellucid.Cws
         Evands.Pellucid.Terminal.Formatting.ColorFormat IDebugData.HeaderColor
         {
             get { return ConsoleBase.Colors.BrightCyan; }
+        }
+
+        /// <summary>
+        /// Disposes of resources.
+        /// </summary>        
+        public void Dispose()
+        {
+            if (server != null)
+            {
+                server.Dispose();
+                server = null;
+            }
         }
 
         /// <inheritdoc/>
@@ -195,6 +195,7 @@ namespace Evands.Pellucid.Cws
                         html = reader.ReadToEnd();
                     }
                 }
+
                 using (var stream = Crestron.SimplSharp.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Evands.Pellucid.Resources.default.css"))
                 {
                     using (var reader = new Crestron.SimplSharp.CrestronIO.StreamReader(stream, true))
@@ -261,7 +262,7 @@ namespace Evands.Pellucid.Cws
         /// <summary>
         /// Validates that the route is still valid.
         /// </summary>
-        /// <returns></returns>        
+        /// <returns>A value that indicates if the route is still valid.</returns>        
         private bool Validate()
         {
             return server != null;

@@ -147,6 +147,24 @@ namespace Evands.Pellucid.Terminal.Formatting
         }
 
         /// <summary>
+        /// Prints an ANSI SGR escape sequence that resets the SGR format to defaults.
+        /// </summary>
+        /// <param name="textToFormat">The text to format.</param>
+        /// <param name="args">Optional array of arguments to use when formatting the text.</param>
+        /// <returns>A <see langword="string"/> containing the provided text and a closing ANSI SGR escape sequence that resets the format to defaults.</returns>
+        public static string CloseTextFormat(string textToFormat, params object[] args)
+        {
+            if (Options.Instance.ColorizeConsoleOutput)
+            {
+                return string.Format("{0}\x1b[0m", textToFormat.OptionalFormat(args));
+            }
+            else
+            {
+                return textToFormat.OptionalFormat(args);
+            }
+        }
+
+        /// <summary>
         /// Formats the provided text to include an ANSI SGR escape sequence.
         /// </summary>
         /// <param name="textToFormat">The text to format.</param>

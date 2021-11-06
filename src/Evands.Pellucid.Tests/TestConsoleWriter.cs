@@ -47,25 +47,25 @@ namespace Evands.Pellucid
         {
             if (args != null && args.Length > 0)
             {
-                Messages.Add(string.Format("{0}\r\n", string.Format(message, args)));
+                Messages.Add(string.Format("{0}{1}", string.Format(message, args), ConsoleBase.NewLine));
                 System.Diagnostics.Debug.WriteLine(string.Format(message, args));
             }
             else
             {
-                Messages.Add(string.Format("{0}\r\n", message));
+                Messages.Add(string.Format("{0}{1)", message, ConsoleBase.NewLine));
                 System.Diagnostics.Debug.WriteLine(message);
             }
         }
 
         public void WriteLine(string message)
         {
-            Messages.Add(message);
+            Messages.Add(message + ConsoleBase.NewLine);
             System.Diagnostics.Debug.WriteLine(message);
         }
 
         public void WriteLine()
         {
-            Messages.Add("\r\n");
+            Messages.Add(ConsoleBase.NewLine);
             System.Diagnostics.Debug.WriteLine(string.Empty);
         }
 
