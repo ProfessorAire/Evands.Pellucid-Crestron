@@ -2,6 +2,10 @@
   <GlobalSettings>
     <CollectionProperty Name="RecognizedWords">
       <Value>Crestron</Value>
+      <Value>recurse</Value>
+      <Value>recursed</Value>
+      <Value>toml</Value>
+      <Value>websocket</Value>
     </CollectionProperty>
   </GlobalSettings>
   <Analyzers>

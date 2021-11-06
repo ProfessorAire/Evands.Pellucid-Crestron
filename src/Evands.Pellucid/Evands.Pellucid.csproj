@@ -127,11 +127,16 @@
     </Compile>
     <Compile Include="Terminal\ColorCode.cs" />
     <Compile Include="Terminal\CrestronConsoleWriter.cs" />
+    <Compile Include="Terminal\Formatting\BasicChrome.cs" />
     <Compile Include="Terminal\Formatting\ColorFormat.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpObjectFailure.cs" />
+    <Compile Include="Terminal\Formatting\RoundedChrome.cs" />
+    <Compile Include="Terminal\Formatting\SquareChrome.cs" />
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpCollection.cs" />
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpFactory.cs" />
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpNode.cs" />
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpObject.cs" />
+    <Compile Include="Terminal\Formatting\IChromeCollection.cs" />
     <Compile Include="Terminal\Formatting\Tables\Column.cs" />
     <Compile Include="Terminal\Formatting\Tables\ColumnCollection.cs" />
     <Compile Include="Terminal\Formatting\Tables\Row.cs" />

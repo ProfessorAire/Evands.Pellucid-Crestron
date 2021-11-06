@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+
 namespace Evands.Pellucid.Terminal.Commands
 {
     /// <summary>
@@ -94,7 +95,7 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         /// <summary>
-        /// Gets the alias for the command, if it exists.
+        /// Gets or sets the alias for the command, if it exists.
         /// </summary>
         public string Alias
         {

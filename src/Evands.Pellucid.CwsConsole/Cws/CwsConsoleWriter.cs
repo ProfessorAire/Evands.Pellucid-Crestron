@@ -164,7 +164,7 @@ namespace Evands.Pellucid.Cws
             cwsServer.AddRoute(this.consoleRoute);
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         public void Write(string message, params object[] args)
         {
             if (consoleRouteHandler != null)
@@ -173,7 +173,7 @@ namespace Evands.Pellucid.Cws
             }
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         public void Write(string message)
         {
             if (consoleRouteHandler != null)
@@ -182,7 +182,7 @@ namespace Evands.Pellucid.Cws
             }
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         public void WriteLine(string message, params object[] args)
         {
             if (consoleRouteHandler != null)
@@ -191,7 +191,7 @@ namespace Evands.Pellucid.Cws
             }
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         public void WriteLine(string message)
         {
             if (consoleRouteHandler != null)
@@ -200,7 +200,7 @@ namespace Evands.Pellucid.Cws
             }
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         public void WriteLine()
         {
             if (consoleRouteHandler != null)
@@ -209,7 +209,7 @@ namespace Evands.Pellucid.Cws
             }
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         public void WriteCommandResponse(string message, params object[] args)
         {
             if (consoleRouteHandler != null)
@@ -218,7 +218,7 @@ namespace Evands.Pellucid.Cws
             }
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         public void WriteCommandResponse(string message)
         {
             if (consoleRouteHandler != null)

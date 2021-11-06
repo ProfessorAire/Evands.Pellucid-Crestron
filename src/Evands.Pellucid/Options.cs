@@ -98,6 +98,12 @@ namespace Evands.Pellucid
         public bool UseTimestamps { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether dumping items to the console will use full type names by default.
+        /// </summary>
+        [TomlProperty("dump-useFullTypeNames")]
+        public bool UseFullTypeNamesWhenDumping { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether debug messages will use shorter 24 hour timestamps, or longer 12 hour timestamps.
         /// </summary>        
         [TomlProperty("debugging-shortTimestamps")]
@@ -142,6 +148,21 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
+        /// Overrides the <see cref="Instance"/> property with a new instance of the <see cref="Options"/> class,
+        /// with the default values and auto-save set to <see langword="false"/>. If called before accessing the
+        /// <see cref="Instance"/> property this will prevent the program from attempting to load an existing file
+        /// from disk.
+        /// <para>
+        /// This can be useful when writing unit-tests for items that call into this class.
+        /// </para>
+        /// </summary>
+        public static void UseDefault()
+        {
+            instance = new Options().WithDefaults();
+            instance.autoSave = false;
+        }
+
+        /// <summary>
         /// Saves the options to a TOML file to the location specified by the <see cref="FilePath"/> property.
         /// <para>This file is automatically saved when the program is shutting down if the <see cref="AutoSave"/> property is true.</para>
         /// </summary>        
@@ -158,21 +179,6 @@ namespace Evands.Pellucid
                 ErrorLog.Exception("Pellucid.Options", ex);
                 Debug.WriteException(this, ex, "Exception while saving Pellucid.Options to disk.");
             }
-        }
-
-        /// <summary>
-        /// Overrides the <see cref="Instance"/> property with a new instance of the <see cref="Options"/> class,
-        /// with the default values and auto-save set to <see langword="false"/>. If called before accessing the
-        /// <see cref="Instance"/> property this will prevent the program from attempting to load an existing file
-        /// from disk.
-        /// <para>
-        /// This can be useful when writing unit-tests for items that call into this class.
-        /// </para>
-        /// </summary>
-        public static void UseDefault()
-        {
-            instance = new Options().WithDefaults();
-            instance.autoSave = false;
         }
 
         /// <summary>
@@ -239,6 +245,7 @@ namespace Evands.Pellucid
         /// <returns>This <see cref="Options"/> object.</returns>        
         private Options WithDefaults()
         {
+            UseFullTypeNamesWhenDumping = false;
             ColorizeConsoleOutput = true;
             UseTimestamps = true;
             Use24HourTime = true;

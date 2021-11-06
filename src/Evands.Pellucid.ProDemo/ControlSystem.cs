@@ -238,6 +238,7 @@ namespace Evands.Pellucid.ProDemo
                         cws.Dispose();
                         cws = null;
                     }
+
                     break;
             }
         }

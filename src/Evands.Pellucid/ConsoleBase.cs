@@ -64,7 +64,7 @@ namespace Evands.Pellucid
         static ConsoleBase()
         {
             writers = new List<IConsoleWriter>();
-            NewLine = "\r\n";
+            NewLine = "\r\n";            
         }
 
         /// <summary>
@@ -723,7 +723,8 @@ namespace Evands.Pellucid
                 DumpPropertyName = new ColorFormat(ColorCode.BrightCyan);
                 DumpPropertyValue = new ColorFormat(ColorCode.BrightMagenta);
                 DumpObjectDetail = new ColorFormat(ColorCode.BrightGreen);
-                DumpObjectChrome = new ColorFormat(ColorCode.Yellow);
+                DumpObjectChrome = new ColorFormat(ColorCode.DarkGray);
+                DumpObjectInfo = new ColorFormat(ColorCode.Yellow);
                 BrightGreen = new ColorFormat(ColorCode.BrightGreen);
                 BrightRed = new ColorFormat(ColorCode.BrightRed);
                 BrightYellow = new ColorFormat(ColorCode.BrightYellow);
@@ -801,6 +802,12 @@ namespace Evands.Pellucid
             /// Gets or sets the <see cref="ColorFormat"/> to use for printing the chrome when dumping objects to the console.
             /// </summary>
             public static ColorFormat DumpObjectChrome { get; set; }
+
+            /// <summary>
+            /// Gets or sets the <see cref="ColorFormat"/> to use for printing info about objects, such as number of properties
+            /// and number of items, when dumping objects to the console.
+            /// </summary>
+            public static ColorFormat DumpObjectInfo { get; set; }
         }
     }
 }

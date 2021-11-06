@@ -1,5 +1,5 @@
 ﻿#region copyright
-// <copyright file="ExampleCommands.cs" company="Christopher McNeely">
+// <copyright file="CustomNameCommand.cs" company="Christopher McNeely">
 // The MIT License (MIT)
 // Copyright (c) Christopher McNeely
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,12 +18,12 @@
 // </copyright>
 #endregion
 
+using System;
 using Evands.Pellucid;
+using Evands.Pellucid.Diagnostics;
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
 using Evands.Pellucid.Terminal.Formatting.Tables;
-using System;
-using Evands.Pellucid.Diagnostics;
 
 namespace Evands.Pellucid.ProDemo
 {
@@ -31,12 +31,12 @@ namespace Evands.Pellucid.ProDemo
     /// Example commands.
     /// </summary>
     [Command("customName", "Console command with a custom name.")]
-    public class CustomNameCommand: TerminalCommandBase
+    public class CustomNameCommand : TerminalCommandBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomNameCommand"/> class.
         /// </summary>
-        /// <param name="suffix">The name to give the command.</param>        
+        /// <param name="name">The name to give the command.</param>        
         public CustomNameCommand(string name)
             : base()
         {
@@ -45,7 +45,7 @@ namespace Evands.Pellucid.ProDemo
                 throw new ArgumentNullException("name");
             }
 
-            base.Name = name;
+            this.Name = name;
         }
 
         /// <summary>
@@ -159,15 +159,15 @@ namespace Evands.Pellucid.ProDemo
         }
 
         /// <summary>
-        /// 
+        /// Writes an exception to the console.
         /// </summary>        
         [Verb("WriteEx", "wex", "Writes an exception to the console.")]
         public void WriteEx()
         {
-            var exString = "Formatted {0} string.";
+            var exceptionString = "Formatted {0} string.";
             try
             {
-                Evands.Pellucid.Diagnostics.Debug.WriteLine(string.Format(exString));
+                Evands.Pellucid.Diagnostics.Debug.WriteLine(string.Format(exceptionString));
             }
             catch (Exception ex)
             {

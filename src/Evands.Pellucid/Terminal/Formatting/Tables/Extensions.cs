@@ -28,7 +28,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
     public static class Extensions
     {
         /// <summary>
-        /// Pads a string on both the left and right, with additional uneven padding being added on the right of the provided text.
+        /// Pads a string on both the left and right, with additional uneven rootPadding being added on the right of the provided text.
         /// </summary>
         /// <param name="value">The value to pad.</param>
         /// <param name="totalWidth">The total width to pad to.</param>

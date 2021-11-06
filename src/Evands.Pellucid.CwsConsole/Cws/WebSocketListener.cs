@@ -64,7 +64,7 @@ namespace Evands.Pellucid.Cws
         /// <summary>
         /// Initializes a new instance of the <see cref="WebSocketListener"/> class.
         /// </summary>
-        /// <param name="useSecureServer"></param>        
+        /// <param name="useSecureServer">Indicates whether to use a secure server.</param>        
         public WebSocketListener(bool useSecureServer)
         {
             this.useSecureServer = useSecureServer;
@@ -214,6 +214,26 @@ namespace Evands.Pellucid.Cws
             }
 
             Send(Encoding.UTF8.GetBytes(data), createFrame);
+        }
+
+        /// <summary>
+        /// Disposes of resources.
+        /// </summary>        
+        public void Dispose()
+        {
+            if (tcpServer != null)
+            {
+                tcpServer.Stop();
+                tcpServer.DisconnectAll();
+                tcpServer = null;
+            }
+
+            if (secureTcpServer != null)
+            {
+                secureTcpServer.Stop();
+                secureTcpServer.DisconnectAll();
+                secureTcpServer = null;
+            }
         }
 
         /// <summary>
@@ -645,7 +665,7 @@ namespace Evands.Pellucid.Cws
         /// <param name="server">The server that had a socket change event.</param>
         /// <param name="clientIndex">The index of the client who's socket connection changed.</param>
         /// <param name="serverSocketStatus">The new socket status.</param>        
-        void SecureSocketStatusChange(SecureTCPServer server, uint clientIndex, SocketStatus serverSocketStatus)
+        private void SecureSocketStatusChange(SecureTCPServer server, uint clientIndex, SocketStatus serverSocketStatus)
         {
             if (serverSocketStatus != SocketStatus.SOCKET_STATUS_CONNECTED)
             {
@@ -668,7 +688,7 @@ namespace Evands.Pellucid.Cws
         /// <param name="server">The server that had a socket change event.</param>
         /// <param name="clientIndex">The index of the client who's socket connection changed.</param>
         /// <param name="serverSocketStatus">The new socket status.</param> 
-        void InsecureSocketStatusChange(TCPServer server, uint clientIndex, SocketStatus serverSocketStatus)
+        private void InsecureSocketStatusChange(TCPServer server, uint clientIndex, SocketStatus serverSocketStatus)
         {
             if (serverSocketStatus == SocketStatus.SOCKET_STATUS_BROKEN_LOCALLY ||
                 serverSocketStatus == SocketStatus.SOCKET_STATUS_BROKEN_REMOTELY)
@@ -677,26 +697,6 @@ namespace Evands.Pellucid.Cws
                 {
                     server.WaitForConnectionsAlways(ClientConnectionCallback);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Disposes of resources.
-        /// </summary>        
-        public void Dispose()
-        {
-            if (tcpServer != null)
-            {
-                tcpServer.Stop();
-                tcpServer.DisconnectAll();
-                tcpServer = null;
-            }
-
-            if (secureTcpServer != null)
-            {
-                secureTcpServer.Stop();
-                secureTcpServer.DisconnectAll();
-                secureTcpServer = null;
             }
         }
     }

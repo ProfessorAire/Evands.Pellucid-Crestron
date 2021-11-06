@@ -256,17 +256,21 @@ namespace Evands.Pellucid
                 };
 
             var expected =
-@"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Evands.Pellucid.DumpTests+TestWithSameName, Evands.Pellucid.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Key0   = 1
-Value0 = Evands.Pellucid.DumpTests+TestWithSameName
-         ------------------------------------------
-         Name = ""Nothing""
-Key1   = 2
-Value1 = Evands.Pellucid.DumpTests+TestWithSameName
-         ------------------------------------------
-         Name = ""Much""";
-            testValue.Dump();
+@"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Evands.Pellucid.DumpTests+TestWithSameName, Evands.Pellucid.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (2 Items)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Key0   = 1
+| Value0 = Evands.Pellucid.DumpTests+TestWithSameName (1 Property)
+|          -------------------------------------------------------
+|          | Name = ""Nothing""
+|          -------------------------------------------------------
+| Key1   = 2
+| Value1 = Evands.Pellucid.DumpTests+TestWithSameName (1 Property)
+|          -------------------------------------------------------
+|          | Name = ""Much""
+|          -------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+";
+            testValue.Dump(true);
 
             Assert.IsTrue(ContainsText(expected), "Complex Object Dictionary Failed.");
 
@@ -275,14 +279,16 @@ Value1 = Evands.Pellucid.DumpTests+TestWithSameName
             var testValue2 = new Dictionary<int, string>() { { 1, "Value 1" }, { 2, "Value 2" }, { 3, "Value 3" } };
 
             expected =
-@"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Key0   = 1
-Value0 = ""Value 1""
-Key1   = 2
-Value1 = ""Value 2""
-Key2   = 3
-Value2 = ""Value 3""";
+@"Dictionary`2 (3 Items)
+----------------------
+| Key0   = 1
+| Value0 = ""Value 1""
+| Key1   = 2
+| Value1 = ""Value 2""
+| Key2   = 3
+| Value2 = ""Value 3""
+----------------------
+";
 
             testValue2.Dump();
 

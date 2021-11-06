@@ -54,6 +54,7 @@ namespace Evands.Pellucid
             Assert.IsTrue(Options.Instance.Suppressed.Count == 0);
             Assert.IsTrue(Options.Instance.Allowed.Count == 0);
             Assert.IsFalse(Options.Instance.AutoSave);
+            Assert.IsFalse(Options.Instance.UseFullTypeNamesWhenDumping);
         }
     }
 }
