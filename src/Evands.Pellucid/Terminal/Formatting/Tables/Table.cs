@@ -47,22 +47,17 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         /// <summary>
         /// Backing field for the <see cref="HorizontalBorder"/> property.
         /// </summary>
-        private char horizontalBorder = '-';
+        private char horizontalBorder = Char.MinValue;
 
         /// <summary>
         /// Backing field for the <see cref="VerticalBorder"/> property.
         /// </summary>
-        private char verticalBorder = '|';
+        private char verticalBorder = Char.MinValue;
 
         /// <summary>
         /// Backing field for the <see cref="HeaderBottomBorder"/> property.
         /// </summary>
-        private char headerBottomBorder = '-';
-
-        /// <summary>
-        /// The line ending style to use when creating the table.
-        /// </summary>
-        private string lineEnding = "\r\n";
+        private char headerBottomBorder = Char.MinValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Table"/> class.
@@ -127,6 +122,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         /// <summary>
         /// Gets or sets the character used for the horizontal borders.
         /// </summary>
+        [Obsolete("This value has been replaced with the use of an IChromeCollection, either by providing one to a ToString() overload that expects it or by default using the Formatters.Chrome property. This will be removed in the next major revision.", false)]
         public char HorizontalBorder
         {
             get { return horizontalBorder; }
@@ -135,7 +131,9 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
         /// <summary>
         /// Gets or sets the character used for the vertical borders.
+        /// <para>This will override the default </para>
         /// </summary>
+        [Obsolete("This value has been replaced with the use of an IChromeCollection, either by providing one to a ToString() overload that expects it or by default using the Formatters.Chrome property. This will be removed in the next major revision.", false)]
         public char VerticalBorder
         {
             get { return verticalBorder; }
@@ -145,6 +143,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         /// <summary>
         /// Gets or sets the character used for the border at the bottom of the header cells.
         /// </summary>
+        [Obsolete("This value has been replaced with the use of an IChromeCollection, either by providing one to a ToString() overload that expects it or by default using the Formatters.Chrome property. This will be removed in the next major revision.", false)]
         public char HeaderBottomBorder
         {
             get { return headerBottomBorder; }
@@ -580,31 +579,78 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
         /// <summary>
         /// Returns a string containing this table formatted for displaying in a log or console.
+        /// <para>Uses the <see cref="Formatters.Chrome"/> property for determining what chrome
+        /// characters to use and the <see cref="Options.ColorizeConsoleOutput"/>
+        /// property to determine whether to colorize the table output and has no max width
+        /// restrictions.</para>
         /// </summary>
         /// <returns>A string containing the formatted table.</returns>
         public override string ToString()
         {
-            return ToString(0, Options.Instance.ColorizeConsoleOutput);
+            return this.ToString(0);
         }
 
         /// <summary>
         /// Returns a string containing this table formatted for displaying in a log or console.
+        /// <para>Uses the <see cref="Formatters.Chrome"/> property for determining what chrome
+        /// characters to use and the <see cref="Options.ColorizeConsoleOutput"/>
+        /// property to determine whether to colorize the table output.</para>
         /// </summary>
         /// <param name="maxWidth">The maximum width to allow each cell to be.</param>
         /// <returns>A string containing the formatted table.</returns>
         public string ToString(int maxWidth)
         {
-            return ToString(maxWidth, Options.Instance.ColorizeConsoleOutput);
+            return this.ToString(maxWidth, Options.Instance.ColorizeConsoleOutput);
         }
 
         /// <summary>
         /// Returns a string containing this table formatted for displaying in a log or console.
+        /// <para>Uses the <see cref="Formatters.Chrome"/> property for determining what chrome
+        /// characters to use.</para>
         /// </summary>
         /// <param name="withColor">A value indicating whether or not to print the cell colors with the table.</param>
         /// <returns>A string containing the formatted table.</returns>
         public string ToString(bool withColor)
         {
-            return ToString(0, true);
+            return this.ToString(0, withColor);
+        }
+
+        /// <summary>
+        /// Returns a string containing this table formatted for displaying in a log or console.
+        /// <para>Uses the <see cref="Formatters.Chrome"/> property for determining what chrome
+        /// characters to use.</para>
+        /// </summary>
+        /// <param name="chrome">The <see cref="IChromeCollection"/> to use when printing the table.</param>
+        /// <returns>A string containing the formatted table.</returns>
+        public string ToString(IChromeCollection chrome)
+        {
+            return this.ToString(0, Options.Instance.ColorizeConsoleOutput, chrome);
+        }
+
+        /// <summary>
+        /// Returns a string containing this table formatted for displaying in a log or console.
+        /// <para>Uses the <see cref="Formatters.Chrome"/> property for determining what chrome
+        /// characters to use.</para>
+        /// </summary>
+        /// <param name="maxWidth">The maximum width to allow each cell to be.</param>
+        /// <param name="withColor">A value indicating whether or not to print the cell colors with the table.</param>
+        /// <returns>A string containing the formatted table.</returns>
+        public string ToString(int maxWidth, bool withColor)
+        {
+            return this.ToString(maxWidth, withColor, Formatters.Chrome);
+        }
+
+        /// <summary>
+        /// Returns a string containing this table formatted for displaying in a log or console.
+        /// <para>Uses the <see cref="Formatters.Chrome"/> property for determining what chrome
+        /// characters to use.</para>
+        /// </summary>
+        /// <param name="maxWidth">The maximum width to allow each cell to be.</param>
+        /// <param name="chrome">The <see cref="IChromeCollection"/> to use when printing the table.</param>
+        /// <returns>A string containing the formatted table.</returns>
+        public string ToString(int maxWidth, IChromeCollection chrome)
+        {
+            return this.ToString(maxWidth, Options.Instance.ColorizeConsoleOutput, Formatters.Chrome);
         }
 
         /// <summary>
@@ -612,8 +658,9 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         /// </summary>
         /// <param name="maxWidth">The maximum width to allow each cell to be.</param>
         /// <param name="withColor">A value indicating whether or not to print the cell colors with the table.</param>
+        /// <param name="chrome">The <see cref="IChromeCollection"/> to use when printing the table.</param>
         /// <returns>A string containing the formatted table.</returns>
-        public string ToString(int maxWidth, bool withColor)
+        public string ToString(int maxWidth, bool withColor, IChromeCollection chrome)
         {
             var sb = new StringBuilder();
 
@@ -641,77 +688,130 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var totalWidth = columnWidths.Sum();
             totalWidth += (numCols * 2) + numCols + 1;
 
-            sb.Append(horizontalBorder, totalWidth);
-            sb.Append(lineEnding);
-
             if (headers.Count > 0)
             {
-                var numLines = headers.Max(c => c.GetNumberOfLines(maxWidth));
-
-                for (var line = 0; line < numLines; line++)
-                {
-                    sb.Append(verticalBorder);
-                    sb.Append(' ');
-
-                    for (var head = 0; head < numCols; head++)
-                    {
-                        sb.Append(headers[head].GetLine(line, columnWidths[head], withColor));
-                        sb.Append(' ');
-                        sb.Append(verticalBorder);
-                        if (head < numCols - 1)
-                        {
-                            sb.Append(' ');
-                        }
-                    }
-
-                    sb.Append(lineEnding);
-                }
-
-                sb.Append(verticalBorder);
-                sb.Append(headerBottomBorder, totalWidth - 2);
-                sb.Append(verticalBorder);
-                sb.Append(lineEnding);
+                sb.Append(this.GetHeader(chrome, maxWidth, numCols, withColor, columnWidths));
+            }
+            else
+            {
+                sb.Append(this.GetChromeLine(chrome.BodyTopLeft, chrome.BodyTop, chrome.BodyTopJoin, chrome.BodyTopRight, columnWidths));
             }
 
+            sb.Append(this.GetBody(chrome, withColor, totalWidth, numRows, numCols, columnWidths));
+
+            return sb.ToString();
+        }
+
+        private string GetHeader(IChromeCollection chrome, int maxWidth, int numCols, bool withColor, int[] columnWidths)
+        {
+            var sb = new StringBuilder();
+            sb.Append(this.GetChromeLine(chrome.HeaderTopLeft, chrome.HeaderTop, chrome.HeaderTopJoin, chrome.HeaderTopRight, columnWidths));
+
+            var numLines = headers.Max(c => c.GetNumberOfLines(maxWidth));
+
+
+            for (var line = 0; line < numLines; line++)
+            {
+                sb.Append(chrome.HeaderLeft);
+
+                sb.Append(' ');
+                for (var head = 0; head < numCols; head++)
+                {
+                    sb.Append(headers[head].GetLine(line, columnWidths[head], withColor));
+                    sb.Append(' ');
+                    if (head < numCols - 1)
+                    {
+                        sb.Append(chrome.HeaderInteriorVertical);
+                        sb.Append(' ');
+                    }
+                }
+
+                sb.Append(chrome.HeaderRight);
+                sb.Append(ConsoleBase.NewLine);
+            }
+
+            if (this.Rows.Count > 0)
+            {
+                sb.Append(this.GetChromeLine(chrome.HeaderBodyLeftJoin, chrome.HeaderBodyHorizontal, chrome.HeaderBodyInteriorJoin, chrome.HeaderBodyRightJoin, columnWidths));
+            }
+            else
+            {
+                sb.Append(this.GetChromeLine(chrome.HeaderBottomLeft, chrome.HeaderBottom, chrome.HeaderBottomJoin, chrome.HeaderBottomRight, columnWidths));
+            }
+
+            return sb.ToString();
+        }
+
+        private string GetChromeLine(string left, string center, string join, string right, int[] columnWidths)
+        {
+            var sb = new StringBuilder();
+            sb.Append(left);
+            for (var i = 0; i < columnWidths.Length; i++)
+            {
+                for (var j = 0; j < columnWidths[i] + 2; j++)
+                {
+                    sb.Append(center);
+                    if (i < columnWidths.Length - 1 && j == (columnWidths[i] + 1))
+                    {
+                        sb.Append(join);
+                    }
+                }
+            }
+
+            sb.Append(right);
+
+            sb.Append(ConsoleBase.NewLine);
+
+            return sb.ToString();
+        }
+
+        private string GetBody(IChromeCollection chrome, bool withColor, int totalWidth, int numRows, int numCols, int[] columnWidths)
+        {
+            var sb = new StringBuilder();
             for (var row = 0; row < numRows; row++)
             {
-                if (row > 0)
+                sb.Append(this.GetRow(row, withColor, chrome, totalWidth, numCols, columnWidths));
+
+                if (row < (numRows - 1))
                 {
-                    sb.Append(verticalBorder);
-                    sb.Append(horizontalBorder, totalWidth - 2);
-                    sb.Append(verticalBorder);
-                    sb.Append(lineEnding);
-                }
-
-                var numLines = 0;
-                for (var i = 0; i < numCols; i++)
-                {
-                    numLines = Math.Max(rows[row][i].GetNumberOfLines(columnWidths[i]), numLines);
-                }
-
-                for (var line = 0; line < numLines; line++)
-                {
-                    sb.Append(verticalBorder);
-                    sb.Append(' ');
-
-                    for (var col = 0; col < numCols; col++)
-                    {
-                        sb.Append(rows[row][col].GetLine(line, columnWidths[col], withColor));
-                        sb.Append(' ');
-                        sb.Append(verticalBorder);
-
-                        if (col < numCols - 1)
-                        {
-                            sb.Append(' ');
-                        }
-                    }
-
-                    sb.Append(lineEnding);
+                    sb.Append(this.GetChromeLine(chrome.BodyLeftJoin, chrome.BodyInteriorHorizontal, chrome.BodyInteriorJoin, chrome.BodyRightJoin, columnWidths));
                 }
             }
 
-            sb.Append(horizontalBorder, totalWidth);
-            sb.Append(lineEnding);
+            sb.Append(this.GetChromeLine(chrome.BodyBottomLeft, chrome.BodyBottom, chrome.BodyBottomJoin, chrome.BodyBottomRight, columnWidths));
+
+            return sb.ToString();
+        }
+
+        private string GetRow(int row, bool withColor, IChromeCollection chrome, int totalWidth, int numCols, int[] columnWidths)
+        {
+            var sb = new StringBuilder();
+
+            var numLines = 0;
+            for (var i = 0; i < numCols; i++)
+            {
+                numLines = Math.Max(rows[row][i].GetNumberOfLines(columnWidths[i]), numLines);
+            }
+
+            for (var line = 0; line < numLines; line++)
+            {
+                sb.Append(chrome.BodyLeft);
+
+                sb.Append(' ');
+                for (var col = 0; col < numCols; col++)
+                {
+                    sb.Append(rows[row][col].GetLine(line, columnWidths[col], withColor));
+                    sb.Append(' ');
+                    if (col < numCols - 1)
+                    {
+                        sb.Append(chrome.BodyInteriorVertical);
+                        sb.Append(' ');
+                    }
+                }
+
+                sb.Append(chrome.BodyRight);
+                sb.Append(ConsoleBase.NewLine);
+            }
 
             return sb.ToString();
         }
