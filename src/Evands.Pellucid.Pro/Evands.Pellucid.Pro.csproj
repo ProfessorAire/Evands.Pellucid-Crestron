@@ -53,7 +53,7 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Test\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Test</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;TEST</DefineConstants>
     <DocumentationFile>bin\Debug\Evands.Pellucid.Pro.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
