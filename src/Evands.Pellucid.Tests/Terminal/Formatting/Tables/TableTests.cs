@@ -14,7 +14,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
     {
         public TableTests()
         {
-          }
+        }
 
         private TestContext testContextInstance;
 
@@ -40,70 +40,89 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
         private string[] brokenRow = new string[] { "This is a long string that spans three lines.", "This is a long string that spans three lines.", "This is a long string that spans three lines." };
 
-        private string GetExpectedTable(HorizontalAlignment a, int mw)
+        private string GetExpectedTable(HorizontalAlignment a, int maxCellWidth)
         {
             var sb = new StringBuilder();
 
-            if (mw == 0)
+            if (maxCellWidth == 0)
             {
-                mw = 4;
+                maxCellWidth = 4;
             }
 
-            var totalWidth = 10 + mw * 3;
+            var totalWidth = 10 + maxCellWidth * 3;
 
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", head[0].Align(a, mw), head[1].Align(a, mw), head[2].Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", head[0].Align(a, maxCellWidth), head[1].Align(a, maxCellWidth), head[2].Align(a, maxCellWidth));
+            sb.Append("\r\n");
+            sb.Append('-', totalWidth);
+            sb.Append("\r\n");
+            sb.AppendFormat("| {0} | {1} | {2} |", row1[0].Align(a, maxCellWidth), row1[1].Align(a, maxCellWidth), row1[2].Align(a, maxCellWidth));
             sb.Append("\r\n");
             sb.Append('|');
-            sb.Append('-', totalWidth - 2);
+
+            for (var i = 0; i < 3; i++)
+            {
+                sb.Append('-', maxCellWidth + 2);
+                if (i < 2)
+                {
+                    sb.Append('+');
+                }
+            }
+
             sb.Append("|\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", row1[0].Align(a, mw), row1[1].Align(a, mw), row1[2].Align(a, mw));
-            sb.Append("\r\n");
-            sb.Append('|');
-            sb.Append('-', totalWidth - 2);
-            sb.Append("|\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", row2[0].Align(a, mw), row2[1].Align(a, mw), row2[2].Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", row2[0].Align(a, maxCellWidth), row2[1].Align(a, maxCellWidth), row2[2].Align(a, maxCellWidth));
             sb.Append("\r\n");
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
             return sb.ToString();
         }
 
-        private string GetExpectedBrokenTable(HorizontalAlignment a, int mw)
+        private string GetExpectedBrokenTable(HorizontalAlignment a, int maxCellWidth)
         {
             var sb = new StringBuilder();
 
-            if (mw == 0)
+            if (maxCellWidth == 0)
             {
-                mw = 4;
+                maxCellWidth = 4;
             }
 
             var split1 = "This is a long";
             var split2 = "string that spans";
             var split3 = "three lines.";
 
-            var totalWidth = 10 + mw * 3;
+            var totalWidth = 10 + maxCellWidth * 3;
 
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split1.Align(a, mw), split1.Align(a, mw), split1.Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", split1.Align(a, maxCellWidth), split1.Align(a, maxCellWidth), split1.Align(a, maxCellWidth));
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split2.Align(a, mw), split2.Align(a, mw), split2.Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", split2.Align(a, maxCellWidth), split2.Align(a, maxCellWidth), split2.Align(a, maxCellWidth));
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split3.Align(a, mw), split3.Align(a, mw), split3.Align(a, mw));
-            sb.Append("\r\n|").Append('-', totalWidth - 2).Append("|\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split1.Align(a, mw), split1.Align(a, mw), split1.Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", split3.Align(a, maxCellWidth), split3.Align(a, maxCellWidth), split3.Align(a, maxCellWidth));
+            sb.Append("\r\n").Append('-', totalWidth).Append("\r\n");
+            sb.AppendFormat("| {0} | {1} | {2} |", split1.Align(a, maxCellWidth), split1.Align(a, maxCellWidth), split1.Align(a, maxCellWidth));
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split2.Align(a, mw), split2.Align(a, mw), split2.Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", split2.Align(a, maxCellWidth), split2.Align(a, maxCellWidth), split2.Align(a, maxCellWidth));
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split3.Align(a, mw), split3.Align(a, mw), split3.Align(a, mw));
-            sb.Append("\r\n|").Append('-', totalWidth - 2).Append("|\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split1.Align(a, mw), split1.Align(a, mw), split1.Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", split3.Align(a, maxCellWidth), split3.Align(a, maxCellWidth), split3.Align(a, maxCellWidth));
+            sb.Append("\r\n|");
+            for (var i = 0; i < 3; i++)
+            {
+                sb.Append('-', maxCellWidth + 2);
+                if (i < 2)
+                {
+                    sb.Append('+');
+                }
+            }
+
+            sb.Append("|\r\n");
+
+            sb.AppendFormat("| {0} | {1} | {2} |", split1.Align(a, maxCellWidth), split1.Align(a, maxCellWidth), split1.Align(a, maxCellWidth));
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split2.Align(a, mw), split2.Align(a, mw), split2.Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", split2.Align(a, maxCellWidth), split2.Align(a, maxCellWidth), split2.Align(a, maxCellWidth));
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", split3.Align(a, mw), split3.Align(a, mw), split3.Align(a, mw));
+            sb.AppendFormat("| {0} | {1} | {2} |", split3.Align(a, maxCellWidth), split3.Align(a, maxCellWidth), split3.Align(a, maxCellWidth));
             sb.Append("\r\n");
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
@@ -574,7 +593,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString();
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -594,7 +613,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString();
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -614,7 +633,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString();
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -634,7 +653,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString(4);
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -654,7 +673,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString(4);
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -674,7 +693,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString(4);
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -694,7 +713,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString(17);
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -714,7 +733,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString(17);
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -734,14 +753,71 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             t.MinimumColumnWidth = width;
 
             var actual = t.ToString(17);
-            Assert.IsTrue(actual == expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void ToString_WithNullCellContent_Prints_Correctly()
         {
             var t = Table.Create().AddRow((string)null, (string)null);
-            t.ToString();
+            var expected = @"-------
+|  |  |
+-------
+|  |  |
+-------
+";
+            var actual = t.ToString();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_WithNullCellContents_AndRoundedChrome_Prints_Correctly()
+        {
+            var t = Table.Create().AddRow((string)null, (string)null);
+            var c = new RoundedChrome();
+            var sb = new StringBuilder();
+            sb.Append(c.HeaderTopLeft);
+            sb.Append(c.HeaderTop);
+            sb.Append(c.HeaderTop);
+            sb.Append(c.HeaderTopJoin);
+            sb.Append(c.HeaderTop);
+            sb.Append(c.HeaderTop);
+            sb.Append(c.HeaderTopRight);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append(c.HeaderLeft);
+            sb.Append(' ', 2);
+            sb.Append(c.HeaderInteriorVertical);
+            sb.Append(' ', 2);
+            sb.Append(c.HeaderRight);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append(c.HeaderBodyLeftJoin);
+            sb.Append(c.HeaderBodyHorizontal);
+            sb.Append(c.HeaderBodyHorizontal);
+            sb.Append(c.HeaderBodyInteriorJoin);
+            sb.Append(c.HeaderBodyHorizontal);
+            sb.Append(c.HeaderBodyHorizontal);
+            sb.Append(c.HeaderBodyRightJoin);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append(c.BodyLeft);
+            sb.Append(' ', 2);
+            sb.Append(c.BodyInteriorVertical);
+            sb.Append(' ', 2);
+            sb.Append(c.BodyRight);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append(c.BodyBottomLeft);
+            sb.Append(c.BodyBottom);
+            sb.Append(c.BodyBottom);
+            sb.Append(c.BodyBottomJoin);
+            sb.Append(c.BodyBottom);
+            sb.Append(c.BodyBottom);
+            sb.Append(c.BodyBottomRight);
+            sb.Append("\r\n");
+
+            var expected = sb.ToString();
+
+            var actual = t.ToString(c);
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }

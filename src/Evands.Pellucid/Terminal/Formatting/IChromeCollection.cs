@@ -38,7 +38,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <summary>
         /// Gets the glyph used where a header's top border intersects with a vertical segment.
         /// </summary>
-        string HeaderJoinTop { get; }
+        string HeaderTopJoin { get; }
 
         /// <summary>
         /// Gets the top right corner glyph for body headers.
@@ -63,7 +63,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <summary>
         /// Gets the glyph used where the bottom left corner of a header joins the top left corner of a body.
         /// </summary>
-        string HeaderBodyJoinLeft { get; }
+        string HeaderBodyLeftJoin { get; }
 
         /// <summary>
         /// Gets the glyph used for the bottom of a header when it is connected to a body.
@@ -73,12 +73,32 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <summary>
         /// Gets the glyph used where a header's bottom border intersects with a vertical segment for both the header and body.
         /// </summary>
-        string HeaderBodyJoinMiddle { get; }
+        string HeaderBodyInteriorJoin { get; }
 
         /// <summary>
         /// Gets the glyph used where the bottom right corner of a header joins the top right corner of a body.
         /// </summary>
-        string HeaderBodyJoinRight { get; }
+        string HeaderBodyRightJoin { get; }
+
+        /// <summary>
+        /// Gets the glyph used for the bottom left corner of a header with no body.
+        /// </summary>
+        string HeaderBottomLeft { get; }
+
+        /// <summary>
+        /// Gets the glyph used for the bottom of a header with no body.
+        /// </summary>
+        string HeaderBottom { get; }
+
+        /// <summary>
+        /// Gets the glyph used where a header with no body intersects with a vertical segment for the header.
+        /// </summary>
+        string HeaderBottomJoin { get; }
+
+        /// <summary>
+        /// Gets the glyph used for the bottom right corner of a header with no body.
+        /// </summary>
+        string HeaderBottomRight { get; }
 
         /// <summary>
         /// Gets the glyph used for the top left corner of a body that has no header.
@@ -93,7 +113,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <summary>
         /// Gets the glyph used where the top of a body with no header meets a vertical segment for the body.
         /// </summary>
-        string BodyJoinTop { get; }
+        string BodyTopJoin { get; }
 
         /// <summary>
         /// Gets the glyph used for the top right corner of a body that has no header.
@@ -103,7 +123,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <summary>
         /// Gets the glyph used where the left border of a body meets an interior horizontal segment.
         /// </summary>
-        string BodyJoinLeft { get; }
+        string BodyLeftJoin { get; }
 
         /// <summary>
         /// Gets the glyph used for the left side of a body.
@@ -128,7 +148,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <summary>
         /// Gets the glyph used where the right border of a body meets an interior horizontal segment.
         /// </summary>
-        string BodyJoinRight { get; }
+        string BodyRightJoin { get; }
 
         /// <summary>
         /// Gets the glyph used for the right border of a body.
@@ -148,7 +168,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         /// <summary>
         /// Gets the glyph used where the bottom border of a body intersects with an interior vertical segment.
         /// </summary>
-        string BodyJoinBottom { get; }
+        string BodyBottomJoin { get; }
 
         /// <summary>
         /// Gets the glyph used for the bottom right corner of a body.
