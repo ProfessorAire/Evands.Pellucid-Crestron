@@ -91,5 +91,53 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         {
             Assert.IsInstanceOfType(DumpFactory.GetNode(new Object()), typeof(DumpObject));
         }
+
+        [TestMethod]
+        public void GetNode_WithException()
+        {
+            var ex = new InvalidOperationException("Invalid Operation");
+            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
+            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 1;
+            var o = new object();
+            var actual = DumpFactory.GetNode(o);
+
+            Assert.AreEqual(typeof(DumpObjectFailure), actual.ValueType);
+
+            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
+            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
+        }
+
+        [TestMethod]
+        public void GetNode_WithName_WithException()
+        {
+            var ex = new InvalidOperationException("Invalid Operation");
+            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
+            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 1;
+            var o = new Dictionary<string, System.Reflection.MethodInfo>();
+            var node = DumpFactory.GetNode(o, "Type");
+
+            var content = node.ToString();
+
+            Assert.IsTrue(content.Contains("Invalid Operation"));
+
+            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
+            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
+        }
+
+        [TestMethod]
+        public void GetNode_WithName_WithType_WithException()
+        {
+            var ex = new InvalidOperationException("Invalid Operation");
+            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
+            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 1;
+            var o = new object();
+            var node = DumpFactory.GetNode(o, "Type", o.GetType());
+            var content = node.ToString();
+
+            Assert.IsTrue(content.Contains("Invalid Operation"));
+
+            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
+            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
+        }
     }
 }

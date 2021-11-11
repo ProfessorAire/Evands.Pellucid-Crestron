@@ -59,35 +59,49 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         /// <returns>A <see cref="DumpNode"/>.</returns>
         public static DumpNode GetNode(object obj, string name, Type objectType)
         {
-            if (obj == null)
+            try
             {
-                return new DumpNode(obj, name, objectType);
-            }
+                if (obj == null)
+                {
+                    return new DumpNode(obj, name, objectType);
+                }
 
-            if (obj.GetType().GetCType().IsValueType || obj is string)
+                if (obj.GetType().GetCType().IsValueType || obj is string)
+                {
+                    return new DumpNode(obj, name, objectType);
+                }
+
+                var idict = obj as IDictionary;
+                if (idict != null)
+                {
+                    return new DumpCollection(idict, name, objectType);
+                }
+
+                var ilist = obj as IList;
+                if (ilist != null)
+                {
+                    return new DumpCollection(ilist, name, objectType);
+                }
+
+                var ienum = obj as IEnumerable;
+                if (ienum != null)
+                {
+                    return new DumpCollection(ienum, name, objectType);
+                }
+
+                return new DumpObject(obj, name, objectType);
+            }
+            catch (Exception ex)
             {
-                return new DumpNode(obj, name, objectType);
+                return new DumpObject(
+                    new DumpObjectFailure()
+                    {
+                        ErrorMessage = "Top level exception while attempting to dump an object.",
+                        ExceptionMessage = ex.Message,
+                        ExceptionType = ex.GetType().FullName
+                    },
+                    name);
             }
-
-            var idict = obj as IDictionary;
-            if (idict != null)
-            {
-                return new DumpCollection(idict, name, objectType);
-            }
-
-            var ilist = obj as IList;
-            if (ilist != null)
-            {
-                return new DumpCollection(ilist, name, objectType);
-            }
-
-            var ienum = obj as IEnumerable;
-            if (ienum != null)
-            {
-                return new DumpCollection(ienum, name, objectType);
-            }
-
-            return new DumpObject(obj, name, objectType);
         }
     }
 }
