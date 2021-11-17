@@ -20,8 +20,8 @@
 
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
-using Evands.Pellucid.Terminal.Formatting.Tables;
 using Evands.Pellucid.Terminal.Formatting;
+using Evands.Pellucid.Terminal.Formatting.Tables;
 
 namespace Evands.Pellucid.Diagnostics
 {
@@ -426,7 +426,7 @@ namespace Evands.Pellucid.Diagnostics
         /// </summary>
         /// <param name="basic">Use the basic chrome.</param>
         /// <param name="round">Use the round chrome.</param>
-        /// <param name="thick">Use thick headers if appliccable.</param>
+        /// <param name="thick">Use thick headers if applicable.</param>
         /// <param name="square">Use the square chrome.</param>
         [Verb("chrome", "Allows you to swap between the standard instances of chrome used when printing information to the console.")]
         [Sample("debug chrome -b", "Sets the chrome to be the basic chrome.")]

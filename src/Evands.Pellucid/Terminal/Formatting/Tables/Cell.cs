@@ -132,13 +132,6 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         /// <returns>A value indicating the total width the cell's contents will consume.</returns>
         public int GetTotalWidth()
         {
-            //if (string.IsNullOrEmpty(Contents))
-            //{
-            //    return 0;
-            //}
-
-            //return ColorFilter.Replace(Contents, string.Empty).Length;
-
             return this.GetTotalWidth(0);
         }
 

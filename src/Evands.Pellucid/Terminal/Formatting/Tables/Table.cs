@@ -47,17 +47,17 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         /// <summary>
         /// Backing field for the <see cref="HorizontalBorder"/> property.
         /// </summary>
-        private char horizontalBorder = Char.MinValue;
+        private char horizontalBorder = char.MinValue;
 
         /// <summary>
         /// Backing field for the <see cref="VerticalBorder"/> property.
         /// </summary>
-        private char verticalBorder = Char.MinValue;
+        private char verticalBorder = char.MinValue;
 
         /// <summary>
         /// Backing field for the <see cref="HeaderBottomBorder"/> property.
         /// </summary>
-        private char headerBottomBorder = Char.MinValue;
+        private char headerBottomBorder = char.MinValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Table"/> class.
