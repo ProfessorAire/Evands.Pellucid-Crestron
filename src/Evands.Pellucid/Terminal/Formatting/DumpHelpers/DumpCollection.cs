@@ -197,6 +197,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                 {
                     sb.Append(ConsoleBase.NewLine);
                 }
+
                 sb.Append(' ', rootPadding);
                 sb.Append(ConsoleBase.Colors.DumpObjectChrome.FormatText(false, Formatters.Chrome.BodyBottomLeft));
                 for (var i = 0; i < underscoreLength - 1; i++)
