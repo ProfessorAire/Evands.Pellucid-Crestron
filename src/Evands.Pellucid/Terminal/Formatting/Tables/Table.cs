@@ -702,13 +702,25 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets the header for the table. This can be nothing, in which case the standard top-of-body chrome will be added.
+        /// </summary>
+        /// <param name="chrome">The <see cref="IChromeCollection"/> to use.</param>
+        /// <param name="maxWidth">The max width a column can be.</param>
+        /// <param name="numCols">The number of columns.</param>
+        /// <param name="withColor"><see langword="true"/> to print with color, otherwise false.</param>
+        /// <param name="columnWidths">Collection of individual column widths.</param>
+        /// <returns>A string containing the table header.</returns>
         private string GetHeader(IChromeCollection chrome, int maxWidth, int numCols, bool withColor, int[] columnWidths)
         {
             var sb = new StringBuilder();
-            sb.Append(this.GetChromeLine(chrome.HeaderTopLeft, chrome.HeaderTop, chrome.HeaderTopJoin, chrome.HeaderTopRight, columnWidths));
 
             var numLines = headers.Max(c => c.GetNumberOfLines(maxWidth));
 
+            if (numLines > 0)
+            {
+                sb.Append(this.GetChromeLine(chrome.HeaderTopLeft, chrome.HeaderTop, chrome.HeaderTopJoin, chrome.HeaderTopRight, columnWidths));
+            }
 
             for (var line = 0; line < numLines; line++)
             {
@@ -732,7 +744,14 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
             if (this.Rows.Count > 0)
             {
-                sb.Append(this.GetChromeLine(chrome.HeaderBodyLeftJoin, chrome.HeaderBodyHorizontal, chrome.HeaderBodyInteriorJoin, chrome.HeaderBodyRightJoin, columnWidths));
+                if (numLines > 0)
+                {
+                    sb.Append(this.GetChromeLine(chrome.HeaderBodyLeftJoin, chrome.HeaderBodyHorizontal, chrome.HeaderBodyInteriorJoin, chrome.HeaderBodyRightJoin, columnWidths));
+                }
+                else
+                {
+                    sb.Append(this.GetChromeLine(chrome.BodyTopLeft, chrome.BodyTop, chrome.BodyTopJoin, chrome.BodyTopRight, columnWidths));
+                }
             }
             else
             {
@@ -742,6 +761,15 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets a line of separator chrome.
+        /// </summary>
+        /// <param name="left">The element to use for the left-most chrome border.</param>
+        /// <param name="center">The element to use for horizontal chrome.</param>
+        /// <param name="join">The element to use for joins.</param>
+        /// <param name="right">The element to use for the right-most chrome border.</param>
+        /// <param name="columnWidths">Collection of individual column widths.</param>
+        /// <returns>A string containing the line of chrome.</returns>
         private string GetChromeLine(string left, string center, string join, string right, int[] columnWidths)
         {
             var sb = new StringBuilder();
@@ -765,6 +793,16 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets the body of the table.
+        /// </summary>
+        /// <param name="chrome">The <see cref="IChromeCollection"/> to use.</param>
+        /// <param name="withColor"><see langword="true"/> to print with color, otherwise false.</param>
+        /// <param name="totalWidth">The total width of the table.</param>
+        /// <param name="numRows">The total number of rows in the table.</param>
+        /// <param name="numCols">The number of columns in each row.</param>
+        /// <param name="columnWidths">Collection of individual column widths.</param>
+        /// <returns>A string containing the table body.</returns>
         private string GetBody(IChromeCollection chrome, bool withColor, int totalWidth, int numRows, int numCols, int[] columnWidths)
         {
             var sb = new StringBuilder();
@@ -783,11 +821,21 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets an individual row for the table.
+        /// </summary>
+        /// <param name="row">The number of the row to get a string for.</param>
+        /// <param name="withColor"><see langword="true"/> to print with color, otherwise false.</param>
+        /// <param name="chrome">The <see cref="IChromeCollection"/> to use.</param>
+        /// <param name="totalWidth">The total width of the table.</param>
+        /// <param name="numCols">The number of columns in each row.</param>
+        /// <param name="columnWidths">The individual column widths.</param>
+        /// <returns>A string containing the specified row.</returns>
         private string GetRow(int row, bool withColor, IChromeCollection chrome, int totalWidth, int numCols, int[] columnWidths)
         {
             var sb = new StringBuilder();
 
-            var numLines = 0;
+            var numLines = 1;
             for (var i = 0; i < numCols; i++)
             {
                 numLines = Math.Max(rows[row][i].GetNumberOfLines(columnWidths[i]), numLines);

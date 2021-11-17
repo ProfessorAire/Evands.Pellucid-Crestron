@@ -763,6 +763,16 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var expected = @"-------
 |  |  |
 -------
+";
+            var actual = t.ToString();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_WithEmptyCellContent_Prints_Correctly()
+        {
+            var t = Table.Create().AddRow(string.Empty, string.Empty);
+            var expected = @"-------
 |  |  |
 -------
 ";
@@ -776,27 +786,13 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var t = Table.Create().AddRow((string)null, (string)null);
             var c = new RoundedChrome();
             var sb = new StringBuilder();
-            sb.Append(c.HeaderTopLeft);
-            sb.Append(c.HeaderTop);
-            sb.Append(c.HeaderTop);
-            sb.Append(c.HeaderTopJoin);
-            sb.Append(c.HeaderTop);
-            sb.Append(c.HeaderTop);
-            sb.Append(c.HeaderTopRight);
-            sb.Append(ConsoleBase.NewLine);
-            sb.Append(c.HeaderLeft);
-            sb.Append(' ', 2);
-            sb.Append(c.HeaderInteriorVertical);
-            sb.Append(' ', 2);
-            sb.Append(c.HeaderRight);
-            sb.Append(ConsoleBase.NewLine);
-            sb.Append(c.HeaderBodyLeftJoin);
-            sb.Append(c.HeaderBodyHorizontal);
-            sb.Append(c.HeaderBodyHorizontal);
-            sb.Append(c.HeaderBodyInteriorJoin);
-            sb.Append(c.HeaderBodyHorizontal);
-            sb.Append(c.HeaderBodyHorizontal);
-            sb.Append(c.HeaderBodyRightJoin);
+            sb.Append(c.BodyTopLeft);
+            sb.Append(c.BodyTop);
+            sb.Append(c.BodyTop);
+            sb.Append(c.BodyTopJoin);
+            sb.Append(c.BodyTop);
+            sb.Append(c.BodyTop);
+            sb.Append(c.BodyTopRight);
             sb.Append(ConsoleBase.NewLine);
             sb.Append(c.BodyLeft);
             sb.Append(' ', 2);
@@ -818,6 +814,23 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var actual = t.ToString(c);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_WithMultiRowCell_WithNonStandardCharacterEndings_PrintsCorrect()
+        {
+            var expected =
+@"-------------
+| Test (1)  |
+| Test3 (3) |
+|-----------|
+| Test2 (2) |
+-------------
+";
+
+            var t = new Table().AddColumn("Test (1)\r\nTest3 (3)", "Test2 (2)");
+
+            Assert.AreEqual(expected, t.ToString());
         }
     }
 }
