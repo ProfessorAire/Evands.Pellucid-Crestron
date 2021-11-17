@@ -19,6 +19,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Evands.Pellucid.Terminal.Formatting.Tables
@@ -126,17 +127,35 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         }
 
         /// <summary>
-        /// Gets the total width of the cell's contents.
+        /// Gets the total width of the cell's contents, assuming no maximum width.
         /// </summary>
         /// <returns>A value indicating the total width the cell's contents will consume.</returns>
         public int GetTotalWidth()
+        {
+            //if (string.IsNullOrEmpty(Contents))
+            //{
+            //    return 0;
+            //}
+
+            //return ColorFilter.Replace(Contents, string.Empty).Length;
+
+            return this.GetTotalWidth(0);
+        }
+
+        /// <summary>
+        /// Gets the total width of the cell's contents.
+        /// </summary>
+        /// <param name="maxWidth">The max width the cell can consume.</param>
+        /// <returns>A value indicating the total width the cell's contents will consume.</returns>
+        public int GetTotalWidth(int maxWidth)
         {
             if (string.IsNullOrEmpty(Contents))
             {
                 return 0;
             }
 
-            return ColorFilter.Replace(Contents, string.Empty).Length;
+            this.CalculateLines(maxWidth);
+            return this.lines.Max(l => ColorFilter.Replace(l, string.Empty).Length);
         }
 
         /// <summary>
@@ -146,8 +165,8 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         /// <returns>A value indicating the number of lines the cell will span.</returns>
         public int GetNumberOfLines(int maxWidth)
         {
-            CalculateLines(maxWidth);
-            return lines.Length;
+            this.CalculateLines(maxWidth);
+            return this.lines.Length;
         }
 
         /// <summary>
@@ -176,37 +195,31 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         {
             if (this.maxWidth != maxWidth || lines == null)
             {
-                if (maxWidth > 0)
-                {
-                    var lineBreaker = new Regex("(?:\\b|^|\\w??)(?:(?:.{1,{WIDTH}}(?:\\b|$)|(?:\\w{1,{WIDTH}}))?)(?:\r|\n|\r\n)?".Replace("{WIDTH}", maxWidth.ToString()));
-                    var matches = lineBreaker.Matches(Contents);
+                var lineBreaker = new Regex(@"((?:(?:\x1b\[[\d;]+m)*.(?:\x1b\[[\d;]+m)*){0,{WIDTH}}(?:\s|$))|((?:(?:\x1b\[[\d;]+m)*.(?:\x1b\[[\d;]+m)*){0,{WIDTH}})".Replace("{WIDTH}", maxWidth > 0 ? maxWidth.ToString() : string.Empty), RegexOptions.Multiline);
 
-                    var l = new List<string>();
-                    for (var i = 0; i < matches.Count; i++)
+                var matches = lineBreaker.Matches(Contents);
+
+                var l = new List<string>();
+                for (var i = 0; i < matches.Count; i++)
+                {
+                    if (matches[i].Value.Contains("\r") || matches[i].Value.Contains("\n"))
                     {
-                        if (matches[i].Value.Contains("\r") || matches[i].Value.Contains("\n"))
+                        var val = matches[i].Value.Replace("\r", string.Empty).Replace("\n", string.Empty).Trim();
+                        if (!string.IsNullOrEmpty(val))
                         {
-                            var val = matches[i].Value.Replace("\r", string.Empty).Replace("\n", string.Empty).Trim();
-                            if (!string.IsNullOrEmpty(val))
-                            {
-                                l.Add(val.Align(HorizontalAlignment, maxWidth));
-                            }
-                        }
-                        else
-                        {
-                            if (!string.IsNullOrEmpty(matches[i].Value))
-                            {
-                                l.Add(matches[i].Value.Trim().Align(HorizontalAlignment, maxWidth));
-                            }
+                            l.Add(val.Align(HorizontalAlignment, maxWidth));
                         }
                     }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(matches[i].Value))
+                        {
+                            l.Add(matches[i].Value.Trim().Align(HorizontalAlignment, maxWidth));
+                        }
+                    }
+                }
 
-                    lines = l.ToArray();
-                }
-                else
-                {
-                    lines = new string[1] { this.Contents };
-                }
+                lines = l.ToArray();
 
                 this.maxWidth = maxWidth;
             }

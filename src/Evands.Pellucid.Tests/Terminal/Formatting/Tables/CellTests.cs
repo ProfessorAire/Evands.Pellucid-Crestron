@@ -141,18 +141,43 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         }
 
         [TestMethod]
+        public void GetTotalWidth_Returns_AccurateValue_WhenLineBreaksIncluded()
+        {
+            var lineToTest = "This is line 1.\r\nThis is line two.\r\nThis is line three.";
+            UnderTest.Contents = lineToTest;
+            var expected = lineToTest.Replace("\r\n", "\n").Split('\n').Max(l => l.Length);
+
+            Assert.AreEqual(expected, UnderTest.GetTotalWidth());
+        }
+
+        [TestMethod]
         public void GetNumberOfLines_IsAccurate()
         {
             var text = "Line1\nLine2\nLine3";
             UnderTest.Contents = text;
-            Assert.IsTrue(UnderTest.GetNumberOfLines(100) == 3);
+            Assert.AreEqual(3, UnderTest.GetNumberOfLines(100));
             text = "Line1Line2Line3Line4";
             UnderTest.Contents = text;
-            Assert.IsTrue(UnderTest.GetNumberOfLines(5) == 4);
-            Assert.IsTrue(UnderTest.GetNumberOfLines(10) == 2);
+            Assert.AreEqual(4, UnderTest.GetNumberOfLines(5));
+            Assert.AreEqual(2, UnderTest.GetNumberOfLines(10));
             text = "Some text.";
             UnderTest.Contents = text;
-            Assert.IsTrue(UnderTest.GetNumberOfLines(100) == 1);
+            Assert.AreEqual(1, UnderTest.GetNumberOfLines(100));
+        }
+
+        [TestMethod]
+        public void GetNumberOfLines_IsAccurate_WhenColorIncluded()
+        {
+            var text = ConsoleBase.Colors.Blue.FormatText("Line1\nLine2\nLine3");
+            UnderTest.Contents = text;
+            Assert.AreEqual(3, UnderTest.GetNumberOfLines(100));
+            text = ConsoleBase.Colors.Blue.FormatText("Line1Line2Line3Line4");
+            UnderTest.Contents = text;
+            Assert.AreEqual(4, UnderTest.GetNumberOfLines(5));
+            Assert.AreEqual(2, UnderTest.GetNumberOfLines(10));
+            text = ConsoleBase.Colors.Blue.FormatText("Some text.");
+            UnderTest.Contents = text;
+            Assert.AreEqual(1, UnderTest.GetNumberOfLines(100));
         }
 
         [TestMethod]
@@ -184,6 +209,34 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
                 var expected = UnderTest.Color.FormatText(items[i]);
                 Assert.IsTrue(line == expected, "Index '{0}' failed.", i);
             }            
+        }
+
+        [TestMethod]
+        public void GetLine_WithTerminatingParenthesis_Returns_CorrectValue_WithoutColor()
+        {
+            var text = "Line1 (1)\r\nLine2 (2)\r\nLine3 (1)\r\nLine 5 (123)";
+            UnderTest.Contents = text;
+
+            var items = text.Replace("\r", string.Empty).Split('\n');
+
+            for (var i = 0; i < items.Length; i++)
+            {
+                Assert.AreEqual(items[i], UnderTest.GetLine(i, 12, false).TrimEnd());
+            }
+        }
+
+        [TestMethod]
+        public void GetLine_WithTerminatingBracket_Returns_CorrectValue_WithoutColor()
+        {
+            var text = "Line1 [1]\nLine2 [2]\nLine3 [1]\nLine5 [4]";
+            UnderTest.Contents = text;
+
+            var items = text.Split('\n');
+
+            for (var i = 0; i < items.Length; i++)
+            {
+                Assert.AreEqual(items[i], UnderTest.GetLine(i, 9, false));
+            }
         }
 
         [TestMethod]
