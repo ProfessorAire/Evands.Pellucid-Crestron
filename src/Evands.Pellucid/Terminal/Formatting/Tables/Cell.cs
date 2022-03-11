@@ -193,6 +193,8 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
                 var matches = lineBreaker.Matches(Contents);
 
                 var l = new List<string>();
+                var lastColor = string.Empty;
+
                 for (var i = 0; i < matches.Count; i++)
                 {
                     if (matches[i].Value.Contains("\r") || matches[i].Value.Contains("\n"))
@@ -207,7 +209,20 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
                     {
                         if (!string.IsNullOrEmpty(matches[i].Value))
                         {
-                            l.Add(matches[i].Value.Trim().Align(HorizontalAlignment, maxWidth));
+                            var colorWidth = 0;
+                            var line = lastColor + matches[i].Value.Trim();
+                            var colorMatches = ColorFilter.Matches(line);
+
+                            for (var colorMatch = 0; colorMatch < colorMatches.Count; colorMatch++)
+                            {
+                                if (colorMatches[colorMatch].Success && colorMatches[colorMatch].Length > 0)
+                                {
+                                    colorWidth += colorMatches[colorMatch].Value.Length;
+                                    lastColor = colorMatches[colorMatch].Value;
+                                }
+                            }
+
+                            l.Add(line.Align(HorizontalAlignment, maxWidth + colorWidth));
                         }
                     }
                 }
