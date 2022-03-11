@@ -147,7 +147,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         }
 
         /// <summary>
-        /// Prints an ANSI SGR escape sequence that resets the SGR format to defaults.
+        /// Prints the text, followed by an ANSI SGR escape sequence that resets the SGR format to defaults.
         /// </summary>
         /// <param name="textToFormat">The text to format.</param>
         /// <param name="args">Optional array of arguments to use when formatting the text.</param>
@@ -161,6 +161,33 @@ namespace Evands.Pellucid.Terminal.Formatting
             else
             {
                 return textToFormat.OptionalFormat(args);
+            }
+        }
+
+        /// <summary>
+        /// Prints the text preceeded or followed by an ANSI SGR escape sequence that resets the SGR format to defaults,
+        /// depending on the value of the <paramref name="closeFirst"/> parameter.
+        /// </summary>
+        /// <param name="closeFirst"><see langword="true"/> to close the text format prior to the provided text, otherwise <see langword="false"/>.</param>
+        /// <param name="textToFormat">The text to format.</param>
+        /// <param name="args">Optional array of arguments to use when formatting the text.</param>
+        /// <returns>A <see langword="string"/> containing the provided text and a closing ANSI SGR escape sequence that resets the format to defaults.</returns>
+        public static string CloseTextFormat(bool closeFirst, string textToFormat, params object[] args)
+        {
+            if (closeFirst)
+            {
+                if (Options.Instance.ColorizeConsoleOutput)
+                {
+                    return string.Format("\x1b[0m{0}", textToFormat.OptionalFormat(args));
+                }
+                else
+                {
+                    return textToFormat.OptionalFormat(args);
+                }
+            }
+            else
+            {
+                return CloseTextFormat(textToFormat, args);
             }
         }
 

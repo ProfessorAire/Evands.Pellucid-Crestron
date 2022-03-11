@@ -846,18 +846,20 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
                 sb.Append(chrome.BodyLeft);
 
                 sb.Append(' ');
+                var latestColHasFormatting = false;
                 for (var col = 0; col < numCols; col++)
                 {
+                    latestColHasFormatting = rows[row][col].GetLine(line, columnWidths[col], withColor).Contains("\x1b");
                     sb.Append(rows[row][col].GetLine(line, columnWidths[col], withColor));
                     sb.Append(' ');
                     if (col < numCols - 1)
                     {
-                        sb.Append(chrome.BodyInteriorVertical);
+                        sb.Append(latestColHasFormatting ? ColorFormat.CloseTextFormat(true, chrome.BodyInteriorVertical) : chrome.BodyInteriorVertical);
                         sb.Append(' ');
                     }
                 }
 
-                sb.Append(chrome.BodyRight);
+                sb.Append(latestColHasFormatting ? ColorFormat.CloseTextFormat(true, chrome.BodyRight) : chrome.BodyRight);
                 sb.Append(ConsoleBase.NewLine);
             }
 

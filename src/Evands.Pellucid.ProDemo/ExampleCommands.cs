@@ -114,11 +114,11 @@ namespace Evands.Pellucid.ProDemo
         /// Prints a sample table to the console.
         /// </summary>
         [Verb("table", 3, "Prints a sample table to the console.")]
-        [Sample("example table", "Prints a sample table with automatic cell widths.")]
+        [Sample("table", "Prints a sample table with automatic cell widths.")]
         [DefaultVerb]
         public void SampleTable()
         {
-            SampleTable(0);
+            SampleTable(0, 0);
         }
 
         /// <summary>
@@ -126,18 +126,108 @@ namespace Evands.Pellucid.ProDemo
         /// </summary>
         /// <param name="minWidth">The minimum width the table can print to.</param>
         [Verb("table", 3, "Prints a sample table to the console.")]
-        [Sample("example table --min 15", "Prints a sample table with a minimum cell width of 15.")]
+        [Sample("table --min 15", "Prints a sample table with a minimum cell width of 15.")]
         public void SampleTable(
             [Operand("min", "Sets the minimum width the cells can be.")] int minWidth)
+        {
+            this.SampleTable(minWidth, 0);
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        /// <param name="minWidth">The minimum width the table can print to.</param>
+        [Verb("table", 3, "Prints a sample table to the console.")]
+        [Sample("table --max 15", "Prints a sample table with a maximum cell width of 15.")]
+        public void SampleTableMax(
+            [Operand("max", "Sets the maximum width the cells can be.")] int maxWidth)
+        {
+            this.SampleTable(0, maxWidth);
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        /// <param name="minWidth">The minimum width the table can print to.</param>
+        [Verb("table", 3, "Prints a sample table to the console.")]
+        [Sample("table --min 10 --max 20", "Prints a sample table with a minimum cell width of 10 and a maxium of 20.")]
+        public void SampleTable(
+            [Operand("min", "Sets the minimum width the cells can be.")] int minWidth,
+            [Operand("max", "Sets the maximum width the cells can be.")] int maxWidth)
         {
             ConsoleBase.WriteLine();
             ConsoleBase.WriteLineNoHeader(Table.Create()
                 .SetMinimumColumnWidth(minWidth)
-                .AddColumnWithHeader("Device", "Touchpanel", "DSP", "Codec", "Display 1", "Display 2")
-                .AddColumnWithHeader("Status", "Online", "Online", "Offline", "Offline", "Online")
+                .AddColumnWithHeader("Device", "Touchpanel", "DSP", "Codec", "Display 1", "Display 2", "Device with a really long name.")
+                .AddColumnWithHeader("Status", "Online", "Online", "Offline", "Offline", "Online", "Offline")
                 .FormatHeaders(ConsoleBase.Colors.BrightYellow, HorizontalAlignment.Center)
                 .FormatColumn(0, ConsoleBase.Colors.BrightCyan, HorizontalAlignment.Right)
-                .ForEachCellInColumn(1, c => c.Color = c.Contents == "Offline" ? ConsoleBase.Colors.BrightRed : ConsoleBase.Colors.BrightGreen).ToString());
+                .ForEachCellInColumn(1, c => c.Color = c.Contents == "Offline" ? ConsoleBase.Colors.BrightRed : ConsoleBase.Colors.BrightGreen)
+                .ToString(maxWidth));
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        /// <param name="minWidth">The minimum width the table can print to.</param>
+        [Verb("table-mix", "tm", "Prints a sample table to the console.")]
+        [Sample("table --min 15", "Prints a sample table with a minimum cell width of 15.")]
+        public void SampleTableMixed(
+            [Operand("min", "Sets the minimum width the cells can be.")] int minWidth)
+        {
+            this.SampleTableMixed(minWidth, 0);
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        /// <param name="minWidth">The minimum width the table can print to.</param>
+        [Verb("table-mix", "tm", "Prints a sample table to the console.")]
+        [Sample("table --max 15", "Prints a sample table with a maximum cell width of 15.")]
+        public void SampleTableMixedMax(
+            [Operand("max", "Sets the maximum width the cells can be.")] int maxWidth)
+        {
+            this.SampleTableMixed(0, maxWidth);
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        /// <param name="minWidth">The minimum width the table can print to.</param>
+        [Verb("table-mix", "tm", "Prints a sample table to the console.")]
+        [Sample("table --min 10 --max 20", "Prints a sample table with a minimum cell width of 10 and a maxium of 20.")]
+        public void SampleTableMixed(
+            [Operand("min", "Sets the minimum width the cells can be.")] int minWidth,
+            [Operand("max", "Sets the maximum width the cells can be.")] int maxWidth)
+        {
+            var longName = string.Format("{0} {1} {2} really {3} {4} {5}",
+                ConsoleBase.Colors.BrightGreen.FormatText("Device"),
+                ConsoleBase.Colors.BrightMagenta.FormatText("with"),
+                ConsoleBase.Colors.BrightRed.FormatText("a"),
+                ConsoleBase.Colors.BrightYellow.FormatText("colorful"),
+                ConsoleBase.Colors.White.FormatText("long"),
+                ConsoleBase.Colors.BrightBlue.FormatText("name"));
+
+            ConsoleBase.WriteLine();
+            ConsoleBase.WriteLineNoHeader(Table.Create()
+                .SetMinimumColumnWidth(minWidth)
+                .AddColumnWithHeader("\x1b[4mDevice\x1b[0m", "\x1b[5mTouchpanel\x1b[0m", "\x1b[3mDSP\x1b[0m", "\x1b[1mCodec\x1b[0m", "\x1b[2mDisplay \x1b[0m\x1b[7m1\x1b[0m", "\x1b[9mDisplay 2\x1b[0m", longName)
+                .AddColumnWithHeader("Status", "Online", "Online", "Offline", "Offline", "Online", "Offline")
+                .FormatHeaders(ConsoleBase.Colors.BrightYellow, HorizontalAlignment.Center)
+                .FormatColumn(0, ConsoleBase.Colors.BrightCyan, HorizontalAlignment.Right)
+                .ForEachCellInColumn(1, c => c.Color = c.Contents == "Offline" ? ConsoleBase.Colors.BrightRed : ConsoleBase.Colors.BrightGreen)
+                .ToString(maxWidth));
+        }
+
+        /// <summary>
+        /// Prints a sample table to the console.
+        /// </summary>
+        [DefaultVerb]
+        [Verb("table-mix", "tm", "Prints a sample table to the console.")]
+        [Sample("table", "Prints a sample table with automatic cell widths.")]
+        public void SampleTableMixed()
+        {
+            SampleTableMixed(0, 0);
         }
 
         /// <summary>
