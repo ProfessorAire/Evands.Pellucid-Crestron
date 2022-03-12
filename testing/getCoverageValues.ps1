@@ -1,6 +1,6 @@
 [String]$html = Get-Content -Path $PSScriptRoot/coverage/index.html
 
-$result = $html -match '^.*Line coverage:</th><td>(\d{1,3}\.{0,1}\d{0,2})%.*$'
+$result = $html -match 'Line coverage<\/div>\n? ?<div.*?>\n? ?<div.*?>(\d{1,3}\.?\d{0,2})%'
 
 if ($result -eq $true)
 {
