@@ -18,6 +18,8 @@
 // </copyright>
 #endregion
 
+using Evands.Pellucid.Terminal.Formatting.Markup;
+
 namespace Evands.Pellucid
 {
     /// <summary>
@@ -118,10 +120,15 @@ namespace Evands.Pellucid
         {
             if (args != null && args.Length > 0)
             {
-                return string.Format(message, args);
+                if (!Options.Instance.EnableMarkup)
+                {
+                    return string.Format(message, args);
+                }
+
+                return string.Format(message, args).ToAnsiFromConsoleMarkup();
             }
 
-            return message;
+            return Options.Instance.EnableMarkup ? message.ToAnsiFromConsoleMarkup() : message;
         }
     }
 }

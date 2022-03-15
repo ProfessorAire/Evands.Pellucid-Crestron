@@ -128,6 +128,9 @@ namespace Evands.Pellucid.ProDemo
                 path = Path.Combine(path, string.Format("App{0}SimpleLog.log", InitialParametersClass.ApplicationNumber));
                 Logger.RegisterLogWriter(new Evands.Pellucid.Diagnostics.SimpleFileLogger(path));
 
+                // This enables markup, which can make writing messages with formatting easier.
+                Options.Instance.EnableMarkup = true;
+
                 // Subscribe to the controller events (System, Program, and Ethernet)
                 CrestronEnvironment.SystemEventHandler += new SystemEventHandler(ControlSystem_ControllerSystemEventHandler);
                 CrestronEnvironment.ProgramStatusEventHandler += new ProgramStatusEventHandler(ControlSystem_ControllerProgramEventHandler);

@@ -147,6 +147,9 @@ namespace Evands.Pellucid
             }
         }
 
+        [TomlProperty("enableMarkup")]
+        public bool EnableMarkup { get; set; }
+
         /// <summary>
         /// Overrides the <see cref="Instance"/> property with a new instance of the <see cref="Options"/> class,
         /// with the default values and auto-save set to <see langword="false"/>. If called before accessing the
