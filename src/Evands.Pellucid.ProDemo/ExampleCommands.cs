@@ -311,5 +311,22 @@ namespace Evands.Pellucid.ProDemo
                 Evands.Pellucid.Diagnostics.Debug.WriteException(this, ex, "Exception encountered.");
             }
         }
+
+        [Verb("Blinky", "bl", "Writes a blinking line of dots to the console.")]
+        public void Blinky(
+            [Operand("duration", "The number of seconds to run for, printing one dot every 3 seconds. Minimum of 12.")]int duration)
+        {
+            duration = Math.Min(duration, 12);
+            var stop = DateTime.Now.AddSeconds(duration);
+
+            while (DateTime.Now < stop)
+            {
+                ConsoleBase.WriteCommandResponse("[:sbcf:lr]>>>...[:/all]");
+                Crestron.SimplSharpPro.CrestronThread.Thread.Sleep(3000);
+                ConsoleBase.WriteCommandResponse("\x08\x08\x08\x08\x08\x08[:cf:lg].[:/all]");
+            }
+
+            ConsoleBase.WriteCommandResponse("[:cf:lg]Processing Complete[:/all]");
+        }
     }
 }

@@ -58,6 +58,7 @@
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpFactoryTests.cs" />
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpObjectTests.cs" />
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpNodeTests.cs" />
+    <Compile Include="Terminal\Formatting\Markup\ConsoleMarkupTests.cs" />
     <Compile Include="TestLogWriter.cs" />
     <Compile Include="Diagnostics\EnumExtensionsTests.cs" />
     <Compile Include="Diagnostics\DebugWriteDebugLineTests.cs" />
