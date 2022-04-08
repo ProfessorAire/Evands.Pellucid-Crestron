@@ -321,12 +321,12 @@ namespace Evands.Pellucid.ProDemo
 
             while (DateTime.Now < stop)
             {
-                ConsoleBase.WriteCommandResponse("[:sbcf:lr]>>>...[:/all]");
+                ConsoleBase.WriteCommandResponse("[:hc][:sbcf:lr].[:/all]");
                 Crestron.SimplSharpPro.CrestronThread.Thread.Sleep(3000);
-                ConsoleBase.WriteCommandResponse("\x08\x08\x08\x08\x08\x08[:cf:lg].[:/all]");
+                ConsoleBase.WriteCommandResponse("\x08[:cf:lg].[:/all]");
             }
 
-            ConsoleBase.WriteCommandResponse("[:cf:lg]Processing Complete[:/all]");
+            ConsoleBase.WriteCommandResponse("[:cf:lg]Processing Complete[:/all][:/hc]");
         }
     }
 }

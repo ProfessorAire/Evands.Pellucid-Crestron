@@ -13,7 +13,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Markup
 
         private const string colorsPattern = @"(?>(?>(?>bright)|(?>light)|b|l)?(?>(?>k|black)|(?>r(?>ed)?)|(?>g(?>reen)?)|(?>y(?>ellow)?)|(?>b(?>lue)?)|(?>m(?>agenta)?)|(?>c(?>yan)?)|(?>w(?>hite)?)))|(?>\d{1,3},\d{1,3},\d{1,3})";
 
-        private const string corePattern = @"(?>\[:(?>(?>(?<bold>\/?b ?)|(?<italic>\/?i ?)|(?<under>\/?u ?)|(?<strike>\/?st ?)|(?<blink>\/?sb ?)|(?<reverse>\/?rv ?)|(?>(?>cf:(?<fg>colors ?))|(?<closefg>\/cf ?)))|(?>(?>cb:(?<bg>colors ?))|(?<closebg>\/cb ?)))+\])|(?>\[:(?<all>\/all)\])";
+        private const string corePattern = @"(?>\[:(?>(?>(?<bold>\/?b ?)|(?<italic>\/?i ?)|(?<under>\/?u ?)|(?<strike>\/?st ?)|(?<blink>\/?sb ?)|(?<reverse>\/?rv ?)|(?<frame>\/?fr ?)|(?<encircle>\/?en ?)|(?<overline>\/?ov ?)|(?<hideCursor>\/?hc ?)|(?>(?>cf:(?<fg>colors ?))|(?<closefg>\/cf ?)))|(?>(?>cb:(?<bg>colors ?))|(?<closebg>\/cb ?)))+\])|(?>\[:(?<all>\/all)\])";
 
         private const string getColorsPattern = @"(?>(?<bright>(?>(?>bright)|(?>light)|b|l))?(?<named>(?>k|black)|(?>r(?>ed)?)|(?>g(?>reen)?)|(?>y(?>ellow)?)|(?>b(?>lue)?)|(?>m(?>agenta)?)|(?>c(?>yan)?)|(?>w(?>hite)?)))|(?<rgb>\d{1,3},\d{1,3},\d{1,3})";
 
@@ -65,6 +65,10 @@ namespace Evands.Pellucid.Terminal.Formatting.Markup
                         sb.Append(match.Groups["blink"].Success ? match.Groups["blink"].Value[0] == '/' ? "25;" : "5;" : string.Empty);
                         sb.Append(match.Groups["reverse"].Success ? match.Groups["reverse"].Value[0] == '/' ? "27;" : "7;" : string.Empty);
                         sb.Append(match.Groups["strike"].Success ? match.Groups["strike"].Value[0] == '/' ? "29;" : "9;" : string.Empty);
+                        sb.Append(match.Groups["frame"].Success ? match.Groups["frame"].Value[0] == '/' ? "54;" : "51;" : string.Empty);
+                        sb.Append(match.Groups["encircle"].Success ? match.Groups["encircle"].Value[0] == '/' ? "54;" : "52;" : string.Empty);
+                        sb.Append(match.Groups["overline"].Success ? match.Groups["overline"].Value[0] == '/' ? "55;" : "53;" : string.Empty);
+                        sb.Append(match.Groups["hideCursor"].Success ? match.Groups["hideCursor"].Value[0] == '/' ? "?25h" : "?25l" : string.Empty);
                         sb.Append(match.Groups["fg"].Success ? GetColor(match.Groups["fg"].Value, false) : string.Empty);
                         sb.Append(match.Groups["bg"].Success ? GetColor(match.Groups["bg"].Value, true) : string.Empty);
                         sb.Append(match.Groups["closefg"].Success ? "39;" : string.Empty);
