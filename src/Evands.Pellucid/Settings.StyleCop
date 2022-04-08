@@ -1,1 +1,10 @@
-<StyleCopSettings Version="105" />
+<StyleCopSettings Version="105">
+  <GlobalSettings>
+    <CollectionProperty Name="RecognizedWords">
+      <Value>Github</Value>
+      <Value>ib</Value>
+      <Value>specifier</Value>
+      <Value>specifiers</Value>
+    </CollectionProperty>
+  </GlobalSettings>
+</StyleCopSettings>
