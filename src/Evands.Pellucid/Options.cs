@@ -146,7 +146,12 @@ namespace Evands.Pellucid
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether or not methods that print to the console will
+        /// attempt to parse Pellucid Console Markup tags prior to printing to the console.
+        /// <para>View the project Github Wiki for more information about Pellucid Console Markup.</para>
+        /// </summary>
         [TomlProperty("enableMarkup")]
         public bool EnableMarkup { get; set; }
 
@@ -201,7 +206,7 @@ namespace Evands.Pellucid
                 {
                     var options = MinimalTomlParser.DeserializeFromDisk<Options>(FilePath);
                     CrestronEnvironment.ProgramStatusEventHandler -= options.HandleAutoLoad;
-                    
+
                     if (options.AutoSave)
                     {
                         CrestronEnvironment.ProgramStatusEventHandler += options.HandleAutoLoad;

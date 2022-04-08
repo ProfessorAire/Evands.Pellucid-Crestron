@@ -91,6 +91,30 @@ namespace Evands.Pellucid.Terminal.Formatting.Markup
         }
 
         [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_Frame_Inserts_Expected()
+        {
+            var expected = "\x1b[51mTest";
+            var actual = "[:fr]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_Encircle_Inserts_Expected()
+        {
+            var expected = "\x1b[52mTest";
+            var actual = "[:en]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_Overline_Inserts_Expected()
+        {
+            var expected = "\x1b[53mTest";
+            var actual = "[:ov]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void ToAnsiFromConsoleMarkup_With_Bold_Closure_Inserts_Expected()
         {
             var expected = "\x1b[22mTest";
@@ -139,10 +163,34 @@ namespace Evands.Pellucid.Terminal.Formatting.Markup
         }
 
         [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_Frame_Closure_Inserts_Expected()
+        {
+            var expected = "\x1b[54mTest";
+            var actual = "[:/fr]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_Encircle_Closure_Inserts_Expected()
+        {
+            var expected = "\x1b[54mTest";
+            var actual = "[:/en]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_Overline_Closure_Inserts_Expected()
+        {
+            var expected = "\x1b[55mTest";
+            var actual = "[:/ov]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void ToAnsiFromConsoleMarkup_With_All_Formats_Inserts_Expected()
         {
-            var expected = "\x1b[1;3;4;5;7;9mTest\x1b[0m";
-            var actual = "[:biusbstrv]Test[:/all]".ToAnsiFromConsoleMarkup();
+            var expected = "\x1b[1;3;4;5;7;9;51;52;53mTest\x1b[0m";
+            var actual = "[:biusbstrvfrenov]Test[:/all]".ToAnsiFromConsoleMarkup();
             Assert.AreEqual(expected, actual);
         }
 
@@ -151,6 +199,30 @@ namespace Evands.Pellucid.Terminal.Formatting.Markup
         {
             var expected = "\x1b[1;3;7;38;2;128;128;128;101mTest\x1b[22;39m";
             var actual = "[:rv i b cf:128,128,128 cb:br]Test[:/b /cf]".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_HideCursor_Inserts_Expected()
+        {
+            var expected = "\x1b[?25lTest";
+            var actual = "[:hc]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_HideCursor_Closure_Inserts_Expected()
+        {
+            var expected = "\x1b[?25hTest";
+            var actual = "[:/hc]Test".ToAnsiFromConsoleMarkup();
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToAnsiFromConsoleMarkup_With_HideCursor_AndOther_Inserts_Only_HideCursor()
+        {
+            var expected = "\x1b[?25lTest";
+            var actual = "[:hcibcf:lr]Test".ToAnsiFromConsoleMarkup();
             Assert.AreEqual(expected, actual);
         }
 

@@ -165,7 +165,7 @@ namespace Evands.Pellucid.Terminal.Formatting
         }
 
         /// <summary>
-        /// Prints the text preceeded or followed by an ANSI SGR escape sequence that resets the SGR format to defaults,
+        /// Prints the text preceded or followed by an ANSI SGR escape sequence that resets the SGR format to defaults,
         /// depending on the value of the <paramref name="closeFirst"/> parameter.
         /// </summary>
         /// <param name="closeFirst"><see langword="true"/> to close the text format prior to the provided text, otherwise <see langword="false"/>.</param>
