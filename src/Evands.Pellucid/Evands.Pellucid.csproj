@@ -130,6 +130,8 @@
     <Compile Include="Terminal\Formatting\BasicChrome.cs" />
     <Compile Include="Terminal\Formatting\ColorFormat.cs" />
     <Compile Include="Terminal\Formatting\DumpHelpers\DumpObjectFailure.cs" />
+    <Compile Include="Terminal\Formatting\Logs\ErrorLogFormatters.cs" />
+    <Compile Include="Terminal\Formatting\Logs\ErrorMessage.cs" />
     <Compile Include="Terminal\Formatting\Markup\ConsoleMarkup.cs" />
     <Compile Include="Terminal\Formatting\RoundedChrome.cs" />
     <Compile Include="Terminal\Formatting\SquareChrome.cs" />

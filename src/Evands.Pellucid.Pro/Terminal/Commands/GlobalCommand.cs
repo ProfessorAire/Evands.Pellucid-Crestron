@@ -516,82 +516,83 @@ namespace Evands.Pellucid.Terminal.Commands
                 PrintCommandHelp(command);
                 return;
             }
-            else
+
+            var verbEntries = Helpers.GetVerb(command, verb);
+
+            if (verbEntries.Count == 0)
             {
-                var verbEntries = Helpers.GetVerb(command, verb);
-
-                if (verbEntries.Count == 0)
+                if (string.IsNullOrEmpty(verb))
                 {
-                    if (string.IsNullOrEmpty(verb))
-                    {
-                        WriteErrorMethod(string.Format("The command '{0}' requires a verb. Enter '{0} --help' to view all available verbs.", commandName));
-                    }
-                    else
-                    {
-                        WriteErrorMethod(string.Format("No verb with the specified name '{1}' exists. Enter '{0} --help' to view all available verbs.", commandName, verb));
-                    }
-
-                    return;
+                    WriteErrorMethod(string.Format("The command '{0}' requires a verb. Enter '{0} --help' to view all available verbs.", commandName));
                 }
                 else
                 {
-                    if (operandsAndFlags.ContainsKey("help") || operandsAndFlags.ContainsKey("h"))
+                    WriteErrorMethod(string.Format("No verb with the specified name '{1}' exists. Enter '{0} --help' to view all available verbs.", commandName, verb));
+                }
+
+                return;
+            }
+            else
+            {
+                if (operandsAndFlags.ContainsKey("help") || operandsAndFlags.ContainsKey("h"))
+                {
+                    PrintVerbHelp(command, verb);
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(defaultValue))
+                {
+                    operandsAndFlags.Add(string.Empty, defaultValue);
+                }
+
+                foreach (var entry in verbEntries)
+                {
+                    var operandAttributes = Helpers.GetOperands(entry.Key);
+                    var flagAttributes = Helpers.GetFlags(entry.Key);
+
+                    var names = operandAttributes.Where((a) => operandsAndFlags.ContainsKey(a.Value.Name.ToLower())).Select(n => n.Value.Name.ToLower()).ToList();
+                    names.AddRange(flagAttributes.Where(a => operandsAndFlags.ContainsKey(a.Value.Name.ToLower()) || operandsAndFlags.ContainsKey(a.Value.ShortName.ToString().ToLower()) || a.Value.IsOptional).Select(n => n.Value.Name.ToLower()));
+
+                    var optional = flagAttributes.Where(a => a.Value.IsOptional).Count();
+                    var parameterCount = entry.Key.GetParameters().Length;
+
+                    var success = true;
+
+                    foreach (var oaf in operandsAndFlags.Keys)
                     {
-                        PrintVerbHelp(command, verb);
-                        return;
-                    }
-
-                    if (!string.IsNullOrEmpty(defaultValue))
-                    {
-                        operandsAndFlags.Add(string.Empty, defaultValue);
-                    }
-
-                    foreach (var entry in verbEntries)
-                    {
-                        var operandAttributes = Helpers.GetOperands(entry.Key);
-                        var flagAttributes = Helpers.GetFlags(entry.Key);
-
-                        var names = operandAttributes.Where((a) => operandsAndFlags.ContainsKey(a.Value.Name.ToLower())).Select(n => n.Value.Name.ToLower()).ToList();
-                        names.AddRange(flagAttributes.Where(a => operandsAndFlags.ContainsKey(a.Value.Name.ToLower()) || operandsAndFlags.ContainsKey(a.Value.ShortName.ToString().ToLower()) || a.Value.IsOptional).Select(n => n.Value.Name.ToLower()));
-
-                        var optional = flagAttributes.Where(a => a.Value.IsOptional).Count();
-                        var parameterCount = entry.Key.GetParameters().Length;
-
-                        var success = true;
-
-                        foreach (var oaf in operandsAndFlags.Keys)
-                        {
-                            if (operandAttributes.Values.Any(oa => oa.Name.ToLower() == oaf))
-                            {
-                                continue;
-                            }
-
-                            if (flagAttributes.Values.Any(fa => fa.Name.ToLower() == oaf || (fa.ShortName.HasValue && fa.ShortName.Value.ToString() == oaf)))
-                            {
-                                continue;
-                            }
-
-                            success = false;
-                        }
-
-                        if (!success)
+                        if (operandAttributes.Values.Any(oa => oa.Name.ToLower() == oaf))
                         {
                             continue;
                         }
 
-                        if ((names.Count == operandsAndFlags.Count && operandsAndFlags.Count == parameterCount) ||
-                            (parameterCount - names.Count <= optional && optional > 0))
+                        if (flagAttributes.Values.Any(fa => fa.Name.ToLower() == oaf || (fa.ShortName.HasValue && fa.ShortName.Value.ToString() == oaf)))
                         {
-                            if (parameterCount > 0)
+                            continue;
+                        }
+
+                        success = false;
+                    }
+
+                    if (!success)
+                    {
+                        continue;
+                    }
+
+                    if ((names.Count == operandsAndFlags.Count && operandsAndFlags.Count == parameterCount) ||
+                        (parameterCount - names.Count <= optional && optional > 0))
+                    {
+                        if (parameterCount > 0)
+                        {
+                            var parameterList = new object[parameterCount];
+
+                            foreach (var oa in operandAttributes)
                             {
-                                var parameterList = new object[parameterCount];
+                                var index = oa.Key.Position;
+                                var type = oa.Key.ParameterType;
 
-                                foreach (var oa in operandAttributes)
+                                var operandName = oa.Value.Name.ToLower();
+                                if (operandsAndFlags.ContainsKey(operandName))
                                 {
-                                    var index = oa.Key.Position;
-                                    var type = oa.Key.ParameterType;
-
-                                    var operandName = oa.Value.Name.ToLower();
                                     var operandValue = operandsAndFlags[operandName];
                                     object value = null;
                                     if (TryPrepareParameterValue(type, operandValue, out value))
@@ -604,38 +605,46 @@ namespace Evands.Pellucid.Terminal.Commands
                                         return;
                                     }
                                 }
-
-                                foreach (var fa in flagAttributes)
+                                else
                                 {
-                                    if (operandsAndFlags.ContainsKey(fa.Value.Name.ToLower()) || (fa.Value.ShortName.HasValue && operandsAndFlags.ContainsKey(fa.Value.ShortName.ToString().ToLower())))
-                                    {
-                                        parameterList[fa.Key.Position] = true;
-                                    }
-                                    else
-                                    {
-                                        parameterList[fa.Key.Position] = false;
-                                    }
-                                }
-
-                                if (success)
-                                {
-                                    entry.Key.Invoke(command, parameterList);
+                                    success = false;
                                 }
                             }
-                            else
+
+                            foreach (var fa in flagAttributes)
                             {
-                                entry.Key.Invoke(command, null);
+                                if (operandsAndFlags.ContainsKey(fa.Value.Name.ToLower()) || (fa.Value.ShortName.HasValue && operandsAndFlags.ContainsKey(fa.Value.ShortName.ToString().ToLower())))
+                                {
+                                    parameterList[fa.Key.Position] = true;
+                                }
+                                else
+                                {
+                                    parameterList[fa.Key.Position] = false;
+                                }
                             }
 
                             if (success)
                             {
-                                return;
+                                entry.Key.Invoke(command, parameterList);
+                            }
+                            else
+                            {
+                                continue;
                             }
                         }
-                    }
+                        else
+                        {
+                            entry.Key.Invoke(command, null);
+                        }
 
-                    WriteErrorMethod(string.Format("The verb '{0}' requires a different combination of operands than what was provided. Enter '{1} {0} --help' for more information.", verb, commandName));
+                        if (success)
+                        {
+                            return;
+                        }
+                    }
                 }
+
+                WriteErrorMethod(string.Format("The verb '{0}' requires a different combination of operands than what was provided. Enter '{1} {0} --help' for more information.", verb, commandName));
             }
         }
 

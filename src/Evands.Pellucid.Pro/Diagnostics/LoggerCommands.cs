@@ -18,6 +18,8 @@
 // </copyright>
 #endregion
 
+using System;
+using System.Linq;
 using Crestron.SimplSharp;
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
@@ -31,6 +33,144 @@ namespace Evands.Pellucid.Diagnostics
     [Command("Logging", 3, "Configures logging parameters.")]
     public class LoggerCommands : TerminalCommandBase
     {
+        /// <summary>
+        /// Prints the error log in a reformatted and prettily printed manner.
+        /// </summary>
+        /// <param name="noColor"><see langword="true"/> to not colorize the printed messages.</param>
+        [Verb("PrettyLog", "plog", "Retrieves the error log and prints it to the console with pretty formatting. Only supported on physical control system hardware.")]
+        [Sample("logging plog", "Prints the error log.")]
+        [Sample("logging plog -o", "Prints the error log with no color.")]
+        public void PrettyPrintLog(
+            [Flag("NoColor", 'o', "When present this indicates that the log should be printed with no color.", true)] bool noColor)
+        {
+            this.PrettyPrintLogOriginAll(noColor, false, false, false, false, false, false, false, false, string.Empty, string.Empty);
+        }
+
+        /// <summary>
+        /// Prints the error log in a reformatted and prettily printed manner.
+        /// </summary>
+        /// <param name="noColor"><see langword="true"/> to not colorize the printed messages.</param>
+        /// <param name="filterOrigin">Restricts the messages to those with origination points that contain the specified value.</param>
+        [Verb("PrettyLog", "plog", "Retrieves the error log and prints it to the console with pretty formatting. Only supported on physical control system hardware.")]
+        [Sample("logging plog -o --origin App10", "Prints the error log with no color filtering to print only messages that originate from App10.")]
+        public void PrettyPrintLogOrigin(
+            [Flag("NoColor", 'o', "When present this indicates that the log should be printed with no color.", true)] bool noColor,
+            [Operand("Origin", "When specified will only print messages with origination points that contain the provided text. Can be used to filter messages by a specific application.")] string filterOrigin)
+        {
+            this.PrettyPrintLogOriginAll(noColor, false, false, false, false, false, false, false, false, filterOrigin, string.Empty);
+        }
+
+        /// <summary>
+        /// Prints the error log in a reformatted and prettily printed manner.
+        /// </summary>
+        /// <param name="noColor"><see langword="true"/> to not colorize the printed messages.</param>
+        /// <param name="filterMessage">Restricts the messages to those with message contents that contain the specified value.</param>
+        [Verb("PrettyLog", "plog", "Retrieves the error log and prints it to the console with pretty formatting. Only supported on physical control system hardware.")]
+        [Sample("logging plog -o --message \"Pseudo Random\"", "Prints the error log with no color filtering to print only messages that contain the phrase 'Psuedo Random'.")]
+        public void PrettyPrintLogMessage(
+            [Flag("NoColor", 'o', "When present this indicates that the log should be printed with no color.", true)] bool noColor,
+            [Operand("Message", "When specified will only print messages with origination points that contain the provided text. Can be used to filter messages by a specific application.")] string filterMessage)
+        {
+            this.PrettyPrintLogOriginAll(noColor, false, false, false, false, false, false, false, false, string.Empty, filterMessage);
+        }
+
+        /// <summary>
+        /// Prints the error log in a reformatted and prettily printed manner.
+        /// </summary>
+        /// <param name="noColor"><see langword="true"/> to not colorize the printed messages.</param>
+        /// <param name="sys"><see langword="true"/> to retrieve the log using the 'SYS' option.</param>
+        /// <param name="current"><see langword="true"/> to retrieve the log using the 'PLOGCURRENT' option.</param>
+        /// <param name="previous"><see langword="true"/> to retrieve the log using the 'PLOGPREVIOUS' option.</param>
+        /// <param name="all"><see langword="true"/> to retrieve the log using the 'PLOGALL' option.</param>
+        /// <param name="fatal"><see langword="true"/> to retrieve the log with only fatal values.</param>
+        /// <param name="error"><see langword="true"/> to retrieve the log with only error or worse values.</param>
+        /// <param name="warn"><see langword="true"/> to retrieve the log with warning or worse values.</param>
+        /// <param name="notice"><see langword="true"/> to retrieve the log with notice or worse values.</param>
+        [Verb("PrettyLog", "plog", "Retrieves the error log and prints it to the console with pretty formatting. Only supported on physical control system hardware.")]
+        [Sample("logging plog -n --origin App10", "Prints the error log with no color filtering to print only messages that originate from App10.")]
+        public void PrettyPrintLogOriginFlags(
+            [Flag("NoColor", 'o', "When present this indicates that the log should be printed with no color.", true)] bool noColor,
+            [Flag("Sys", 's', "When present this indicates that the log will be retrieved with the 'SYS' option.", true)] bool sys,
+            [Flag("Current", 'c', "When present this indicates that the current persistent log will be retrieved.", true)] bool current,
+            [Flag("Previous", 'p', "When present this indicates that the previous persistent log will be retrieved.", true)] bool previous,
+            [Flag("All", 'a', "When present this indicates that all persistent logs will be retrieved.", true)] bool all,
+            [Flag("Fatal", 'f', "When present this indicates that only fatal errors will be retrieved.", true)] bool fatal,
+            [Flag("Error", 'e', "When present this indicates that only error messages and above will be retrieved.", true)] bool error,
+            [Flag("Warn", 'w', "When present this indicates that only warning messages and above will be retrieved.", true)] bool warn,
+            [Flag("Notice", 'n', "When present this indicates that all messages will be retrieved.", true)] bool notice)
+        {
+            this.PrettyPrintLogOriginAll(noColor, sys, current, previous, all, fatal, error, warn, notice, string.Empty, string.Empty);
+        }
+
+        /// <summary>
+        /// Prints the error log in a reformatted and prettily printed manner.
+        /// </summary>
+        /// <param name="noColor"><see langword="true"/> to not colorize the printed messages.</param>
+        /// <param name="sys"><see langword="true"/> to retrieve the log using the 'SYS' option.</param>
+        /// <param name="current"><see langword="true"/> to retrieve the log using the 'PLOGCURRENT' option.</param>
+        /// <param name="previous"><see langword="true"/> to retrieve the log using the 'PLOGPREVIOUS' option.</param>
+        /// <param name="all"><see langword="true"/> to retrieve the log using the 'PLOGALL' option.</param>
+        /// <param name="fatal"><see langword="true"/> to retrieve the log with only fatal values.</param>
+        /// <param name="error"><see langword="true"/> to retrieve the log with only error or worse values.</param>
+        /// <param name="warn"><see langword="true"/> to retrieve the log with warning or worse values.</param>
+        /// <param name="notice"><see langword="true"/> to retrieve the log with notice or worse values.</param>
+        /// <param name="filterOrigin">Restricts the messages to those with origination points that contain the specified value.</param>
+        /// <param name="filterMessage">Restricts the messages to those with message contents that contain the specified value.</param>
+        [Verb("PrettyLog", "plog", "Retrieves the error log and prints it to the console with pretty formatting. Only supported on physical control system hardware.")]
+        [Sample("logging plog -n --origin App10", "Prints the error log with no color filtering to print only messages that originate from App10.")]
+        public void PrettyPrintLogOriginAll(
+            [Flag("NoColor", 'o', "When present this indicates that the log should be printed with no color.", true)] bool noColor,
+            [Flag("Sys", 's', "When present this indicates that the log will be retrieved with the 'SYS' option.", true)] bool sys,
+            [Flag("Current", 'c', "When present this indicates that the current persistent log will be retrieved.", true)] bool current,
+            [Flag("Previous", 'p', "When present this indicates that the previous persistent log will be retrieved.", true)] bool previous,
+            [Flag("All", 'a', "When present this indicates that all persistent logs will be retrieved.", true)] bool all,
+            [Flag("Fatal", 'f', "When present this indicates that only fatal errors will be retrieved.", true)] bool fatal,
+            [Flag("Error", 'e', "When present this indicates that only error messages and above will be retrieved.", true)] bool error,
+            [Flag("Warn", 'w', "When present this indicates that only warning messages and above will be retrieved.", true)] bool warn,
+            [Flag("Notice", 'n', "When present this indicates that all messages will be retrieved.", true)] bool notice,
+            [Operand("Origin", "When specified will only print messages with origination points that contain the provided text. Can be used to filter messages by a specific application.")] string filterOrigin,
+            [Operand("Message", "When specified will only print messages that contain the provided text.")] string filterMessage)
+        {
+            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "Retrieving the error log.\r\n");
+            if (Options.Instance.EnableMarkup)
+            {
+                ConsoleBase.WriteCommandResponse("[:hc]");
+            }
+
+            try
+            {
+                var response = string.Empty;
+                var options = sys ? " sys" : current ? " plogcurrent" : previous ? " plogprevious" : all ? " plogall" : fatal ? " fatal" : error ? " error" : warn ? " warning" : notice ? " notice" : string.Empty;
+                CrestronConsole.SendControlSystemCommand(string.Format("err{0}", options), ref response);
+                if (string.IsNullOrEmpty(response))
+                {
+                    ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Error, "Unable to retrieve the error log. No content returned.");
+                }
+                else
+                {
+                    var msgs = Terminal.Formatting.Logs.ErrorLogFormatters.PrettifyCrestronErrorLog(response);
+                    if (!string.IsNullOrEmpty(filterOrigin))
+                    {
+                        msgs = msgs.Where(m => m.Origination.Contains(filterOrigin));
+                    }
+
+                    if (!string.IsNullOrEmpty(filterMessage))
+                    {
+                        msgs = msgs.Where(m => m.Message.Contains(filterMessage));
+                    }
+
+                    ConsoleBase.WriteCommandResponse(Terminal.Formatting.Logs.ErrorLogFormatters.PrintPrettyErrorLog(msgs, !noColor));
+                }
+            }
+            finally
+            {
+                if (Options.Instance.EnableMarkup)
+                {
+                    ConsoleBase.WriteCommandResponse("[:/hc]");
+                }
+            }
+        }
+
         /// <summary>
         /// Toggles the included terminal logging levels.
         /// </summary>
