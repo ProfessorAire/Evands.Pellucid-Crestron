@@ -30,6 +30,7 @@ namespace Evands.Pellucid.Diagnostics
             Logger.UnregisterLogWriter(logger);
             ConsoleBase.OptionalHeader = string.Empty;
             Options.Instance.LogLevels = LogLevels.None;
+            Options.Instance.ColorizeConsoleOutput = true;
         }
 
         private TestContext testContextInstance;
@@ -113,7 +114,7 @@ namespace Evands.Pellucid.Diagnostics
             for (var i = 0; i < formatLinesToTest.Length; i++)
             {
                 var content = string.Format(formatLinesToTest[i][0], formatLinesToTest[i].Skip(1).ToArray());
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32m{0}\x1b[0m", content)));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32;49m{0}\x1b[0m", content)));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Notice][LoggerExtensionsTests] {0}", content));
             }
         }
@@ -128,7 +129,7 @@ namespace Evands.Pellucid.Diagnostics
 
             for (var i = 0; i < linesToTest.Length; i++)
             {
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31m{0}\x1b[0m", linesToTest[i])));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31;49m{0}\x1b[0m", linesToTest[i])));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Notice][LoggerExtensionsTests] {0}", linesToTest[i]));
             }
         }
@@ -144,7 +145,7 @@ namespace Evands.Pellucid.Diagnostics
             for (var i = 0; i < formatLinesToTest.Length; i++)
             {
                 var content = string.Format(formatLinesToTest[i][0], formatLinesToTest[i].Skip(1).ToArray());
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32m{0}\x1b[0m", content)));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32;49m{0}\x1b[0m", content)));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Notice][LoggerExtensionsTests] {0}", content));
             }
         }
@@ -159,7 +160,7 @@ namespace Evands.Pellucid.Diagnostics
 
             for (var i = 0; i < linesToTest.Length; i++)
             {
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31m{0}\x1b[0m", linesToTest[i])));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31;49m{0}\x1b[0m", linesToTest[i])));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Debug][LoggerExtensionsTests] {0}", linesToTest[i]));
             }
         }
@@ -175,7 +176,7 @@ namespace Evands.Pellucid.Diagnostics
             for (var i = 0; i < formatLinesToTest.Length; i++)
             {
                 var content = string.Format(formatLinesToTest[i][0], formatLinesToTest[i].Skip(1).ToArray());
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32m{0}\x1b[0m", content)));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32;49m{0}\x1b[0m", content)));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Debug][LoggerExtensionsTests] {0}", content));
             }
         }
@@ -190,7 +191,7 @@ namespace Evands.Pellucid.Diagnostics
 
             for (var i = 0; i < linesToTest.Length; i++)
             {
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31m{0}\x1b[0m", linesToTest[i])));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31;49m{0}\x1b[0m", linesToTest[i])));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Warning][LoggerExtensionsTests] {0}", linesToTest[i]));
             }
         }
@@ -206,7 +207,7 @@ namespace Evands.Pellucid.Diagnostics
             for (var i = 0; i < formatLinesToTest.Length; i++)
             {
                 var content = string.Format(formatLinesToTest[i][0], formatLinesToTest[i].Skip(1).ToArray());
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32m{0}\x1b[0m", content)));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32;49m{0}\x1b[0m", content)));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Warning][LoggerExtensionsTests] {0}", content));
             }
         }
@@ -221,7 +222,7 @@ namespace Evands.Pellucid.Diagnostics
 
             for (var i = 0; i < linesToTest.Length; i++)
             {
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31m{0}\x1b[0m", linesToTest[i])));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31;49m{0}\x1b[0m", linesToTest[i])));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Error][LoggerExtensionsTests] {0}", linesToTest[i]));
             }
         }
@@ -237,7 +238,7 @@ namespace Evands.Pellucid.Diagnostics
             for (var i = 0; i < formatLinesToTest.Length; i++)
             {
                 var content = string.Format(formatLinesToTest[i][0], formatLinesToTest[i].Skip(1).ToArray());
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32m{0}\x1b[0m", content)));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32;49m{0}\x1b[0m", content)));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Error][LoggerExtensionsTests] {0}", content));
             }
         }
@@ -252,7 +253,7 @@ namespace Evands.Pellucid.Diagnostics
 
             for (var i = 0; i < linesToTest.Length; i++)
             {
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31m{0}\x1b[0m", linesToTest[i])));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[31;49m{0}\x1b[0m", linesToTest[i])));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Error][LoggerExtensionsTests] {0}", linesToTest[i]));
             }
         }
@@ -268,7 +269,7 @@ namespace Evands.Pellucid.Diagnostics
             for (var i = 0; i < formatLinesToTest.Length; i++)
             {
                 var content = string.Format(formatLinesToTest[i][0], formatLinesToTest[i].Skip(1).ToArray());
-                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32m{0}\x1b[0m", content)));
+                Assert.IsTrue(writer.Messages[i].Contains(string.Format("\x1b[32;49m{0}\x1b[0m", content)));
                 Assert.IsTrue(logger.Messages[i] == string.Format("[Error][LoggerExtensionsTests] {0}", content));
             }
         }

@@ -49,5 +49,12 @@ namespace Crestron.SimplSharp
         {
             Messages.AppendFormat("{0}\r\n", string.Format(message, args));
         }
+
+        public static string CommandResponse { get; set; }
+
+        public static void SendControlSystemCommand(string command, ref string response)
+        {
+            response = CommandResponse ?? string.Empty;
+        }
     }
 }

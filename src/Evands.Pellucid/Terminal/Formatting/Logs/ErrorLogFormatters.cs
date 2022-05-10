@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Crestron.SimplSharp;
 
 namespace Evands.Pellucid.Terminal.Formatting.Logs
 {
@@ -33,79 +34,36 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
     {
         /// <summary>
         /// Takes the contents of the result from an ErrorLog command and parses it out to a
-        /// list of <see cref="ErrorMessage"/> objects.
+        /// list of <see cref="LogMessage"/> objects.
         /// </summary>
         /// <param name="logContents">The contents of the error log.</param>
-        /// <returns>An enumerable of <see cref="ErrorMessage"/> instances.</returns>
-        public static IEnumerable<ErrorMessage> PrettifyCrestronErrorLog(string logContents)
+        /// <returns>An enumerable of <see cref="LogMessage"/> instances.</returns>
+        public static IEnumerable<LogMessage> ParseCrestronErrorLog(string logContents)
         {
-            var spaceRegex = new Regex(@"(?>(?>\r|\n)|\r\n)(?>  )+", RegexOptions.Compiled);
-            var startingAtRegex = new Regex(@"(?>\r|\n|\r\n) *at ", RegexOptions.Compiled);
-            var brokenRegex = new Regex(@"(?>\d+\. )?\w*: +.*? +# +\d{4}-\d\d-\d\d \d\d:\d\d:\d\d +# +(?<msg>(?>(?!(?>\r|\n|\r\n) *\d+\. +)(?>.)){0,256})", RegexOptions.Compiled | RegexOptions.Singleline);
-
-            var assembly = spaceRegex.Replace(logContents, "\r\n");
-            assembly = startingAtRegex.Replace(assembly, "\r\n   at ");
-
-            var messages = new List<ErrorMessage>();
-
-            var matches = brokenRegex.Matches(assembly);
-
-            var sb = new StringBuilder();
-            var removeNextHeader = false;
-            for (var i = 0; i < matches.Count; i++)
+            if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance)
             {
-                var remove = removeNextHeader;
-                removeNextHeader = matches[i].Groups["msg"].Value.Length == 256;
-
-                if (remove)
+                if (CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Series3)
                 {
-                    sb.Append(matches[i].Groups["msg"].Value);
-                    if (!removeNextHeader)
-                    {
-                        sb.Append("\r\n");
-                    }
+                    return ParseThreeSeriesErrorLog(logContents);
                 }
-                else
+                
+                if ((CrestronEnvironment.ProgramCompatibility & eCrestronSeries.Series4) == eCrestronSeries.Series4)
                 {
-                    if (sb.Length > 0)
-                    {
-                        ErrorMessage msg;
-                        if (ErrorMessage.TryParse(sb.ToString(), messages.Count + 1, out msg))
-                        {
-                            messages.Add(msg);
-                        }
-
-                        sb.Length = 0;
-                    }
-
-                    sb.Append(matches[i].Value);
-                    if (!removeNextHeader)
-                    {
-                        sb.Append("\r\n");
-                    }
+                    return ParseFourSeriesErrorLog(logContents);
                 }
             }
 
-            if (sb.Length > 0)
-            {
-                ErrorMessage msg;
-                if (ErrorMessage.TryParse(sb.ToString(), messages.Count + 1, out msg))
-                {
-                    messages.Add(msg);
-                }
-            }
-
-            return messages.AsReadOnly();
+            return new LogMessage[0];
         }
 
         /// <summary>
-        /// Prints an enumeration of <see cref="ErrorMessage"/> instances to a string,
+        /// Prints an enumeration of <see cref="LogMessage"/> instances to a string,
         /// formatting them in a way that is easier to review.
         /// </summary>
-        /// <param name="messages">The <see cref="ErrorMessage"/>s to print.</param>
+        /// <param name="messages">The <see cref="LogMessage"/>s to print.</param>
         /// <param name="colorize"><see langword="true"/> to colorize the messages, <see langword="false"/> otherwise.</param>
         /// <returns>A <see langword="string"/> with the error log contents prettily formatted.</returns>
-        public static string PrintPrettyErrorLog(IEnumerable<ErrorMessage> messages, bool colorize)
+        public static string PrintPrettyErrorLog(IEnumerable<LogMessage> messages, bool colorize)
         {
             if (messages == null)
             {
@@ -128,7 +86,142 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 return sb.ToString();
             }
 
-            return string.Empty;
+            return colorize ? ConsoleBase.Colors.Warning.FormatText("No Messages to Display")
+                : "No Messages to Display";
+        }
+
+        /// <summary>
+        /// Parses an error log, treating the contents as a 3-Series error log.
+        /// </summary>
+        /// <param name="logContents">The log contents from a 3-Series processor.</param>
+        /// <returns>An enumerable of <see cref="LogMessage"/> instances.</returns>
+        private static IEnumerable<LogMessage> ParseThreeSeriesErrorLog(string logContents)
+        {
+            var spaceRegex = new Regex(@"(?>\r\n|\r|\n)(?>  )+", RegexOptions.Compiled);
+            var startingAtRegex = new Regex(@"(?>\r\n|\r|\n) *at ", RegexOptions.Compiled);
+            var brokenRegex = new Regex(@"(?>\d+\. )?\w*:? +.*? +# +\d{4}-\d\d-\d\d \d\d:\d\d:\d\d +# +(?<msg>(?>(?!(?>\r|\n|\r\n)? *\d+\. +)(?>\w|\W|))*(?>\r\n|\r|\n)?)", RegexOptions.Compiled | RegexOptions.Singleline);
+
+            var assembly = spaceRegex.Replace(logContents, "\r\n");
+            assembly = startingAtRegex.Replace(assembly, "\r\n  at ");
+
+            var messages = new List<LogMessage>();
+
+            var matches = brokenRegex.Matches(assembly);
+
+            var sb = new StringBuilder();
+            var removeNextHeader = false;
+            for (var i = 0; i < matches.Count; i++)
+            {
+                var remove = removeNextHeader;
+                removeNextHeader = !matches[i].Groups["msg"].Value.EndsWith("\r\n");
+
+                if (remove)
+                {
+                    sb.Append(matches[i].Groups["msg"].Value.Replace(Environment.NewLine, "\r\n"));
+                    if (!removeNextHeader)
+                    {
+                        sb.Append("\r\n");
+                    }
+                }
+                else
+                {
+                    if (sb.Length > 0)
+                    {
+                        LogMessage msg;
+                        if (LogMessage.TryParse(sb.ToString(), messages.Count + 1, out msg))
+                        {
+                            messages.Add(msg);
+                        }
+
+                        sb.Length = 0;
+                    }
+
+                    sb.Append(matches[i].Value.Replace(Environment.NewLine, "\r\n"));
+                    if (!removeNextHeader)
+                    {
+                        sb.Append("\r\n");
+                    }
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                LogMessage msg;
+                if (LogMessage.TryParse(sb.ToString(), messages.Count + 1, out msg))
+                {
+                    messages.Add(msg);
+                }
+            }
+
+            return messages.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Parses an error log, treating the contents as a 4-Series error log.
+        /// </summary>
+        /// <param name="logContents">The log contents from a 4-Series processor.</param>
+        /// <returns>An enumerable of <see cref="LogMessage"/> instances.</returns>
+        private static IEnumerable<LogMessage> ParseFourSeriesErrorLog(string logContents)
+        {
+            var spaceRegex = new Regex(@"(?>\r\n|\r|\n)(?> +)+", RegexOptions.Compiled);
+            var startingAtRegex = new Regex(@"(?>\r\n|\r|\n) *at ", RegexOptions.Compiled);
+            var brokenRegex = new Regex(@"(?>\d+\. )?\w*:? +.*? +# +\d{4}-\d\d-\d\d \d\d:\d\d:\d\d +# +(?<msg>(?>(?!(?>\r|\n|\r\n)? *\d+\. +)(?>\w|\W|))*(?>\r\n|\r|\n)?)", RegexOptions.Compiled | RegexOptions.Singleline);
+
+            var assembly = spaceRegex.Replace(logContents, "\r\n");
+            assembly = startingAtRegex.Replace(assembly, "\r\n  at ");
+
+            var messages = new List<LogMessage>();
+
+            var matches = brokenRegex.Matches(assembly);
+
+            var sb = new StringBuilder();
+            var removeNextHeader = false;
+            for (var i = 0; i < matches.Count; i++)
+            {
+                var remove = removeNextHeader;
+                removeNextHeader = !matches[i].Groups["msg"].Value.EndsWith("\r\n") || matches[i].Groups["msg"].Value.Length >= 256;
+
+                if (remove)
+                {
+                    sb.Append(matches[i].Groups["msg"].Value.Replace(Environment.NewLine, "\r\n").TrimEnd('\n', '\r'));
+                    if (!removeNextHeader)
+                    {
+                        sb.Append("\r\n");
+                    }
+                }
+                else
+                {
+                    if (sb.Length > 0)
+                    {
+                        LogMessage msg;
+                        if (LogMessage.TryParse(sb.ToString(), messages.Count + 1, out msg))
+                        {
+                            messages.Add(msg);
+                        }
+
+                        sb.Length = 0;
+                    }
+
+                    sb.Append(removeNextHeader ? matches[i].Value.Replace(Environment.NewLine, "\r\n").TrimEnd('\n', '\r')
+                        : matches[i].Value.Replace(Environment.NewLine, "\r\n"));
+
+                    if (!removeNextHeader)
+                    {
+                        sb.Append("\r\n");
+                    }
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                LogMessage msg;
+                if (LogMessage.TryParse(sb.ToString(), messages.Count + 1, out msg))
+                {
+                    messages.Add(msg);
+                }
+            }
+
+            return messages.AsReadOnly();
         }
     }
 }

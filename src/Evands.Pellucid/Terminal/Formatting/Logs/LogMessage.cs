@@ -27,18 +27,47 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
     /// <summary>
     /// Contains information regarding error messages.
     /// </summary>
-    public class ErrorMessage
+    public class LogMessage
     {
         /// <summary>
         /// Parses out the message contents from an error string.
         /// </summary>
-        private static readonly Regex MsgRegex = new Regex(@"^(?> *(?<num>\d+)\. )?(?<type>[^:]+): (?<orig>.*) # (?<stamp>\d[^#]+) # (?<msg>.*)$", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.Singleline);
+        private static readonly Regex MsgRegex = new Regex(@"^(?> *(?<num>\d+)\. )?(?<type>[^:]+): (?<orig>.*) # (?<stamp>\d[^#]+) +# (?<msg>.*)$", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.Singleline);
 
         /// <summary>
         /// Parses out the number of messages logged from a full error log.
         /// Used to remove the number of messages when needed.
         /// </summary>
         private static readonly Regex CountRegex = new Regex(@"Total [^ ]+ Logged += +\d+");
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="LogMessage"/> class from being created.
+        /// </summary>
+        private LogMessage()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogMessage"/> class.
+        /// </summary>
+        /// <param name="number">The message number.</param>
+        /// <param name="messageType">The message type as a <see langword="string"/>.</param>
+        /// <param name="origination">The origination point of the message.</param>
+        /// <param name="timestamp">The date/time stamp of the message.</param>
+        /// <param name="message">The message body.</param>
+        internal LogMessage(
+                    int number,
+                    string messageType,
+                    string origination,
+                    DateTime timestamp,
+                    string message)
+        {
+            this.Number = number;
+            this.MessageType = messageType;
+            this.Origination = origination;
+            this.TimeStamp = timestamp;
+            this.Message = message;
+        }
 
         /// <summary>
         /// Gets or sets the number of the error.
@@ -66,29 +95,22 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         public string Message { get; set; }
 
         /// <summary>
-        /// Tries to parse a complete <see cref="ErrorMessage"/> from an unformatted error message.
+        /// Tries to parse a complete <see cref="LogMessage"/> from an unformatted error message.
         /// </summary>
         /// <param name="message">The message to parse.</param>
         /// <param name="index">The index of the message.</param>
-        /// <param name="result">An <see cref="ErrorMessage"/> instance.</param>
+        /// <param name="result">A <see cref="LogMessage"/> instance.</param>
         /// <returns><see langword="true"/> if the message was parsed, <see langword="false"/> otherwise.</returns>
-        public static bool TryParse(string message, int index, out ErrorMessage result)
+        public static bool TryParse(string message, int index, out LogMessage result)
         {
-            result = new ErrorMessage();
+            result = new LogMessage();
 
             try
             {
                 var match = MsgRegex.Match(message);
-                if (match.Groups["num"].Success)
-                {
-                    result.Number = int.Parse(match.Groups["num"].Value);
-                }
-                else
-                {
-                    result.Number = index;
-                }
+                result.Number = match.Groups["num"].Success ? int.Parse(match.Groups["num"].Value) : index;
 
-                result.TimeStamp = DateTime.Parse(match.Groups["stamp"].Value);
+                result.TimeStamp = DateTime.Parse(match.Groups["stamp"].Value, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.AssumeLocal);
                 result.MessageType = match.Groups["type"].Value;
                 result.Origination = match.Groups["orig"].Value;
                 var countMatch = CountRegex.Match(match.Groups["msg"].Value);
@@ -139,7 +161,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 return string.Format(
                     ConsoleBase.Colors.LogHeaders.FormatText(false, "{0}. {1} | {2} | {3}: {4}"),
                     this.Number.ToString().PadLeft(numberPad),
-                    this.TimeStamp.ToString("yy/mm/dd HH:mm:ss"),
+                    this.TimeStamp.ToString("yy/MM/dd HH:mm:ss"),
                     this.Origination.PadRight(originationPad),
                     typeColor.FormatText(false, this.MessageType.PadLeft(typePad)),
                     ColorFormat.CloseTextFormat(this.Message));
@@ -148,10 +170,29 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             return string.Format(
                     "{0}. {1} | {2} | {3}: {4}",
                     this.Number.ToString().PadLeft(numberPad),
-                    this.TimeStamp.ToString("yy/mm/dd HH:mm:ss"),
-                    this.Origination.PadLeft(originationPad),
+                    this.TimeStamp.ToString("yy/MM/dd HH:mm:ss"),
+                    this.Origination.PadRight(originationPad),
                     this.MessageType.PadLeft(typePad),
                     this.Message);
+        }
+
+        /// <summary>
+        /// Compares this instance with another <see cref="LogMessage"/> instance.
+        /// </summary>
+        /// <param name="obj">An instance of <see cref="LogMessage"/> to compare this one to.</param>
+        /// <returns><see langword="true"/> if the two instances are equal, <see langword="false"/> otherwise.</returns>
+        public bool Equals(LogMessage obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            return this.Number == obj.Number &&
+                this.TimeStamp == obj.TimeStamp &&
+                this.MessageType.Equals(obj.MessageType) &&
+                this.Origination == obj.Origination &&
+                this.Message.Equals(obj.Message);
         }
 
         /// <summary>
@@ -164,19 +205,23 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             {
                 return ConsoleBase.Colors.Warning;
             }
-            else if (this.MessageType.Equals("error", StringComparison.OrdinalIgnoreCase))
+            
+            if (this.MessageType.Equals("error", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Error;
             }
-            else if (this.MessageType.Equals("notice", StringComparison.OrdinalIgnoreCase))
+            
+            if (this.MessageType.Equals("notice", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Notice;
             }
-            else if (this.MessageType.Equals("info", StringComparison.OrdinalIgnoreCase))
+            
+            if (this.MessageType.Equals("info", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Notice;
             }
-            else if (this.MessageType.Equals("ok", StringComparison.OrdinalIgnoreCase))
+            
+            if (this.MessageType.Equals("ok", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Notice;
             }

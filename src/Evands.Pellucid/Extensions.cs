@@ -36,10 +36,7 @@ namespace Evands.Pellucid
         /// <returns>The object being dumped.</returns>
         public static T Dump<T>(this T obj)
         {
-            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
-            {
-                ConsoleBase.WriteLine();
-            }
+            ConsoleBase.WriteLine();
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj));
             return obj;
@@ -58,10 +55,7 @@ namespace Evands.Pellucid
         /// <returns>The object being dumped.</returns>
         public static T Dump<T>(this T obj, int maxDepth)
         {
-            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
-            {
-                ConsoleBase.WriteLine();
-            }
+            ConsoleBase.WriteLine();
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, maxDepth));
             return obj;
@@ -77,10 +71,7 @@ namespace Evands.Pellucid
         /// <returns>The object being dumped.</returns>
         public static T Dump<T>(this T obj, bool useFullTypeNames)
         {
-            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
-            {
-                ConsoleBase.WriteLine();
-            }
+            ConsoleBase.WriteLine();
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, useFullTypeNames));
             return obj;
@@ -101,10 +92,7 @@ namespace Evands.Pellucid
         /// <returns>The object being dumped.</returns>
         public static T Dump<T>(this T obj, int maxDepth, bool useFullTypeNames)
         {
-            if (Crestron.SimplSharp.CrestronEnvironment.ProgramCompatibility == Crestron.SimplSharp.eCrestronSeries.Series3)
-            {
-                ConsoleBase.WriteLine();
-            }
+            ConsoleBase.WriteLine();
 
             ConsoleBase.WriteNoHeader(Terminal.Formatting.Formatters.FormatObjectForConsole(obj, maxDepth, useFullTypeNames));
             return obj;
