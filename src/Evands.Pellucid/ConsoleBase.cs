@@ -719,7 +719,8 @@ namespace Evands.Pellucid
                 Exception = new ColorFormat(ColorCode.BrightRed);
                 Subtle = new ColorFormat(ColorCode.DarkGray);
                 Warning = new ColorFormat(new RgbColor(254, 163, 110));
-                Notice = new ColorFormat(ColorCode.DarkGray);
+                Notice = new ColorFormat(ColorCode.LightGray);
+                LogHeaders = new ColorFormat(ColorCode.DarkGray);
                 DumpPropertyName = new ColorFormat(ColorCode.BrightCyan);
                 DumpPropertyValue = new ColorFormat(ColorCode.BrightMagenta);
                 DumpObjectDetail = new ColorFormat(ColorCode.BrightGreen);
@@ -782,6 +783,11 @@ namespace Evands.Pellucid
             /// Gets or sets the <see cref="ColorFormat"/> to use for Notices.
             /// </summary>
             public static ColorFormat Notice { get; set; }
+
+            /// <summary>
+            /// Gets or sets the <see cref="ColorFormat"/> to use for pretty printed log headers.
+            /// </summary>
+            public static ColorFormat LogHeaders { get; set; }
 
             /// <summary>
             /// Gets or sets the <see cref="ColorFormat"/> to use for printing property names when dumping objects to the console.

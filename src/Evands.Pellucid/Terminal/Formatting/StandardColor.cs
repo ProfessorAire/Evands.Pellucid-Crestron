@@ -60,7 +60,7 @@ namespace Evands.Pellucid.Terminal.Formatting
                 return string.Format("{0}", (int)Code + 30);
             }
 
-            return string.Empty;
+            return "39";
         }
 
         /// <inheritdoc />
@@ -71,7 +71,7 @@ namespace Evands.Pellucid.Terminal.Formatting
                 return string.Format("{0}", (int)Code + 40);
             }
 
-            return string.Empty;
+            return "49";
         }
 
         /// <summary>

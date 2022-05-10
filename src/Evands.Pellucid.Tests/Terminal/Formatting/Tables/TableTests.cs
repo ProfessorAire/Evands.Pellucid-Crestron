@@ -579,6 +579,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_Formats_Left_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Left;
             var width = 16;
             var expected = GetExpectedTable(align, width);
@@ -599,6 +600,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_Formats_Center_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Center;
             var width = 22;
             var expected = GetExpectedTable(align, width);
@@ -619,6 +621,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_Formats_Right_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Right;
             var width = 12;
             var expected = GetExpectedTable(align, width);
@@ -639,6 +642,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_WithMax_Formats_Left_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Left;
             var width = 0;
             var expected = GetExpectedTable(align, width);
@@ -659,6 +663,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_WithMax_Formats_Center_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Center;
             var width = 0;
             var expected = GetExpectedTable(align, width);
@@ -679,6 +684,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_WithMax_Formats_Right_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Right;
             var width = 0;
             var expected = GetExpectedTable(align, width);
@@ -699,6 +705,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_WithBrokenText_Formats_Left_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Left;
             var width = 0;
             var expected = GetExpectedBrokenTable(align, 17);
@@ -719,6 +726,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_WithBrokenText_Formats_Center_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Center;
             var width = 0;
             var expected = GetExpectedBrokenTable(align, 17);
@@ -739,6 +747,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [TestMethod]
         public void ToString_WithBrokenText_Formats_Right_Correctly()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Right;
             var width = 0;
             var expected = GetExpectedBrokenTable(align, 17);

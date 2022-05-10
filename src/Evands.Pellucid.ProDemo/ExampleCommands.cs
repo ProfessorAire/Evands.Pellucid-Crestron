@@ -136,7 +136,7 @@ namespace Evands.Pellucid.ProDemo
         /// <summary>
         /// Prints a sample table to the console.
         /// </summary>
-        /// <param name="minWidth">The minimum width the table can print to.</param>
+        /// <param name="maxWidth">The maximum width the table can print to.</param>
         [Verb("table", 3, "Prints a sample table to the console.")]
         [Sample("table --max 15", "Prints a sample table with a maximum cell width of 15.")]
         public void SampleTableMax(
@@ -149,6 +149,7 @@ namespace Evands.Pellucid.ProDemo
         /// Prints a sample table to the console.
         /// </summary>
         /// <param name="minWidth">The minimum width the table can print to.</param>
+        /// <param name="maxWidth">The maximum width the table can print to.</param>
         [Verb("table", 3, "Prints a sample table to the console.")]
         [Sample("table --min 10 --max 20", "Prints a sample table with a minimum cell width of 10 and a maxium of 20.")]
         public void SampleTable(
@@ -181,7 +182,7 @@ namespace Evands.Pellucid.ProDemo
         /// <summary>
         /// Prints a sample table to the console.
         /// </summary>
-        /// <param name="minWidth">The minimum width the table can print to.</param>
+        /// <param name="maxWidth">The maximum width the table can print to.</param>
         [Verb("table-mix", "tm", "Prints a sample table to the console.")]
         [Sample("table --max 15", "Prints a sample table with a maximum cell width of 15.")]
         public void SampleTableMixedMax(
@@ -194,6 +195,7 @@ namespace Evands.Pellucid.ProDemo
         /// Prints a sample table to the console.
         /// </summary>
         /// <param name="minWidth">The minimum width the table can print to.</param>
+        /// <param name="maxWidth">The maximum width the table can print to.</param>
         [Verb("table-mix", "tm", "Prints a sample table to the console.")]
         [Sample("table --min 10 --max 20", "Prints a sample table with a minimum cell width of 10 and a maxium of 20.")]
         public void SampleTableMixed(
@@ -273,7 +275,6 @@ namespace Evands.Pellucid.ProDemo
         /// Dumps a list of objects to the console.
         /// </summary>
         /// <param name="full">Optional parameter specifying whether to use full type names.</param>
-        /// <param name="extended">When true use the <see cref="RoundedChrome"/> chrome collection.</param>
         [Verb("DumpClassList", 5, "Dump a list of class objects to the console.")]
         public void DumpObjectList(
             [Flag("full", 'f', "Writes type names with their full name.", true)] bool full)
@@ -297,21 +298,33 @@ namespace Evands.Pellucid.ProDemo
 
         /// <summary>
         /// Writes an exception to the console.
-        /// </summary>        
+        /// </summary>
+        /// <param name="log">When present logs the exception as well as writing it to the console.</param>
         [Verb("WriteEx", "wex", "Writes an exception to the console.")]
-        public void WriteEx()
+        public void WriteEx(
+            [Flag("log", 'l', "Logs the exception as well.", true)] bool log)
         {
-            var exceptionString = "Formatted {0} string.";
             try
             {
-                Evands.Pellucid.Diagnostics.Debug.WriteLine(string.Format(exceptionString));
+                Diagnostics.Debug.WriteLine(string.Format("Formatted {0} string."));
             }
             catch (Exception ex)
             {
-                Evands.Pellucid.Diagnostics.Debug.WriteException(this, ex, "Exception encountered.");
+                if (log)
+                {
+                    Diagnostics.Logger.LogException(this, ex, "Exception encountered.");
+                }
+                else
+                {
+                    Diagnostics.Debug.WriteException(this, ex, "Exception encountered.");
+                }
             }
         }
 
+        /// <summary>
+        /// Writes a blinking line of dots to the console.
+        /// </summary>
+        /// <param name="duration">The number of seconds to print dots for, printing one dot every 3 seconds. Minimum of 12.</param>
         [Verb("Blinky", "bl", "Writes a blinking line of dots to the console.")]
         public void Blinky(
             [Operand("duration", "The number of seconds to run for, printing one dot every 3 seconds. Minimum of 12.")]int duration)

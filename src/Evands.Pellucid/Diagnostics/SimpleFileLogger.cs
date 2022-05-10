@@ -134,7 +134,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             var now = Crestron.SimplSharp.CrestronEnvironment.GetLocalTime();
 
-            if (fileStamp == null || fileStamp.ToShortDateString() != now.ToShortDateString())
+            if (fileStamp.ToShortDateString() != now.ToShortDateString())
             {
                 fileStamp = now;
                 fileName = Path.Combine(baseDirectory, string.Format("{0}_{1}{2}{3}{4}", baseFileName, fileStamp.Year, fileStamp.Month, fileStamp.Day, fileExtension));
