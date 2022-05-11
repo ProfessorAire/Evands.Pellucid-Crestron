@@ -49,6 +49,14 @@ $path = "$path\src\Evands.Pellucid.sln"
 Write-Host "Attempting to open $path"
 $dte.Solution.Open($path)
 
+Start-Sleep -s 5
+
+if ($null -eq $dte -or $null -eq $dte.Solution)
+{
+    Write-Error "Unable to load DTE"
+    return 1;
+}
+
 $libVersion = ""
 $proVersion = ""
 $cwsVersion = ""
