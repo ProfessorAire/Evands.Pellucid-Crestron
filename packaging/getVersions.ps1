@@ -49,6 +49,10 @@ $path = "$path\src\Evands.Pellucid.sln"
 Write-Host "Attempting to open $path"
 $dte.Solution.Open($path)
 
+$count = $dte.Solution.Projects.Count
+
+Write-Host "$count Projects in the Opened Solution"
+
 Start-Sleep -s 5
 
 if ($null -eq $dte -or $null -eq $dte.Solution)
@@ -67,6 +71,8 @@ Start-Sleep -s 3
 
 foreach ($proj in $dte.Solution.Projects)
 {
+    $name = $proj.Name
+    Write-Host "Processing $name"
     foreach ($rootItem in $proj.ProjectItems)
     {
         if ($rootItem.Name -eq "Properties")

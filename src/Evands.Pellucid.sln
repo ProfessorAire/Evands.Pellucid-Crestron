@@ -12,12 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.ProDemo", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.Tests", "Evands.Pellucid.Tests\Evands.Pellucid.Tests.csproj", "{BC372062-5208-4B9D-9AD4-E36501DC2BEA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41EC7852-176E-489E-BB88-969FFCF24CE4}"
-	ProjectSection(SolutionItems) = preProject
-		Evands.Pellucid.vsmdi = Evands.Pellucid.vsmdi
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.Fakes", "Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj", "{5A2D7A75-F172-43BE-AF04-18A89560D79E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.CwsConsole", "Evands.Pellucid.CwsConsole\Evands.Pellucid.CwsConsole.csproj", "{A71792E4-E9F2-4F88-B733-88148F581831}"
