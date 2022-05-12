@@ -121,8 +121,8 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
-        uses: dansiegel/publish-nuget@v1.01
-        with:
+        run:
+          .\scripts\pushPackages.ps1 'packaging/.releases/*.nupkg' ${{ secrets.NUGET_API_KEY }}
           filename: 'packaging/.releases/*.nupkg'
           apiKey: ${{ secrets.NUGET_API_KEY }}
 
