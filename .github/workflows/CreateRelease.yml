@@ -122,7 +122,7 @@ jobs:
       
       - name: Push Nuget Packages
         run:
-          .\scripts\pushPackages.ps1 'packaging/.releases/*.nupkg' ${{ secrets.NUGET_API_KEY }}
+          .\packaging\pushPackages.ps1 'packaging/.releases/*.nupkg' ${{ secrets.NUGET_API_KEY }}
 
   createVersionBadge:
     runs-on: self-hosted
