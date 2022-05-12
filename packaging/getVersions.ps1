@@ -62,6 +62,9 @@ $proVersion = ""
 $cwsVersion = ""
 
 Write-Host "Looking for version information"
+
+Start-Sleep -s 3
+
 foreach ($proj in $dte.Solution.Projects)
 {
     foreach ($rootItem in $proj.ProjectItems)
