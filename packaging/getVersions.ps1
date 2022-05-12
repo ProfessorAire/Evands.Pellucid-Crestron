@@ -35,103 +35,35 @@ function Get-LibVersion
     return [string]$ver.Replace("`"", "")
 }
 
-$libContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj"
-$libProContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj"
-$libProDemoContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj"
-$libCwsContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.CwsConsole/Evands.Pellucid.CwsConsole.csproj"
-
-Write-Host "Creating new Visual Studio DTE Object"
-$dte = New-Object -ComObject VisualStudio.DTE.9.0
-
-$path = Split-Path $PSScriptRoot -Parent
-$path = "$path\src\Evands.Pellucid.sln"
-
-Write-Host "Attempting to open $path"
-$dte.Solution.Open($path)
-
-$count = $dte.Solution.Projects.Count
-
-Write-Host "$count Projects in the Opened Solution"
-
-Start-Sleep -s 5
-
-if ($null -eq $dte -or $null -eq $dte.Solution)
+function Get-VersionData
 {
-    Write-Error "Unable to load DTE"
-    return 1;
-}
+    param(
+        [string]$filePath
+    )
 
-$libVersion = ""
-$proVersion = ""
-$cwsVersion = ""
+    $content = Get-Content $filePath -Raw
+    $match = $content -match 'AssemblyVersion\("(?<ver>\d+\.\d+\.\d+\.\d+)"\)'
 
-Write-Host "Looking for version information"
-
-Start-Sleep -s 3
-
-foreach ($proj in $dte.Solution.Projects)
-{
-    $name = $proj.Name
-    if ($name.Contains("Fakes") -or $name.Contains("Miscellaneous") -or $name.Contains("Tests"))
-    {
-        Write-Host "Skipping $name"
-        Continue 
+    if ($match) {
+        return $matches["ver"]
     }
     
-    Write-Host "Processing $name"
-    foreach ($rootItem in $proj.ProjectItems)
-    {
-        if ($rootItem.Name -eq "Properties")
-        {
-            Write-Host $rootItem.Name
-            foreach ($subItem in $rootItem.ProjectItems)
-            {
-                if ($subItem.Name -eq "AssemblyInfo.cs")
-                {
-                    Write-Host $subItem.Name
-                    foreach ($element in $subItem.FileCodeModel.CodeElements)
-                    {
-                        if ($element.Kind -eq 7)
-                        {
-                            $name = $element.Name
-                            $ver = $element.Value
-                            Write-Host "$name $ver"
-
-                            if ($name -eq "AssemblyVersion")
-                            {
-                                if ($proj.Name -eq "Evands.Pellucid")
-                                {
-                                    Write-Host "Evands.Pellucid version found: $ver"
-                                    $libVersion = $ver
-                                }
-                                elseif ($proj.Name -eq "Evands.Pellucid.Pro")
-                                {
-                                    Write-Host "Evands.Pellucid.Pro version found: $ver"
-                                    $proVersion = $ver
-                                }
-                                elseif ($proj.Name -eq "Evands.Pellucid.CwsConsole")
-                                {
-                                    Write-Host "Evands.Pellucid.CwsConsole version found: $ver"
-                                    $cwsVersion = $ver
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    Write-Error "Unable to get version data for '$filePath'"
+    exit 1001
 }
 
-$dte.Solution.Close($false)
-$dte.Quit()
+$pellucidPath = "$PSScriptRoot/../src/Evands.Pellucid/Properties/AssemblyInfo.cs"
+$pellucidProPath = "$PSScriptRoot/../src/Evands.Pellucid.Pro/Properties/AssemblyInfo.cs"
+$pellucidCwsPath = "$PSScriptRoot/../src/Evands.Pellucid.CwsConsole/Properties/AssemblyInfo.cs"
 
-Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj" -Value $libContents
-Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj" -Value $libProContents
-Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj" -Value $libProDemoContents
-Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.CwsConsole/Evands.Pellucid.CwsConsole.csproj" -Value $libCwsContents
+$libVersion = Get-VersionData $pellucidPath
+Write-Host "Lib Raw Version: $libVersion"
+$proVersion = Get-VersionData $pellucidProPath
+Write-Host "Pro Raw Version: $proVersion"
+$cwsVersion = Get-VersionData $pellucidCwsPath
+Write-Host "Cws Raw Version: $cwsVersion"
 
-if ($libVersion -eq "" -or $proVersion -eq "")
+if ($libVersion -eq "" -or $proVersion -eq "" -or $cwsVersion -eq "")
 {
     Write-Host "Unable to find version information, cannot create packages."
     exit 1001
@@ -142,6 +74,8 @@ else
     $ver2 = Get-LibVersion $proVersion
     $ver3 = Get-LibVersion $cwsVersion
 
+    Write-Host "Lib Version Found: $ver1"
+    Write-host "Pro Version Found: $ver2"
     Write-Host "Cws Version Found: $ver3"
 
     $preRelease = "false"
