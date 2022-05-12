@@ -72,21 +72,30 @@ Start-Sleep -s 3
 foreach ($proj in $dte.Solution.Projects)
 {
     $name = $proj.Name
+    if ($name.Contains("Fakes") -or $name.Contains("Miscellaneous") -or $name.Contains("Tests"))
+    {
+        Write-Host "Skipping $name"
+        Continue 
+    }
+    
     Write-Host "Processing $name"
     foreach ($rootItem in $proj.ProjectItems)
     {
         if ($rootItem.Name -eq "Properties")
         {
+            Write-Host $rootItem.Name
             foreach ($subItem in $rootItem.ProjectItems)
             {
                 if ($subItem.Name -eq "AssemblyInfo.cs")
                 {
+                    Write-Host $subItem.Name
                     foreach ($element in $subItem.FileCodeModel.CodeElements)
                     {
                         if ($element.Kind -eq 7)
                         {
                             $name = $element.Name
                             $ver = $element.Value
+                            Write-Host "$name $ver"
 
                             if ($name -eq "AssemblyVersion")
                             {
