@@ -56,5 +56,23 @@ namespace Evands.Pellucid
             Assert.IsFalse(Options.Instance.AutoSave);
             Assert.IsFalse(Options.Instance.UseFullTypeNamesWhenDumping);
         }
+
+        [TestMethod]
+        public void DefaultLogTimestampFormat_Gets_Expected_Default()
+        {
+            const string expected = "yy/MM/dd HH:mm:ss";
+            var actual = Options.Instance.DefaultLogTimestampFormat;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void DefaultLogTimestampFormat_Sets_Gets_Expected()
+        {
+            const string expected = "ss:mm:HH dd/MM/yy";
+            Options.Instance.DefaultLogTimestampFormat = expected;
+            var actual = Options.Instance.DefaultLogTimestampFormat;
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
