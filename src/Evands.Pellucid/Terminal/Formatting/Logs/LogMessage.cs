@@ -41,6 +41,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         private static readonly Regex CountRegex = new Regex(@"Total [^ ]+ Logged += +\d+");
 
         /// <summary>
+        /// Backing field for the <see cref="TimestampFormat"/> property.
+        /// </summary>
+        private string timestampFormat;
+
+        /// <summary>
         /// Prevents a default instance of the <see cref="LogMessage"/> class from being created.
         /// </summary>
         private LogMessage()
@@ -93,6 +98,26 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         /// Gets or sets the message contents.
         /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value representing the default Date/Time format string to use when writing log
+        /// messages to strings, using the <see cref="Terminal.Formatting.Logs.LogMessage"/> class.
+        /// <para>
+        /// If not specified will return the value specified by the <see cref="Options.DefaultLogTimestampFormat"/> property.
+        /// </para>
+        /// </summary>
+        public string TimestampFormat
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.timestampFormat) ? this.timestampFormat : Options.Instance.DefaultLogTimestampFormat;
+            }
+
+            set
+            {
+                this.timestampFormat = value;
+            }
+        }
 
         /// <summary>
         /// Tries to parse a complete <see cref="LogMessage"/> from an unformatted error message.
@@ -161,7 +186,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 return string.Format(
                     ConsoleBase.Colors.LogHeaders.FormatText(false, "{0}. {1} | {2} | {3}: {4}"),
                     this.Number.ToString().PadLeft(numberPad),
-                    this.TimeStamp.ToString("yy/MM/dd HH:mm:ss"),
+                    this.TimeStamp.ToString(this.TimestampFormat),
                     this.Origination.PadRight(originationPad),
                     typeColor.FormatText(false, this.MessageType.PadLeft(typePad)),
                     ColorFormat.CloseTextFormat(this.Message));
@@ -170,7 +195,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             return string.Format(
                     "{0}. {1} | {2} | {3}: {4}",
                     this.Number.ToString().PadLeft(numberPad),
-                    this.TimeStamp.ToString("yy/MM/dd HH:mm:ss"),
+                    this.TimeStamp.ToString(this.TimestampFormat),
                     this.Origination.PadRight(originationPad),
                     this.MessageType.PadLeft(typePad),
                     this.Message);

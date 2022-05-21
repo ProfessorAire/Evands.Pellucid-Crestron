@@ -20,6 +20,25 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         }
 
         [TestMethod]
+        public void TimestampFormat_Get_Returns_DefaultValue()
+        {
+            var msg = new LogMessage(1, "Error", "test.exe", DateTime.Now, "Nothing");
+            var expected = Options.Instance.DefaultLogTimestampFormat;
+            var actual = msg.TimestampFormat;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TimestampFormat_Set_Get_Returns_NewValue()
+        {
+            var msg = new LogMessage(1, "Error", "test.exe", DateTime.Now, "Nothing");
+            const string expected = "MM/dd/yy";
+            msg.TimestampFormat = expected;
+            var actual = msg.TimestampFormat;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void TryParse_With_Exception_Returns_False()
         {
             LogMessage msg = null;
@@ -808,6 +827,20 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var expected = string.Format(
                 "1. {0} | Origin.exe | Notice: Test Message",
                 dt.ToString("yy/MM/dd HH:mm:ss"));
+            var actual = msg.ToString();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_New_TimestampFormat_Returns_Expected()
+        {
+            const string format = "ss:mm:HH dd/MM/yy";
+            var dt = DateTime.Now;
+            var msg = new LogMessage(1, "Notice", "Origin.exe", dt, "Test Message") { TimestampFormat = format };
+            var expected = string.Format(
+                "1. {0} | Origin.exe | Notice: Test Message",
+                dt.ToString(format));
             var actual = msg.ToString();
 
             Assert.AreEqual(expected, actual);

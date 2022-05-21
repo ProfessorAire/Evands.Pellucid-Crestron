@@ -156,6 +156,16 @@ namespace Evands.Pellucid
         public bool EnableMarkup { get; set; }
 
         /// <summary>
+        /// Gets or sets a value representing the default Date/Time format string to use when writing log
+        /// messages to strings, using the <see cref="Terminal.Formatting.Logs.LogMessage"/> class.
+        /// <para>
+        /// Defaults to "yy/MM/dd HH:mm:ss". Uses standard .Net Date/Time format string characters.
+        /// </para>
+        /// </summary>
+        [TomlProperty("defaultLogTimestampFormat")]
+        public string DefaultLogTimestampFormat { get; set; }
+
+        /// <summary>
         /// Overrides the <see cref="Instance"/> property with a new instance of the <see cref="Options"/> class,
         /// with the default values and auto-save set to <see langword="false"/>. If called before accessing the
         /// <see cref="Instance"/> property this will prevent the program from attempting to load an existing file
@@ -233,7 +243,7 @@ namespace Evands.Pellucid
         {
             if (string.IsNullOrEmpty(FilePath))
             {
-                var fileName = string.Empty;
+                string fileName;
                 if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance)
                 {
                     fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
@@ -257,10 +267,11 @@ namespace Evands.Pellucid
             ColorizeConsoleOutput = true;
             UseTimestamps = true;
             Use24HourTime = true;
-            LogLevels = Evands.Pellucid.Diagnostics.LogLevels.None;
+            LogLevels = LogLevels.None;
             DebugLevels = DebugLevels.All;
             Suppressed = new List<string>();
             Allowed = new List<string>();
+            DefaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
             return this;
         }
 
