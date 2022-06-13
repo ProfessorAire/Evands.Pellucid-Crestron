@@ -20,6 +20,7 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Evands.Pellucid.Terminal.Formatting.Logs
@@ -177,6 +178,159 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         /// <param name="numberPad">The number of characters to pad the number component of the message. Used to align messages.</param>
         /// <param name="typePad">The number of characters to pad the type component of the message. Used to align messages.</param>
         /// <param name="originationPad">The number of characters to pad the origination component of the message. Used to align messages.</param>
+        /// <param name="totalWidth">The total width of the line the log message should be printed on.</param>
+        /// <param name="wrapHeaders"><see langword="true"/> to wrap the headers, leaving more room for the message content.</param>
+        /// <returns>A <see langword="string"/> with the formatted message.</returns>
+        public string ToString(bool colorize, int numberPad, int typePad, int originationPad, int totalWidth, bool wrapHeaders)
+        {
+            var sb = new StringBuilder();
+            numberPad = Math.Max(numberPad, this.Number.ToString().Length);
+            typePad = Math.Max(typePad, this.MessageType.Length);
+            originationPad = Math.Max(originationPad, this.Origination.Length);
+
+            var isColored = Options.Instance.ColorizeConsoleOutput;
+            if (!colorize)
+            {
+                Options.Instance.ColorizeConsoleOutput = false;
+            }
+
+            try
+            {
+                var typeColor = GetTypeColorFormat();
+                if (!wrapHeaders)
+                {
+                    sb.Append(
+                        ConsoleBase.Colors.LogHeaders.FormatText(false, "{0}. {1} | {2} | {3}: ",
+                            this.Number.ToString().PadLeft(numberPad),
+                            this.TimeStamp.ToString(this.TimestampFormat),
+                            this.Origination.PadRight(originationPad),
+                            typeColor.FormatText(false, this.MessageType.PadLeft(typePad))));
+
+                    var indentAmount = numberPad +
+                        this.TimeStamp.ToString(this.TimestampFormat).Length +
+                        originationPad +
+                        typePad + 10;
+
+                    var msgWidth = totalWidth - indentAmount;
+                    if (msgWidth < 20)
+                    {
+                        sb.Append(this.Message);
+                    }
+                    else
+                    {
+                        var lines = this.Message.Replace(ConsoleBase.NewLine, "\n").Split('\n');
+                        var first = true;
+                        for (var i = 0; i < lines.Length; i++)
+                        {
+                            var line = lines[i];
+                            var widthLeftToWrite = line.Length;
+
+                            while (widthLeftToWrite > 0)
+                            {
+                                var start = line.Length - widthLeftToWrite;
+                                var count = Math.Min(widthLeftToWrite, msgWidth);
+                                sb.Append(start > 0 ? line.Substring(start, count).Trim() : line.Substring(start, count).TrimEnd());
+                                widthLeftToWrite -= count;
+
+                                if (first)
+                                {
+                                    first = false;
+                                    msgWidth += typePad + 2;
+                                    indentAmount -= typePad + 2;
+                                }
+
+                                if (widthLeftToWrite > 0)
+                                {
+                                    sb.Append(ConsoleBase.NewLine);
+                                    sb.Append(' ', indentAmount);
+                                }
+                            }
+
+                            if (i < lines.Length - 1)
+                            {
+                                sb.Append(ConsoleBase.NewLine);
+                                if (!string.IsNullOrEmpty(lines[i + 1]))
+                                {
+                                    sb.Append(' ', indentAmount);
+                                }
+                            }
+                        }
+                    }
+
+                    sb.Append(ColorFormat.CloseTextFormat(string.Empty));
+                }
+                else
+                {
+                    var msgWidth = totalWidth - typePad - 2 - numberPad - 2;
+                    Console.WriteLine(msgWidth);
+                    sb.Append(
+                        ConsoleBase.Colors.LogHeaders.FormatText(false, "{0}. {1} | {2}",
+                            this.Number.ToString().PadLeft(numberPad),
+                            this.TimeStamp.ToString(this.TimestampFormat),
+                            this.Origination));
+
+                    sb.Append(ConsoleBase.NewLine);
+                    sb.Append(' ', numberPad + 2);
+                    sb.Append(typeColor.FormatText(false, "{0}: ", this.MessageType.PadLeft(typePad)));
+
+                    if (msgWidth <= 20)
+                    {
+                        sb.Append(this.Message);
+                    }
+                    else
+                    {
+                        var lines = this.Message.Replace(ConsoleBase.NewLine, "\n").Split('\n');
+                        var indentAmount = numberPad + 4 + typePad;
+
+                        for (var i = 0; i < lines.Length; i++)
+                        {
+                            var line = lines[i];
+                            var widthLeftToWrite = line.Length;
+
+                            while (widthLeftToWrite > 0)
+                            {
+                                var start = line.Length - widthLeftToWrite;
+                                var count = Math.Min(widthLeftToWrite, msgWidth);
+                                sb.Append(start > 0 ? line.Substring(start, count).Trim() : line.Substring(start, count).TrimEnd());
+                                widthLeftToWrite -= count;
+
+                                if (widthLeftToWrite > 0)
+                                {
+                                    sb.Append(ConsoleBase.NewLine);
+                                    sb.Append(' ', indentAmount);
+                                }
+                            }
+
+                            if (i < lines.Length - 1)
+                            {
+                                sb.Append(ConsoleBase.NewLine);
+                                if (!string.IsNullOrEmpty(lines[i + 1]))
+                                {
+                                    sb.Append(' ', indentAmount);
+                                }
+                            }
+                        }
+                    }
+
+                    sb.Append(ColorFormat.CloseTextFormat(string.Empty));
+                }
+
+                return sb.ToString();
+            }
+            finally
+            {
+                Options.Instance.ColorizeConsoleOutput = isColored;
+            }
+
+        }
+
+        /// <summary>
+        /// Prints the message as a string, optionally colorizing it, with the specified padding.
+        /// </summary>
+        /// <param name="colorize">A value indicating whether to print the message with color.</param>
+        /// <param name="numberPad">The number of characters to pad the number component of the message. Used to align messages.</param>
+        /// <param name="typePad">The number of characters to pad the type component of the message. Used to align messages.</param>
+        /// <param name="originationPad">The number of characters to pad the origination component of the message. Used to align messages.</param>
         /// <returns>A <see langword="string"/> with the formatted message.</returns>
         public string ToString(bool colorize, int numberPad, int typePad, int originationPad)
         {
@@ -230,22 +384,22 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             {
                 return ConsoleBase.Colors.Warning;
             }
-            
+
             if (this.MessageType.Equals("error", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Error;
             }
-            
+
             if (this.MessageType.Equals("notice", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Notice;
             }
-            
+
             if (this.MessageType.Equals("info", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Notice;
             }
-            
+
             if (this.MessageType.Equals("ok", StringComparison.OrdinalIgnoreCase))
             {
                 return ConsoleBase.Colors.Notice;

@@ -43,6 +43,11 @@ namespace Evands.Pellucid
         private bool autoSave = true;
 
         /// <summary>
+        /// Backing field for the <see cref="DefaultLogTimestampFormat"/>.
+        /// </summary>
+        private string defaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Options"/> class.
         /// </summary>        
         public Options()
@@ -163,7 +168,18 @@ namespace Evands.Pellucid
         /// </para>
         /// </summary>
         [TomlProperty("defaultLogTimestampFormat")]
-        public string DefaultLogTimestampFormat { get; set; }
+        public string DefaultLogTimestampFormat
+        {
+            get
+            {
+                return this.defaultLogTimestampFormat;
+            }
+
+            set
+            {
+                this.defaultLogTimestampFormat = value;
+            }
+        }
 
         /// <summary>
         /// Overrides the <see cref="Instance"/> property with a new instance of the <see cref="Options"/> class,
@@ -263,15 +279,15 @@ namespace Evands.Pellucid
         /// <returns>This <see cref="Options"/> object.</returns>        
         private Options WithDefaults()
         {
-            UseFullTypeNamesWhenDumping = false;
-            ColorizeConsoleOutput = true;
-            UseTimestamps = true;
-            Use24HourTime = true;
-            LogLevels = LogLevels.None;
-            DebugLevels = DebugLevels.All;
-            Suppressed = new List<string>();
-            Allowed = new List<string>();
-            DefaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
+            this.UseFullTypeNamesWhenDumping = false;
+            this.ColorizeConsoleOutput = true;
+            this.UseTimestamps = true;
+            this.Use24HourTime = true;
+            this.LogLevels = LogLevels.None;
+            this.DebugLevels = DebugLevels.All;
+            this.Suppressed = new List<string>();
+            this.Allowed = new List<string>();
+            this.DefaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
             return this;
         }
 
