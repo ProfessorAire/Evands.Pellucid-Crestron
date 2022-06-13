@@ -19,11 +19,13 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [TestCleanup]
         public void Cleanup()
         {
+            CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
         }
 
+        [TestMethod]
         public void ParseCrestronErrorLog_With_Server_Returns_NoEntries()
         {
-            CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
+            CrestronEnvironment.DevicePlatform = eDevicePlatform.Server;
             var actual = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetThreeSeriesLog()).ToList();
             Assert.AreEqual(actual.Count, 0);
         }

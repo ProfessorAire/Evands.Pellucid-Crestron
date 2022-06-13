@@ -847,6 +847,259 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         }
 
         [TestMethod]
+        public void ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
+        {
+            const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
+                                      be printed on two lines.";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
+            var actual = msg.ToString(false, 3, 6, 10, 79, false);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_FourLines()
+        {
+            const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
+                                      be printed on  four lines so that we can
+                                      test multiple multiple lines with multip
+                                      le long sentences.";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on  four lines so that we can test multiple multiple lines with multiple long sentences.");
+            var actual = msg.ToString(false, 3, 6, 10, 79, false);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_Color_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
+        {
+            const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe   | \x1b[91;49m Error: This is a basic message that will\r\n" + 
+"                                      be printed on two lines.\x1b[0m";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
+            var actual = msg.ToString(true, 3, 6, 10, 79, false);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_Color_And_TotalWidth_And_Not_WrapHeaders_Returns_FourLines()
+        {
+            const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe   | \x1b[91;49m Error: This is a basic message that will\r\n" +
+"                                      be printed on  four lines so that we can\r\n" + 
+"                                      test multiple multiple lines with multip\r\n" +
+"                                      le long sentences.\x1b[0m";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on  four lines so that we can test multiple multiple lines with multiple long sentences.");
+            var actual = msg.ToString(true, 3, 6, 10, 79, false);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_NoColor_And_TooShortTotalWidth_And_Not_WrapHeaders_Returns_OneLine()
+        {
+            const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will be printed on two lines.";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
+            var actual = msg.ToString(false, 3, 6, 10, 15, false);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
+        {
+            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
+      Error: This is a basic message that will be printed on two lines.";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
+            var actual = msg.ToString(false, 3, 6, 10, 79, true);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_FourLines()
+        {
+            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
+      Error: This is a basic message that will be printed on multiple lines bec
+             ause it is really very very long and will take quite a bit of text
+             in order to print it across at least three lines, despite what yo
+             u're thinking.";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on multiple lines because it is really very very long and will take quite a bit of text in order to print it across at least three lines, despite what you're thinking.");
+            var actual = msg.ToString(false, 3, 6, 10, 79, true);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_Color_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
+        {
+            const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe\r\n" +
+"     \x1b[91;49m Error: This is a basic message that will be printed on two lines.\x1b[0m";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
+            var actual = msg.ToString(true, 3, 6, 10, 79, true);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_Color_And_TotalWidth_And_WrapHeaders_Returns_FourLines()
+        {
+            const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe\r\n" +
+"     \x1b[91;49m Error: This is a basic message that will be printed on multiple lines bec\r\n" + 
+            "             ause it is really very very long and will take quite a bit of text\r\n" +
+            "             in order to print it across at least three lines, despite what yo\r\n" +
+            "             u're thinking.\x1b[0m";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on multiple lines because it is really very very long and will take quite a bit of text in order to print it across at least three lines, despite what you're thinking.");
+            var actual = msg.ToString(true, 3, 6, 10, 79, true);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_NoColor_And_TooShortTotalWidth_And_WrapHeaders_Returns_TwoLines()
+        {
+            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
+      Error: This is a basic message that will be printed on two lines just because.";
+
+            var dt = new DateTime(2022, 10, 2, 7, 12, 34);
+            var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines just because.");
+            var actual = msg.ToString(false, 3, 6, 10, 20, true);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_With_Exception_Returns_Expected()
+        {
+            const string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1] |   Error: [01][ExampleCommands] Exception encountered.
+                                                   --------Exception 1--------
+                                                   System.FormatException: FormatException
+                                                     at System.Text.StringBuilder.AppendFormat(IFormatProvider provider, String format, Object[] args)
+                                                     at System.String.Format(IFormatProvider provider, String format, Object[] args)
+                                                     at System.String.Format(String format, Object[] args)
+                                                     at Evands.Pellucid.ProDemo.ExampleCommands.WriteEx(Boolean log)
+                                                     at System.Reflection.RuntimeMethodInfo.InternalInvoke(RuntimeMethodInfo rtmi, Object obj, BindingF
+                                                   lags invokeAttr, Binder binder, Object parameters, CultureInfo culture, Boolean isBinderDefault, Ass
+                                                   embly caller, Boolean verifyAccess, StackCrawlMark& stackMark)
+                                                     at System.Reflection.RuntimeMethodInfo.InternalInvoke(Object obj, BindingFlags invokeAttr, Binder
+                                                   binder, Object[] parameters, CultureInfo culture, Boolean verifyAccess, StackCrawlMark& stackMark)
+                                                     at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder,
+                                                   Object[] parameters, CultureInfo culture)
+                                                     at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+                                                     at Crestron.SimplSharp.Reflection.MethodInfoImpl.Invoke(Object obj, Object[] parameters)
+                                                     at Evands.Pellucid.Terminal.Commands.GlobalCommand.ProcessCommand(String commandName, String verb,
+                                                   String defaultValue, Dictionary`2 operandsAndFlags)
+                                                     at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
+                                                     at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
+
+                                                   -----------------------------";
+
+            const string message = @"[01][ExampleCommands] Exception encountered.
+--------Exception 1--------
+System.FormatException: FormatException
+  at System.Text.StringBuilder.AppendFormat(IFormatProvider provider, String format, Object[] args)
+  at System.String.Format(IFormatProvider provider, String format, Object[] args)
+  at System.String.Format(String format, Object[] args)
+  at Evands.Pellucid.ProDemo.ExampleCommands.WriteEx(Boolean log)
+  at System.Reflection.RuntimeMethodInfo.InternalInvoke(RuntimeMethodInfo rtmi, Object obj, BindingFlags invokeAttr, Binder binder, Object parameters, CultureInfo culture, Boolean isBinderDefault, Assembly caller, Boolean verifyAccess, StackCrawlMark& stackMark)
+  at System.Reflection.RuntimeMethodInfo.InternalInvoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture, Boolean verifyAccess, StackCrawlMark& stackMark)
+  at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+  at Crestron.SimplSharp.Reflection.MethodInfoImpl.Invoke(Object obj, Object[] parameters)
+  at Evands.Pellucid.Terminal.Commands.GlobalCommand.ProcessCommand(String commandName, String verb, String defaultValue, Dictionary`2 operandsAndFlags)
+  at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
+  at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
+
+-----------------------------";
+
+            var dt = new DateTime(2022, 6, 13, 15, 48, 50);
+            var msg = new LogMessage(
+                1,
+                "Error",
+                "SimplSharpPro.exe [App 1]",
+                dt,
+                message);
+
+            var actual = msg.ToString(false, 0, 7, 0, 151, false);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_With_Exception_Returns_Expected()
+        {
+            const string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1]
+     Error: [01][ExampleCommands] Exception encountered.
+            --------Exception 1--------
+            System.FormatException: FormatException
+              at System.Text.StringBuilder.AppendFormat(IFormatProvider provider, String format, Object[] args)
+              at System.String.Format(IFormatProvider provider, String format, Object[] args)
+              at System.String.Format(String format, Object[] args)
+              at Evands.Pellucid.ProDemo.ExampleCommands.WriteEx(Boolean log)
+              at System.Reflection.RuntimeMethodInfo.InternalInvoke(RuntimeMethodInfo rtmi, Object obj, BindingF
+            lags invokeAttr, Binder binder, Object parameters, CultureInfo culture, Boolean isBinderDefault, Ass
+            embly caller, Boolean verifyAccess, StackCrawlMark& stackMark)
+              at System.Reflection.RuntimeMethodInfo.InternalInvoke(Object obj, BindingFlags invokeAttr, Binder
+            binder, Object[] parameters, CultureInfo culture, Boolean verifyAccess, StackCrawlMark& stackMark)
+              at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder,
+            Object[] parameters, CultureInfo culture)
+              at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+              at Crestron.SimplSharp.Reflection.MethodInfoImpl.Invoke(Object obj, Object[] parameters)
+              at Evands.Pellucid.Terminal.Commands.GlobalCommand.ProcessCommand(String commandName, String verb,
+            String defaultValue, Dictionary`2 operandsAndFlags)
+              at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
+              at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
+
+            -----------------------------";
+
+            const string message = @"[01][ExampleCommands] Exception encountered.
+--------Exception 1--------
+System.FormatException: FormatException
+  at System.Text.StringBuilder.AppendFormat(IFormatProvider provider, String format, Object[] args)
+  at System.String.Format(IFormatProvider provider, String format, Object[] args)
+  at System.String.Format(String format, Object[] args)
+  at Evands.Pellucid.ProDemo.ExampleCommands.WriteEx(Boolean log)
+  at System.Reflection.RuntimeMethodInfo.InternalInvoke(RuntimeMethodInfo rtmi, Object obj, BindingFlags invokeAttr, Binder binder, Object parameters, CultureInfo culture, Boolean isBinderDefault, Assembly caller, Boolean verifyAccess, StackCrawlMark& stackMark)
+  at System.Reflection.RuntimeMethodInfo.InternalInvoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture, Boolean verifyAccess, StackCrawlMark& stackMark)
+  at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+  at Crestron.SimplSharp.Reflection.MethodInfoImpl.Invoke(Object obj, Object[] parameters)
+  at Evands.Pellucid.Terminal.Commands.GlobalCommand.ProcessCommand(String commandName, String verb, String defaultValue, Dictionary`2 operandsAndFlags)
+  at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
+  at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
+
+-----------------------------";
+
+            var dt = new DateTime(2022, 6, 13, 15, 48, 50);
+            var msg = new LogMessage(
+                1,
+                "Error",
+                "SimplSharpPro.exe [App 1]",
+                dt,
+                message);
+
+            var actual = msg.ToString(false, 0, 7, 0, 112, true);
+            Console.WriteLine(actual);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void Equals_Returns_True_When_InstanceDetails_Are_Equal()
         {
             var dt = DateTime.Now;

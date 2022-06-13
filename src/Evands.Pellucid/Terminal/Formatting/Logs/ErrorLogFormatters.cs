@@ -91,6 +91,42 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         }
 
         /// <summary>
+        /// Prints an enumeration of <see cref="LogMessage"/> instances to a string,
+        /// formatting them in a way that is easier to review.
+        /// </summary>
+        /// <param name="messages">The <see cref="LogMessage"/>s to print.</param>
+        /// <param name="colorize"><see langword="true"/> to colorize the messages, <see langword="false"/> otherwise.</param>
+        /// <param name="totalWidth">The width of the console, in characters.</param>
+        /// <param name="wrapHeaders"><see langword="true"/> to break the message headers, with the message starting on the second line.</param>
+        /// <returns>A <see langword="string"/> with the error log contents prettily formatted.</returns>
+        public static string PrintPrettyErrorLog(IEnumerable<LogMessage> messages, bool colorize, int totalWidth, bool wrapHeaders)
+        {
+            if (messages == null)
+            {
+                throw new ArgumentNullException("messages");
+            }
+
+            if (messages.Any())
+            {
+                var sb = new StringBuilder();
+                var numberMax = messages.Max(m => m.Number.ToString().Length);
+                var typeMax = messages.Max(m => m.MessageType.Length);
+                var origMax = messages.Max(m => m.Origination.Length);
+
+                foreach (var msg in messages)
+                {
+                    sb.Append(msg.ToString(colorize, numberMax, typeMax, origMax, totalWidth, wrapHeaders));
+                    sb.Append("\r\n");
+                }
+
+                return sb.ToString();
+            }
+
+            return colorize ? ConsoleBase.Colors.Warning.FormatText("No Messages to Display")
+                : "No Messages to Display";
+        }
+
+        /// <summary>
         /// Parses an error log, treating the contents as a 3-Series error log.
         /// </summary>
         /// <param name="logContents">The log contents from a 3-Series processor.</param>
