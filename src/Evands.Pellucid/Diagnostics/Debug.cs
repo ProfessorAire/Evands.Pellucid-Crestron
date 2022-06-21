@@ -20,7 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 using Crestron.SimplSharp;
 using Evands.Pellucid.Terminal.Formatting;
@@ -33,21 +32,34 @@ namespace Evands.Pellucid.Diagnostics
     public static class Debug
     {
         /// <summary>
+        /// A Dictionary of classes registered with the Logger to use unique header colors.
+        /// </summary>
+        private static readonly Dictionary<string, ColorFormat> InternalRegisteredClasses = new Dictionary<string, ColorFormat>(0);
+
+        /// <summary>
         /// Tracks line writing states.
         /// </summary>
         private static bool isLastWriteALine = true;
 
         /// <summary>
-        /// A Dictionary of classes registered with the Logger to use unique header colors.
+        /// Backing field for the <see cref="RegisteredClasses"/> property.
         /// </summary>
-        private static Dictionary<string, ColorFormat> registeredClasses = new Dictionary<string, ColorFormat>(0);
+        private static ReadOnlyDictionary<string, ColorFormat> registeredClasses;
 
         /// <summary>
         /// Gets a list of the class names registered with unique <see cref="ColorFormat"/>s to use for header text.
         /// </summary>
         public static ReadOnlyDictionary<string, ColorFormat> RegisteredClasses
         {
-            get { return new ReadOnlyDictionary<string, ColorFormat>(registeredClasses); }
+            get
+            {
+                if (registeredClasses == null)
+                {
+                    registeredClasses = new ReadOnlyDictionary<string, ColorFormat>(InternalRegisteredClasses);
+                }
+
+                return registeredClasses;
+            }
         }
 
         /// <summary>
@@ -59,25 +71,16 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (obj != null)
             {
-                var key = string.Empty;
                 var str = obj as string;
+                var key = !string.IsNullOrEmpty(str) ? str : obj.GetType().FullName;
 
-                if (!string.IsNullOrEmpty(str))
+                if (InternalRegisteredClasses.ContainsKey(key))
                 {
-                    key = str;
+                    InternalRegisteredClasses[key] = colors;
                 }
                 else
                 {
-                    key = obj.GetType().FullName;
-                }
-
-                if (registeredClasses.ContainsKey(key))
-                {
-                    registeredClasses[key] = colors;
-                }
-                else
-                {
-                    registeredClasses.Add(key, colors);
+                    InternalRegisteredClasses.Add(key, colors);
                 }
             }
         }
@@ -89,13 +92,13 @@ namespace Evands.Pellucid.Diagnostics
         /// <param name="colors">The ColorFormat to use when writing the message.</param>
         /// <param name="message">The message to write to the console.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
-        public static void Write(object obj, Terminal.Formatting.ColorFormat colors, string message, params object[] args)
+        public static void Write(object obj, ColorFormat colors, string message, params object[] args)
         {
             if (IsValid(obj))
             {
                 var header = GetMessageHeader(obj, true, true);
 
-                message = Formatters.GetColorFormattedString(colors, message, args);
+                message = colors.FormatText(TruncateMessage(message, args));
 
                 Write("{0}{1}", header, message);
             }
@@ -147,11 +150,11 @@ namespace Evands.Pellucid.Diagnostics
         /// <param name="colors">The ColorFormat to use when writing the message.</param>
         /// <param name="message">The message to write to the console.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
-        public static void WriteLine(object obj, Terminal.Formatting.ColorFormat colors, string message, params object[] args)
+        public static void WriteLine(object obj, ColorFormat colors, string message, params object[] args)
         {
             if (IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(colors, message, args);
+                message = colors.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -213,7 +216,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Debug) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Debug, message, args);
+                message = ConsoleBase.Colors.Debug.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -237,7 +240,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Debug) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Debug, message, args);
+                message = ConsoleBase.Colors.Debug.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -246,7 +249,7 @@ namespace Evands.Pellucid.Diagnostics
                 }
                 else
                 {
-                    ForceWriteLine(Formatters.GetColorFormattedString(ConsoleBase.Colors.Debug, message, args));
+                    ForceWriteLine(ConsoleBase.Colors.Debug.FormatText(TruncateMessage(message, args)));
                 }
             }
         }
@@ -261,7 +264,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Success) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Success, message, args);
+                message = ConsoleBase.Colors.Success.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -285,7 +288,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Success) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Success, message, args);
+                message = ConsoleBase.Colors.Success.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -309,7 +312,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Progress) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Progress, message, args);
+                message = ConsoleBase.Colors.Progress.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -333,7 +336,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Progress) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Progress, message, args);
+                message = ConsoleBase.Colors.Progress.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -357,7 +360,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Notice) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Notice, message, args);
+                message = ConsoleBase.Colors.Notice.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -381,7 +384,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Notice) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Notice, message, args);
+                message = ConsoleBase.Colors.Notice.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -405,7 +408,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Warning) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Warning, message, args);
+                message = ConsoleBase.Colors.Warning.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -429,7 +432,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Warning) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Warning, message, args);
+                message = ConsoleBase.Colors.Warning.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -453,7 +456,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Error) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Error, message, args);
+                message = ConsoleBase.Colors.Error.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -477,7 +480,7 @@ namespace Evands.Pellucid.Diagnostics
         {
             if (Options.Instance.DebugLevels.Contains(DebugLevels.Error) && IsValid(obj))
             {
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Error, message, args);
+                message = ConsoleBase.Colors.Error.FormatText(TruncateMessage(message, args));
 
                 if (isLastWriteALine)
                 {
@@ -511,7 +514,7 @@ namespace Evands.Pellucid.Diagnostics
 
                 var header = GetMessageHeader(obj, true, true);
 
-                message = Formatters.GetColorFormattedString(ConsoleBase.Colors.Exception, message, args);
+                message = ConsoleBase.Colors.Exception.FormatText(message, args);
 
                 sb.AppendFormat("{0}{1}", header, message);
 
@@ -528,8 +531,7 @@ namespace Evands.Pellucid.Diagnostics
                     ex = ex.InnerException;
                 }
 
-                ForceWriteLine(
-                    Formatters.GetColorFormattedString(ConsoleBase.Colors.Exception, sb.ToString()));
+                ForceWriteLine(ConsoleBase.Colors.Exception.FormatText(sb.ToString()));
             }
         }
 
@@ -642,14 +644,7 @@ namespace Evands.Pellucid.Diagnostics
                 else
                 {
                     var debugObject = obj as IDebugData;
-                    if (debugObject != null)
-                    {
-                        header = string.Format("{0}{1}[{2}]", optional, stamp, debugObject.Header);
-                    }
-                    else
-                    {
-                        header = string.Format("{0}{1}[{2}]", optional, stamp, obj.GetType().Name);
-                    }
+                    header = debugObject != null ? string.Format("{0}{1}[{2}]", optional, stamp, debugObject.Header) : string.Format("{0}{1}[{2}]", optional, stamp, obj.GetType().Name);
                 }
 
                 if (!string.IsNullOrEmpty(header))
@@ -679,9 +674,9 @@ namespace Evands.Pellucid.Diagnostics
             if (obj != null)
             {
                 var key = obj.GetType().FullName;
-                if (registeredClasses.ContainsKey(key))
+                if (InternalRegisteredClasses.ContainsKey(key))
                 {
-                    return registeredClasses[key];
+                    return InternalRegisteredClasses[key];
                 }
 
                 var debugObject = obj as IDebugData;
@@ -714,6 +709,27 @@ namespace Evands.Pellucid.Diagnostics
         {
             ConsoleBase.WriteLineNoHeader(message, args);
             isLastWriteALine = true;
+        }
+
+        /// <summary>
+        /// Formats the message and truncates it if necessary.
+        /// </summary>
+        /// <param name="message">The message to format and truncate if necessary.</param>
+        /// <param name="args">Optional arguments to use when formatting the message.</param>
+        /// <returns>A <see langword="string"/> containing the formatted message, truncated if necessary.</returns>
+        private static string TruncateMessage(string message, params object[] args)
+        {
+            var msg = message.OptionalFormat(args);
+            if (Options.Instance.MaxDebugMessageLength > -1 && msg.Length > Options.Instance.MaxDebugMessageLength)
+            {
+                return string.Format(
+                    "{0}{1}{2}",
+                    msg.Substring(0, Options.Instance.MaxDebugMessageLength - 8),
+                    "<...>",
+                    msg.Substring(msg.Length - 4, 4));
+            }
+
+            return msg;
         }
 
         /// <summary>
@@ -750,7 +766,7 @@ namespace Evands.Pellucid.Diagnostics
                 return true;
             }
 
-            var name = string.Empty;
+            string name;
 
             var data = obj as IDebugData;
             if (data != null)
@@ -771,10 +787,8 @@ namespace Evands.Pellucid.Diagnostics
             {
                 return allowed.Contains(name);
             }
-            else
-            {
-                return !suppressed.Contains(name);
-            }
+
+            return !suppressed.Contains(name);
         }
     }
 }

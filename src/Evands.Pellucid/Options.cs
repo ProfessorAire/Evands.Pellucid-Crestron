@@ -43,9 +43,14 @@ namespace Evands.Pellucid
         private bool autoSave = true;
 
         /// <summary>
-        /// Backing field for the <see cref="DefaultLogTimestampFormat"/>.
+        /// Backing field for the <see cref="DefaultLogTimestampFormat"/> property.
         /// </summary>
         private string defaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
+
+        /// <summary>
+        /// Backing field for the <see cref="MaxDebugMessageLength"/> property.
+        /// </summary>
+        private int maxDebugMessageLength = -1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Options"/> class.
@@ -182,6 +187,26 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether there is a maximum length to the debug messages
+        /// that can be printed to the console. Values greater than or equal to 20 are acceptable. Values lower
+        /// than 20 will set this to -1, which indicates no limit.
+        /// <para>Defaults to -1.</para>
+        /// </summary>
+        [TomlProperty("maxDebugMessageLength")]
+        public int MaxDebugMessageLength
+        {
+            get
+            {
+                return this.maxDebugMessageLength;
+            }
+
+            set
+            {
+                this.maxDebugMessageLength = value >= 20 ? value : -1;
+            }
+        }
+
+        /// <summary>
         /// Overrides the <see cref="Instance"/> property with a new instance of the <see cref="Options"/> class,
         /// with the default values and auto-save set to <see langword="false"/>. If called before accessing the
         /// <see cref="Instance"/> property this will prevent the program from attempting to load an existing file
@@ -288,6 +313,7 @@ namespace Evands.Pellucid
             this.Suppressed = new List<string>();
             this.Allowed = new List<string>();
             this.DefaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
+            this.MaxDebugMessageLength = -1;
             return this;
         }
 

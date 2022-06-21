@@ -265,7 +265,7 @@ namespace Evands.Pellucid
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void Write(string message, params object[] args)
         {
-            message = message.OptionalFormat(message, args);
+            message = message.OptionalFormat(args);
 
             if (!string.IsNullOrEmpty(message))
             {
