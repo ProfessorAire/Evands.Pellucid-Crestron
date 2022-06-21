@@ -74,5 +74,24 @@ namespace Evands.Pellucid
             var actual = Options.Instance.DefaultLogTimestampFormat;
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void MaxDebugMessageLength_Get_Returns_Expected_Default()
+        {
+            const int expected = -1;
+            var actual = Options.Instance.MaxDebugMessageLength;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void MaxDebugMessageLength_Sets_Gets_Expected()
+        {
+            const int expected = 120;
+            Options.Instance.MaxDebugMessageLength = expected;
+            var actual = Options.Instance.MaxDebugMessageLength;
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

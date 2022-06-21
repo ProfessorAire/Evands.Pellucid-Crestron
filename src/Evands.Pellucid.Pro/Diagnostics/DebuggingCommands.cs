@@ -471,5 +471,28 @@ namespace Evands.Pellucid.Diagnostics
                 }
             }
         }
+
+        /// <summary>
+        /// Sets the maximum length that debug messages may print.
+        /// </summary>
+        /// <param name="limit">The maximum limit for messages to print.</param>
+        [Verb("SetLength", "sl", "Sets the maximum length that debug messages may print.")]
+        [Sample("debug sl --length 120", "Sets the maximum length of messages to 120 characters.")]
+        public void SetLimit(
+            [Operand("length", "The total length that debug messages may print. Values lower than 20 will be set to -1, which indicates no limit.")] int limit)
+        {
+            Options.Instance.MaxDebugMessageLength = limit;
+            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "The Maximum Debug Message Length has been set to '{0}'.", Options.Instance.MaxDebugMessageLength);
+        }
+
+        /// <summary>
+        /// Prints the maximum length that debug messages will print at.
+        /// </summary>
+        [Verb("SetLength", "sl", "Sets the maximum length that debug messages may print.")]
+        [Sample("debug setLength", "Prints the current setting.")]
+        public void SetLimit()
+        {
+            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "The current Maximum Debug Message Length is '{0}'.", Options.Instance.MaxDebugMessageLength > -1 ? Options.Instance.MaxDebugMessageLength.ToString() : "Unlimited");
+        }
     }
 }
