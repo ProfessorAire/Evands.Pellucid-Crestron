@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1099AAAF-77FD-4702-826D-2EF05AAA892E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Evands.Pellucid</RootNamespace>
+    <AssemblyName>Evands.Pellucid</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SERIES4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;SERIES4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SERIES4,TEST</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+    <Choose>
+    <When Condition=" '$(Configuration)' == 'Test' ">
+      <ItemGroup>
+        <ProjectReference Include="..\Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj">
+      <Project>{c9ea6f68-8323-4bbb-b479-17a54ab22b62}</Project>
+      <Name>Evands.Pellucid.Fakes</Name>
+    </ProjectReference>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+    <ItemGroup>
+    <Reference Include="SimplSharpCustomAttributesInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\lib\net47\SimplSharpCustomAttributesInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplSharpHelperInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\lib\net47\SimplSharpHelperInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplSharpProgrammingInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\lib\net47\SimplSharpProgrammingInterfaces.dll</HintPath>
+    </Reference>
+    </ItemGroup>
+  </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Series3\Evands.Pellucid\ConsoleBase.cs">
+      <Link>ConsoleBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\CrestronLogWriter.cs">
+      <Link>Diagnostics\CrestronLogWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\Debug.cs">
+      <Link>Diagnostics\Debug.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\DebugExtensions.cs">
+      <Link>Diagnostics\DebugExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\DebugLevels.cs">
+      <Link>Diagnostics\DebugLevels.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\DebugStateChangedEventArgs.cs">
+      <Link>Diagnostics\DebugStateChangedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\IDebugData.cs">
+      <Link>Diagnostics\IDebugData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\ILogWriter.cs">
+      <Link>Diagnostics\ILogWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\Logger.cs">
+      <Link>Diagnostics\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\LoggerExtensions.cs">
+      <Link>Diagnostics\LoggerExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\LogLevels.cs">
+      <Link>Diagnostics\LogLevels.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\LogLevelsChangedEventArgs.cs">
+      <Link>Diagnostics\LogLevelsChangedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Diagnostics\SimpleFileLogger.cs">
+      <Link>Diagnostics\SimpleFileLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\MinimalTomlParser.cs">
+      <Link>Internal\MinimalTomlParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\Parts\INamedToml.cs">
+      <Link>Internal\Parts\INamedToml.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\Parts\IPrintToml.cs">
+      <Link>Internal\Parts\IPrintToml.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\Parts\TomlArray.cs">
+      <Link>Internal\Parts\TomlArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\Parts\TomlClass.cs">
+      <Link>Internal\Parts\TomlClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\Parts\TomlComment.cs">
+      <Link>Internal\Parts\TomlComment.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\Parts\TomlKeyValuePair.cs">
+      <Link>Internal\Parts\TomlKeyValuePair.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Internal\TomlPropertyAttribute.cs">
+      <Link>Internal\TomlPropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Options.cs">
+      <Link>Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\ColorCode.cs">
+      <Link>Terminal\ColorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\CrestronConsoleWriter.cs">
+      <Link>Terminal\CrestronConsoleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\BasicChrome.cs">
+      <Link>Terminal\Formatting\BasicChrome.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\ColorFormat.cs">
+      <Link>Terminal\Formatting\ColorFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\DumpHelpers\DumpCollection.cs">
+      <Link>Terminal\Formatting\DumpHelpers\DumpCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\DumpHelpers\DumpFactory.cs">
+      <Link>Terminal\Formatting\DumpHelpers\DumpFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\DumpHelpers\DumpNode.cs">
+      <Link>Terminal\Formatting\DumpHelpers\DumpNode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\DumpHelpers\DumpObject.cs">
+      <Link>Terminal\Formatting\DumpHelpers\DumpObject.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\DumpHelpers\DumpObjectFailure.cs">
+      <Link>Terminal\Formatting\DumpHelpers\DumpObjectFailure.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Formatters.cs">
+      <Link>Terminal\Formatting\Formatters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\IChromeCollection.cs">
+      <Link>Terminal\Formatting\IChromeCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\IConsoleColor.cs">
+      <Link>Terminal\Formatting\IConsoleColor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Logs\ErrorLogFormatters.cs">
+      <Link>Terminal\Formatting\Logs\ErrorLogFormatters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Logs\LogMessage.cs">
+      <Link>Terminal\Formatting\Logs\LogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Markup\ConsoleMarkup.cs">
+      <Link>Terminal\Formatting\Markup\ConsoleMarkup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\RgbColor.cs">
+      <Link>Terminal\Formatting\RgbColor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\RoundedChrome.cs">
+      <Link>Terminal\Formatting\RoundedChrome.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\SquareChrome.cs">
+      <Link>Terminal\Formatting\SquareChrome.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\StandardColor.cs">
+      <Link>Terminal\Formatting\StandardColor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\Cell.cs">
+      <Link>Terminal\Formatting\Tables\Cell.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\Column.cs">
+      <Link>Terminal\Formatting\Tables\Column.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\ColumnCollection.cs">
+      <Link>Terminal\Formatting\Tables\ColumnCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\Extensions.cs">
+      <Link>Terminal\Formatting\Tables\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\HorizontalAlignment.cs">
+      <Link>Terminal\Formatting\Tables\HorizontalAlignment.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\Row.cs">
+      <Link>Terminal\Formatting\Tables\Row.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\RowCollection.cs">
+      <Link>Terminal\Formatting\Tables\RowCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\Formatting\Tables\Table.cs">
+      <Link>Terminal\Formatting\Tables\Table.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid\Terminal\IConsoleWriter.cs">
+      <Link>Terminal\IConsoleWriter.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets" Condition="Exists('..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets'))" />
+  </Target>
+</Project>

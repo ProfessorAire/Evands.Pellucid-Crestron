@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C9EA6F68-8323-4BBB-B479-17A54AB22B62}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Evands.Pellucid.Fakes</RootNamespace>
+    <AssemblyName>Evands.Pellucid.Fakes</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CCriticalSection.cs">
+      <Link>Crestron\SimplSharp\CCriticalSection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\ConsoleAccessLevelEnum.cs">
+      <Link>Crestron\SimplSharp\ConsoleAccessLevelEnum.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronConsole.cs">
+      <Link>Crestron\SimplSharp\CrestronConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronEnvironment.cs">
+      <Link>Crestron\SimplSharp\CrestronEnvironment.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronIO\Directory.cs">
+      <Link>Crestron\CrestronIO\Directory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronIO\DirectoryInfo.cs">
+      <Link>Crestron\CrestronIO\DirectoryInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronIO\File.cs">
+      <Link>Crestron\CrestronIO\File.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronIO\FileInfo.cs">
+      <Link>Crestron\CrestronIO\FileInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronIO\FileNotFoundException.cs">
+      <Link>Crestron\CrestronIO\FileNotFoundException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronIO\InvalidDirectoryLocationException.cs">
+      <Link>Crestron\CrestronIO\InvalidDirectoryLocationException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\CrestronIO\Path.cs">
+      <Link>Crestron\CrestronIO\Path.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\eCrestronSeries.cs">
+      <Link>Crestron\SimplSharp\eCrestronSeries.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\eDevicePlatform.cs">
+      <Link>Crestron\SimplSharp\eDevicePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\eProgramStatusEventType.cs">
+      <Link>Crestron\SimplSharp\eProgramStatusEventType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\ErrorLog.cs">
+      <Link>Crestron\SimplSharp\ErrorLog.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\InitialParametersClass.cs">
+      <Link>Crestron\SimplSharp\InitialParametersClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\ProgramStatusEventHandler.cs">
+      <Link>Crestron\SimplSharp\ProgramStatusEventHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\ReadOnlyDictionary.cs">
+      <Link>Crestron\SimplSharp\ReadOnlyDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\Reflection\Activator.cs">
+      <Link>Crestron\Reflection\Activator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\Reflection\BindingFlags.cs">
+      <Link>Crestron\Reflection\BindingFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\Reflection\CType.cs">
+      <Link>Crestron\Reflection\CType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\Reflection\ExtensionMethods.cs">
+      <Link>Crestron\Reflection\ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\Reflection\MethodInfo.cs">
+      <Link>Crestron\Reflection\MethodInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\Reflection\ParameterInfo.cs">
+      <Link>Crestron\Reflection\ParameterInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Fakes\Crestron\SimplSharp\Reflection\PropertyInfo.cs">
+      <Link>Crestron\Reflection\PropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

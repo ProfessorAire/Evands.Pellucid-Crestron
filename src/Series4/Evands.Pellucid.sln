@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid", "Evands.Pellucid\Evands.Pellucid.csproj", "{1099AAAF-77FD-4702-826D-2EF05AAA892E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C9EA6F68-8323-4BBB-B479-17A54AB22B62} = {C9EA6F68-8323-4BBB-B479-17A54AB22B62}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.Tests", "Evands.Pellucid.Tests\Evands.Pellucid.Tests.csproj", "{BE326120-C2BF-42D1-8ADD-C0D70EB87326}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.Pro", "Evands.Pellucid.Pro\Evands.Pellucid.Pro.csproj", "{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C9EA6F68-8323-4BBB-B479-17A54AB22B62} = {C9EA6F68-8323-4BBB-B479-17A54AB22B62}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evands.Pellucid.Fakes", "Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj", "{C9EA6F68-8323-4BBB-B479-17A54AB22B62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Test|Any CPU = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1099AAAF-77FD-4702-826D-2EF05AAA892E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1099AAAF-77FD-4702-826D-2EF05AAA892E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1099AAAF-77FD-4702-826D-2EF05AAA892E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1099AAAF-77FD-4702-826D-2EF05AAA892E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1099AAAF-77FD-4702-826D-2EF05AAA892E}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{1099AAAF-77FD-4702-826D-2EF05AAA892E}.Test|Any CPU.Build.0 = Test|Any CPU
+		{BE326120-C2BF-42D1-8ADD-C0D70EB87326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE326120-C2BF-42D1-8ADD-C0D70EB87326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE326120-C2BF-42D1-8ADD-C0D70EB87326}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{BE326120-C2BF-42D1-8ADD-C0D70EB87326}.Test|Any CPU.Build.0 = Test|Any CPU
+		{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}.Test|Any CPU.Build.0 = Test|Any CPU
+		{C9EA6F68-8323-4BBB-B479-17A54AB22B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9EA6F68-8323-4BBB-B479-17A54AB22B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9EA6F68-8323-4BBB-B479-17A54AB22B62}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{C9EA6F68-8323-4BBB-B479-17A54AB22B62}.Test|Any CPU.Build.0 = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A8F1FA51-52CD-45C9-97B6-EAF257C81F4D}
+	EndGlobalSection
+EndGlobal

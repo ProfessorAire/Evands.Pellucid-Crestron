@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{35093F1D-DA0F-45D3-8FC7-7AED561D9DBC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Evands.Pellucid.Pro</RootNamespace>
+    <AssemblyName>Evands.Pellucid.Pro</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SERIES4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;SERIES4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SERIES4,TEST</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <Choose>
+  <When Condition=" '$(Configuration)' == 'Test' ">
+      <ItemGroup>
+        <ProjectReference Include="..\Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj">
+      <Project>{c9ea6f68-8323-4bbb-b479-17a54ab22b62}</Project>
+      <Name>Evands.Pellucid.Fakes</Name>
+    </ProjectReference>
+      </ItemGroup>
+    </When>
+    <Otherwise>
+  <ItemGroup>  
+    <Reference Include="SimplSharpCustomAttributesInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\lib\net47\SimplSharpCustomAttributesInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplSharpHelperInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\lib\net47\SimplSharpHelperInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplSharpPro, Version=1.5.3.17, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Crestron.SimplSharp.SDK.ProgramLibrary.2.19.15\lib\net47\SimplSharpPro.exe</HintPath>
+    </Reference>
+    </ItemGroup>
+    </Otherwise>
+    </Choose>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\ConsoleCommands.cs">
+      <Link>ConsoleCommands.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Diagnostics\DebuggingCommands.cs">
+      <Link>Diagnostics\DebuggingCommands.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Diagnostics\LoggerCommands.cs">
+      <Link>Diagnostics\LoggerCommands.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\ProConsole.cs">
+      <Link>ProConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Access.cs">
+      <Link>Terminal\Commands\Access.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Attributes\CommandAttribute.cs">
+      <Link>Terminal\Commands\Attributes\CommandAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Attributes\DefaultVerbAttribute.cs">
+      <Link>Terminal\Commands\Attributes\DefaultVerbAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Attributes\FlagAttribute.cs">
+      <Link>Terminal\Commands\Attributes\FlagAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Attributes\OperandAttribute.cs">
+      <Link>Terminal\Commands\Attributes\OperandAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Attributes\SampleAttribute.cs">
+      <Link>Terminal\Commands\Attributes\SampleAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Attributes\VerbAttribute.cs">
+      <Link>Terminal\Commands\Attributes\VerbAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\GlobalCommand.cs">
+      <Link>Terminal\Commands\GlobalCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Helpers.cs">
+      <Link>Terminal\Commands\Helpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\ICommandProvider.cs">
+      <Link>Terminal\Commands\ICommandProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\Manager.cs">
+      <Link>Terminal\Commands\Manager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\RegisterResult.cs">
+      <Link>Terminal\Commands\RegisterResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\TerminalCommandBase.cs">
+      <Link>Terminal\Commands\TerminalCommandBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\TerminalCommandBaseOfT.cs">
+      <Link>Terminal\Commands\TerminalCommandBaseOfT.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\TerminalCommandException.cs">
+      <Link>Terminal\Commands\TerminalCommandException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Series3\Evands.Pellucid.Pro\Terminal\Commands\TerminalCommandExceptionEventArgs.cs">
+      <Link>Terminal\Commands\TerminalCommandExceptionEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Evands.Pellucid\Evands.Pellucid.csproj">
+      <Project>{1099aaaf-77fd-4702-826d-2ef05aaa892e}</Project>
+      <Name>Evands.Pellucid</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets" Condition="Exists('..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crestron.SimplSharp.SDK.Library.2.19.15\build\Crestron.SimplSharp.SDK.Library.targets'))" />
+    <Error Condition="!Exists('..\packages\Crestron.SimplSharp.SDK.ProgramLibrary.2.19.15\build\Crestron.SimplSharp.SDK.ProgramLibrary.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Crestron.SimplSharp.SDK.ProgramLibrary.2.19.15\build\Crestron.SimplSharp.SDK.ProgramLibrary.targets'))" />
+  </Target>
+  <Import Project="..\packages\Crestron.SimplSharp.SDK.ProgramLibrary.2.19.15\build\Crestron.SimplSharp.SDK.ProgramLibrary.targets" Condition="Exists('..\packages\Crestron.SimplSharp.SDK.ProgramLibrary.2.19.15\build\Crestron.SimplSharp.SDK.ProgramLibrary.targets')" />
+</Project>
