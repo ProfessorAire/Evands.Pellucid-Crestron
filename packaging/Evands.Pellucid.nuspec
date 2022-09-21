@@ -14,15 +14,17 @@
         <copyright>Christopher McNeely 2021</copyright>
         <tags>Crestron S# Simpl# Simpl</tags>
         <dependencies>
-            <group targetFramework=".NETFramework4.7" />
             <group targetFramework=".NETFramework3.5-CompactFramework" />
+            <group targetFramework=".NETFramework4.7">
+                <dependency id="Crestron.SimplSharp.SDK.Library" version="2.19.5" />
+            </group>
         </dependencies>
     </metadata>
     <files>
         <file src="..\icon.png" target="images\" />
-        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.dll" target="lib\net35-cf" />
-        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.xml" target="lib\net35-cf" />
-        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.dll" target="lib\net47" />
-        <file src="..\src\Evands.Pellucid\bin\Release\Evands.Pellucid.xml" target="lib\net47" />
+        <file src="..\src\Series3\Evands.Pellucid\bin\Release\Evands.Pellucid.dll" target="lib\net35-cf" />
+        <file src="..\src\Series3\Evands.Pellucid\bin\Release\Evands.Pellucid.xml" target="lib\net35-cf" />
+        <file src="..\src\Series4\Evands.Pellucid\bin\Release\Evands.Pellucid.dll" target="lib\net47" />
+        <file src="..\src\Series4\Evands.Pellucid\bin\Release\Evands.Pellucid.xml" target="lib\net47" />
     </files>
 </package>

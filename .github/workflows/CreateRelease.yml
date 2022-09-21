@@ -40,11 +40,11 @@ jobs:
       proVer: ${{ env.PRO_VERSION }}
       preRelease: ${{ env.PRE }}
 
-  build:
+  build-3:
     runs-on: self-hosted
     needs: getVersions
     steps:
-      - name: Build Project
+      - name: Build 3-Series Project
         run: |
           .\scripts\buildProject.ps1 -Mode Release
       
@@ -53,11 +53,29 @@ jobs:
         with:
           name: release-output
           path: |
-            .\src\Evands.Pellucid\bin\Release\Evands.Pellucid.dll
-            .\src\Evands.Pellucid\bin\Release\Evands.Pellucid.xml
-            .\src\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.dll
-            .\src\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.xml
-            .\src\Evands.Pellucid.ProDemo\bin\Release\Evands.Pellucid.ProDemo.cpz
+            .\src\Series3\Evands.Pellucid\bin\Release\Evands.Pellucid.dll
+            .\src\Series3\Evands.Pellucid\bin\Release\Evands.Pellucid.xml
+            .\src\Series3\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.dll
+            .\src\Series3\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.xml
+            .\src\Series3\Evands.Pellucid.ProDemo\bin\Release\Evands.Pellucid.ProDemo.cpz
+
+  build-4:
+    runs-on: self-hosted
+    needs: getVersions
+    steps:
+      - name: Build 4-Series Project
+        run: |
+          .\scripts\buildProject4Series.ps1 -Mode Release
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifacts@v2
+        with:
+          name: release-output
+          path: |
+            .\src\Series4\Evands.Pellucid\bin\Release\Evands.Pellucid.dll
+            .\src\Series4\Evands.Pellucid\bin\Release\Evands.Pellucid.xml
+            .\src\Series4\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.dll
+            .\src\Series4\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.xml
   
   createPackages:
     runs-on: self-hosted
