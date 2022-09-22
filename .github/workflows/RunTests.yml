@@ -94,9 +94,9 @@ jobs:
           
   validateCoverage:
     runs-on: self-hosted
-    needs: |
-      generateReportSeries3
-      generateReportSeries4
+    needs:
+      - generateReportSeries3
+      - generateReportSeries4
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
