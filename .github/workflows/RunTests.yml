@@ -31,15 +31,18 @@ jobs:
 
       - name: Build Project
         run: |
-          .\scripts\buildProject.ps1 -Mode Test
+          .\scripts\buildSeries3Project.ps1 -Mode Test
+          .\scripts\buildSeries4Project.ps1 -Mode Test
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: test-output
-          path: .\src\Evands.Pellucid.Tests\bin\Test\
-  
-  generateReport:
+          path: |
+            .\src\Series3\Evands.Pellucid.Tests\bin\Test\
+            .\src\Series4\Evands.Pellucid.Tests\bin\Test\
+
+  generateReportSeries3:
     runs-on: self-hosted
     needs: build
     steps:
@@ -50,19 +53,44 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-output
-          path: .\src\Evands.Pellucid.Tests\bin\Test\
+          path: .\src\Series3\Evands.Pellucid.Tests\bin\Test\
       
       - name: Generate Coverage Report
         run: |
-          .\testing\generateReport.ps1
+          .\testing\generateReport.ps1 -Series 3
 
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: coverage-results
           path: |
-            .\testing\coverage\index.html
-            .\testing\testResults.trx
+            .\testing\series3\coverage\index.html
+            .\testing\series3\testResults.trx
+
+  generateReportSeries4:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: test-output
+          path: .\src\Series4\Evands.Pellucid.Tests\bin\Test\
+      
+      - name: Generate Coverage Report
+        run: |
+          .\testing\generateReport.ps1 -Series 4
+
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-results
+          path: |
+            .\testing\series4\coverage\index.html
+            .\testing\series4\testResults.trx
           
   validateCoverage:
     runs-on: self-hosted
@@ -75,29 +103,51 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: coverage-results
-          path: .\testing
+          path: |
+            .\testing\series3
+            .\testing\series4
 
-      - name: Get Coverage Info
+      - name: Get Coverage Info 3-Series
         run: |
-          $info = .\testing\getCoverageValues.ps1
+          $info = .\testing\getCoverageValues.ps1 -Mode 3
           $cover = $info[0]
           $color = $info[1]
-          echo "COVERAGE=$cover" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "COLOR=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "COVERAGE3=$cover" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "COLOR3=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
 
-      - name: Get Test Results
+      - name: Get Coverage Info 4-Series
+        run: |
+          $info = .\testing\getCoverageValues.ps1 -Mode 4
+          $cover = $info[0]
+          $color = $info[1]
+          echo "COVERAGE4=$cover" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "COLOR4=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+      - name: Get Test Results 3-Series
         run: |
           $results = .\testing\getTestsResults.ps1
           $passed = $results[0]
           $errors = $results[1]
           $failed = $results[2]
           $color = $results[3]
-          echo "PASSED=$passed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "ERRORS=$errors" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "FAILED=$failed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "TESTS_COLOR=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "PASSED3=$passed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "ERRORS3=$errors" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "FAILED3=$failed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "TESTS_COLOR3=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+      - name: Get Test Results 4-Series
+        run: |
+          $results = .\testing\getTestsResults.ps1
+          $passed = $results[0]
+          $errors = $results[1]
+          $failed = $results[2]
+          $color = $results[3]
+          echo "PASSED4=$passed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "ERRORS4=$errors" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "FAILED4=$failed" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "TESTS_COLOR4=$color" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       
-      - name: Create Coverage Badge
+      - name: Create Coverage Badge 3-Series
         if: github.ref == 'refs/heads/main'
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
@@ -105,11 +155,11 @@ jobs:
           gistID: 511fb463532b10f6fca3eba9df658486
           filename: Evands.Pellucid-CodeCoverage.json
           label: Coverage
-          color: ${{ env.COLOR }}
-          message: ${{ env.COVERAGE }}
+          color: ${{ env.COLOR3 }}
+          message: ${{ env.COVERAGE3 }}
           style: flat
 
-      - name: Create Tests Badge
+      - name: Create Tests Badge 3-Series
         if: github.ref == 'refs/heads/main'
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
@@ -117,8 +167,32 @@ jobs:
           gistID: 511fb463532b10f6fca3eba9df658486
           filename: Evands.Pellucid-Tests.json
           label: Tests
-          color: ${{ env.TESTS_COLOR }}
-          message: "${{ env.PASSED }} passing/${{ env.FAILED }} failing"
+          color: ${{ env.TESTS_COLOR3 }}
+          message: "${{ env.PASSED3 }} passing/${{ env.FAILED3 }} failing"
+          style: flat
+      
+      - name: Create Coverage Badge 4-Series
+        if: github.ref == 'refs/heads/main'
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.GIST_AUTH_TOKEN }}
+          gistID: 511fb463532b10f6fca3eba9df658486
+          filename: Evands.Pellucid-CodeCoverage4.json
+          label: Coverage
+          color: ${{ env.COLOR4 }}
+          message: ${{ env.COVERAGE4 }}
+          style: flat
+
+      - name: Create Tests Badge 4-Series
+        if: github.ref == 'refs/heads/main'
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.GIST_AUTH_TOKEN }}
+          gistID: 511fb463532b10f6fca3eba9df658486
+          filename: Evands.Pellucid-Tests4.json
+          label: Tests
+          color: ${{ env.TESTS_COLOR4 }}
+          message: "${{ env.PASSED4 }} passing/${{ env.FAILED4 }} failing"
           style: flat
       
       - name: Check For Failure

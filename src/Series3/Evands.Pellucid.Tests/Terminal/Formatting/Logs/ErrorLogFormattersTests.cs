@@ -185,7 +185,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
 2323. 22/05/13 11:11:11 | nk.exe               |  Notice: User Reboot
 2442. 22/05/14 11:11:11 | nk.exe               |  Notice: User Reboot
 ";
-
+            Options.Instance.DefaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
             var actual = ErrorLogFormatters.PrintPrettyErrorLog(items.AsEnumerable(), false);
 
             Assert.AreEqual(expected, actual);

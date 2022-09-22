@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Evands.Pellucid;
+using System.Diagnostics;
 
 namespace Evands.Pellucid.Diagnostics
 {
@@ -156,10 +157,13 @@ namespace Evands.Pellucid.Diagnostics
         [TestMethod]
         public void WriteDebugLine_With_Limit_Prints_Expected()
         {
+            const string expected = "4234567890098<...>1ABC";
             Options.Instance.MaxDebugMessageLength = 21;
+            Options.Instance.ColorizeConsoleOutput = false;
             Debug.WriteDebugLine(null, "42345678900987654321ABC");
-            Console.WriteLine(writer.Messages.Last());
-            Assert.IsTrue(writer.Messages.Last().Contains("4234567890098<...>1ABC"));
+            System.Diagnostics.Debug.WriteLine(String.Format("Expected: {0}", expected));
+            System.Diagnostics.Debug.WriteLine(String.Format("  Actual: {0}", writer.Messages.Last()));
+            Assert.IsTrue(writer.Messages.Last().Contains(expected));
         }
 
         [TestMethod]

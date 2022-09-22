@@ -52,9 +52,9 @@ function Get-VersionData
     exit 1001
 }
 
-$pellucidPath = "$PSScriptRoot/../src/Evands.Pellucid/Properties/AssemblyInfo.cs"
-$pellucidProPath = "$PSScriptRoot/../src/Evands.Pellucid.Pro/Properties/AssemblyInfo.cs"
-$pellucidCwsPath = "$PSScriptRoot/../src/Evands.Pellucid.CwsConsole/Properties/AssemblyInfo.cs"
+$pellucidPath = "$PSScriptRoot/../src/Series3/Evands.Pellucid/Properties/AssemblyInfo.cs"
+$pellucidProPath = "$PSScriptRoot/../src/Series3/Evands.Pellucid.Pro/Properties/AssemblyInfo.cs"
+$pellucidCwsPath = "$PSScriptRoot/../src/Series3/Evands.Pellucid.CwsConsole/Properties/AssemblyInfo.cs"
 
 $libVersion = Get-VersionData $pellucidPath
 Write-Host "Lib Raw Version: $libVersion"

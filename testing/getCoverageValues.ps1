@@ -1,4 +1,21 @@
-[String]$html = Get-Content -Path $PSScriptRoot/coverage/index.html
+param(
+[string]$Series
+)
+
+if ($Series -ne "3" -And $Series -ne "4")
+{
+    Write-Warning "You must provide an appropriate series in the mode of '-Series 3' or '-Series 4'. Unable to continue."
+    exit 1004
+}
+
+if ($Series -eq "3")
+{
+    [String]$html = Get-Content -Path $PSScriptRoot/Series3/coverage/index.html
+}
+else
+{
+    [String]$html = Get-Content -Path $PSScriptRoot/Series4/coverage/index.html
+}
 
 $result = $html -match 'Line coverage<\/div>\n? ?<div.*?>\n? ?<div.*?>(\d{1,3}\.?\d{0,2})%'
 

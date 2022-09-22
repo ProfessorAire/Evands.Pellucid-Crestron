@@ -1,4 +1,16 @@
-[String]$tests = Get-Content -Path $PSScriptRoot/testResults.trx
+param(
+[string]$Series
+)
+
+if ($Series -ne "3" -And $Series -ne "4")
+{
+    Write-Warning "You must provide an appropriate series in the mode of '-Series 3' or '-Series 4'. Unable to continue."
+    exit 1004
+}
+
+$Series = "Series$Series"
+
+[String]$tests = Get-Content -Path "$PSScriptRoot/$Series/testResults.trx"
 
 $result = $tests -match '^.*Counters.*?passed="(\d*)" error="(\d*)" failed="(\d*)"'
 

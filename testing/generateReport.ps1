@@ -1,3 +1,7 @@
+param(
+[string]$Series
+)
+
 function DeleteAll
 {
     param(
@@ -18,13 +22,28 @@ function DeleteAll
     }
 }
 
-$path = Split-Path $PSScriptRoot -Parent
-$sourcePath = "$path\src\Evands.Pellucid.Tests\bin\Test\Evands.Pellucid.Tests.dll"
-$resultPath = "$PSScriptRoot\testResults.trx"
-$coveragePath = "$PSScriptRoot\coverageResults.xml"
-$coverageHtmlPath = "$PSScriptRoot\coverage\"
+if ($Series -ne "3" -And $Series -ne "4")
+{
+    Write-Warning "You must provide an appropriate series in the mode of '-Series 3' or '-Series 4'. Unable to continue."
+    exit 1004
+}
 
-$testExe = "C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe"
+$Series = "Series$Series"
+$path = Split-Path $PSScriptRoot -Parent
+$sourcePath = "$path\src\$Series\Evands.Pellucid.Tests\bin\Test\Evands.Pellucid.Tests.dll"
+$resultPath = "$PSScriptRoot\$Series\testResults.trx"
+$coveragePath = "$PSScriptRoot\$Series\coverageResults.xml"
+$coverageHtmlPath = "$PSScriptRoot\$Series\coverage\"
+
+if ($Series -eq "Series3")
+{
+    $testExe = "C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\MSTest.exe"
+}
+else
+{
+    $testExe = "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+}
+
 $openCover = "OpenCover.Console.exe"
 $reportGenerator = "ReportGenerator.exe"
 
@@ -50,10 +69,20 @@ if ($null -ne (Get-Item $resultPath -ErrorAction SilentlyContinue)) {
     Remove-Item $resultPath    
 }
 
-& $openCover "-target:$testExe" "-targetargs:/testContainer:$sourcePath /resultsfile:$resultPath" -log:all -output:$coveragePath -filter:"+[Evands*]* -[Evands.Pellucid.Tests*]* -[Evands.Pellucid.Fakes*]*"
+New-Item $resultPath -ItemType "Directory"
+
+if ($Series -eq "Series3")
+{
+    & $openCover "-target:$testExe" "-targetargs:/testContainer:$sourcePath /resultsfile:$resultPath" -log:all -output:$coveragePath -filter:"+[Evands*]* -[Evands.Pellucid.Tests*]* -[Evands.Pellucid.Fakes*]*"
+}
+else
+{
+    & $openCover "-target:$testExe" "-targetargs:$sourcePath" -log:all -output:$coveragePath -filter:"+[Evands*]* -[Evands.Pellucid.Tests*]* -[Evands.Pellucid.Fakes*]*"
+}
+
 & $reportGenerator -reports:$coveragePath -targetdir:$coverageHtmlPath -reporttypes:Html
 
-$dir = Get-ChildItem $PSScriptRoot -Directory
+$dir = Get-ChildItem "$PSScriptRoot/$Series" -Directory
 
 foreach($item in $dir)
 {

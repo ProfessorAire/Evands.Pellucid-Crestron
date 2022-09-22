@@ -24,9 +24,9 @@
     </metadata>
     <files>
         <file src="..\icon.png" target="images\" />
-        <file src="..\src\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.dll" target="lib\net35-cf" />
-        <file src="..\src\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.xml" target="lib\net35-cf" />
-        <file src="..\src\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.dll" target="lib\net47" />
-        <file src="..\src\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.xml" target="lib\net47" />
+        <file src="..\src\Series3\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.dll" target="lib\net35-cf" />
+        <file src="..\src\Series3\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.xml" target="lib\net35-cf" />
+        <file src="..\src\Series3\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.dll" target="lib\net47" />
+        <file src="..\src\Series3\Evands.Pellucid.CwsConsole\bin\Release\Evands.Pellucid.CwsConsole.xml" target="lib\net47" />
     </files>
 </package>

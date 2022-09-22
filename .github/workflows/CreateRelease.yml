@@ -46,7 +46,7 @@ jobs:
     steps:
       - name: Build 3-Series Project
         run: |
-          .\scripts\buildProject.ps1 -Mode Release
+          .\scripts\buildProject3Series.ps1 -Mode Release
       
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2

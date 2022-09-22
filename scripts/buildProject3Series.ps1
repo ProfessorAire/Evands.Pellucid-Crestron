@@ -13,9 +13,9 @@ if ($Mode -ne "Test")
 {
 $exitCode = 0
 
-$libContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj"
-$libProContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj"
-$libProDemoContents = Get-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj"
+$libContents = Get-Content -Path "$PSScriptRoot/../src/Series3/Evands.Pellucid/Evands.Pellucid.csproj"
+$libProContents = Get-Content -Path "$PSScriptRoot/../src/Series3/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj"
+$libProDemoContents = Get-Content -Path "$PSScriptRoot/../src/Series3/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj"
 
 Write-Host "Creating new Visual Studio DTE Object"
 $dte = New-Object -ComObject VisualStudio.DTE.9.0
@@ -64,14 +64,14 @@ else {
 
 Write-Host "Restoring previous project contents."
 
-Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj" -Value $libContents
-Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj" -Value $libProContents
-Set-Content -Path "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj" -Value $libProDemoContents
+Set-Content -Path "$PSScriptRoot/../src/Series3/Evands.Pellucid/Evands.Pellucid.csproj" -Value $libContents
+Set-Content -Path "$PSScriptRoot/../src/Series3/Evands.Pellucid.Pro/Evands.Pellucid.Pro.csproj" -Value $libProContents
+Set-Content -Path "$PSScriptRoot/../src/Series3/Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj" -Value $libProDemoContents
 
 exit $exitCode
 }
 else {
     $path = Split-Path $PSScriptRoot -Parent
-    $path = "$path\src\Evands.Pellucid.sln"
+    $path = "$path\src\Series3\Evands.Pellucid.sln"
     & C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe $path -property:Configuration=Test
 }

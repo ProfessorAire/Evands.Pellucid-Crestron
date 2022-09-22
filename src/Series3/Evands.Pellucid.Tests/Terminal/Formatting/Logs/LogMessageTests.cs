@@ -877,6 +877,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [TestMethod]
         public void ToString_With_Color_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
         {
+            Options.Instance.ColorizeConsoleOutput = true;
             const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe   | \x1b[91;49m Error: This is a basic message that will\r\n" + 
 "                                      be printed on two lines.\x1b[0m";
 
