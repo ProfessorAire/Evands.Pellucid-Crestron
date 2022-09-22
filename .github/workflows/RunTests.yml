@@ -154,7 +154,7 @@ jobs:
           auth: ${{ secrets.GIST_AUTH_TOKEN }}
           gistID: 511fb463532b10f6fca3eba9df658486
           filename: Evands.Pellucid-CodeCoverage.json
-          label: Coverage
+          label: Coverage 3-Series
           color: ${{ env.COLOR3 }}
           message: ${{ env.COVERAGE3 }}
           style: flat
@@ -166,7 +166,7 @@ jobs:
           auth: ${{ secrets.GIST_AUTH_TOKEN }}
           gistID: 511fb463532b10f6fca3eba9df658486
           filename: Evands.Pellucid-Tests.json
-          label: Tests
+          label: Tests 3-Series
           color: ${{ env.TESTS_COLOR3 }}
           message: "${{ env.PASSED3 }} passing/${{ env.FAILED3 }} failing"
           style: flat
@@ -178,7 +178,7 @@ jobs:
           auth: ${{ secrets.GIST_AUTH_TOKEN }}
           gistID: 511fb463532b10f6fca3eba9df658486
           filename: Evands.Pellucid-CodeCoverage4.json
-          label: Coverage
+          label: Coverage 4-Series
           color: ${{ env.COLOR4 }}
           message: ${{ env.COVERAGE4 }}
           style: flat
@@ -190,7 +190,7 @@ jobs:
           auth: ${{ secrets.GIST_AUTH_TOKEN }}
           gistID: 511fb463532b10f6fca3eba9df658486
           filename: Evands.Pellucid-Tests4.json
-          label: Tests
+          label: Tests 4-Series
           color: ${{ env.TESTS_COLOR4 }}
           message: "${{ env.PASSED4 }} passing/${{ env.FAILED4 }} failing"
           style: flat
