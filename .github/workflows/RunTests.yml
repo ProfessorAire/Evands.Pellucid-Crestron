@@ -79,7 +79,7 @@ jobs:
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-results
+          name: coverage-results-3
           path: |
             .\testing\series3\coverage\index.html
             .\testing\series3\testResults.trx
@@ -104,7 +104,7 @@ jobs:
       - name: Upload Test Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-results
+          name: coverage-results-4
           path: |
             .\testing\series4\coverage\index.html
             .\testing\series4\testResults.trx
@@ -118,13 +118,19 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Download Test Artifacts
+      - name: Download Test Artifacts Series 3
         uses: actions/download-artifact@v2
         with:
-          name: coverage-results
-          path: |
-            .\testing\series3
-            .\testing\series4
+          name: coverage-results-3
+          path:
+            - .\testing\
+      
+      - name: Download Test Artifacts Series 4
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-results-4
+          path:
+            - .\testing\
 
       - name: Get Coverage Info 3-Series
         run: |
