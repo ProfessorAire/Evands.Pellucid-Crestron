@@ -89,5 +89,6 @@ else {
     $slnPath = "$PSScriptRoot/../src/Series4/Evands.Pellucid.sln"
     $MsBuild = "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
 
-    & "$MsBuild" -p:Configuration=$Mode -restore $slnPath
+    & "$MsBuild" -t:restore -p:Configuration=$Mode,RestorePackagesConfig=true $slnPath
+    & "$MsBuild" -p:Configuration=$Mode -r $slnPath
 }
