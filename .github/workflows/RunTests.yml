@@ -22,7 +22,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  build-3:
     runs-on: self-hosted
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -32,7 +32,6 @@ jobs:
       - name: Build Project
         run: |
           .\scripts\buildProject.ps1 -Mode Test -Series 3
-          .\scripts\buildProject.ps1 -Mode Test -Series 4
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
@@ -40,11 +39,29 @@ jobs:
           name: test-output
           path: |
             .\src\Series3\Evands.Pellucid.Tests\bin\Test\
+
+  build-4:
+    runs-on: self-hosted
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Build Project
+        run: |
+          .\scripts\buildProject.ps1 -Mode Test -Series 4
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-output
+          path: |
             .\src\Series4\Evands.Pellucid.Tests\bin\Test\
 
   generateReportSeries3:
     runs-on: self-hosted
-    needs: build
+    needs:
+      - build-3
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -69,7 +86,7 @@ jobs:
 
   generateReportSeries4:
     runs-on: self-hosted
-    needs: build
+    needs: build-4
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
