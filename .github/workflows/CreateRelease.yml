@@ -46,7 +46,7 @@ jobs:
     steps:
       - name: Build 3-Series Project
         run: |
-          .\scripts\buildProject3Series.ps1 -Mode Release
+          .\scripts\buildProject.ps1 -Mode Release -Series 3
       
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
@@ -65,7 +65,7 @@ jobs:
     steps:
       - name: Build 4-Series Project
         run: |
-          .\scripts\buildProject4Series.ps1 -Mode Release
+          .\scripts\buildProject.ps1 -Mode Release -Series 4
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifacts@v2
@@ -79,7 +79,7 @@ jobs:
   
   createPackages:
     runs-on: self-hosted
-    needs: [build, getVersions]
+    needs: [build-3, build-4, getVersions]
     steps:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v2

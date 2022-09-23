@@ -31,8 +31,8 @@ jobs:
 
       - name: Build Project
         run: |
-          .\scripts\buildSeries3Project.ps1 -Mode Test
-          .\scripts\buildSeries4Project.ps1 -Mode Test
+          .\scripts\buildProject.ps1 -Mode Test -Series 3
+          .\scripts\buildProject.ps1 -Mode Test -Series 4
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
