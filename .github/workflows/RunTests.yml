@@ -132,7 +132,7 @@ jobs:
 
       - name: Get Coverage Info 3-Series
         run: |
-          $info = .\testing\getCoverageValues.ps1 -Mode 3
+          $info = .\testing\getCoverageValues.ps1 -Series 3
           $cover = $info[0]
           $color = $info[1]
           echo "COVERAGE3=$cover" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
@@ -140,7 +140,7 @@ jobs:
 
       - name: Get Coverage Info 4-Series
         run: |
-          $info = .\testing\getCoverageValues.ps1 -Mode 4
+          $info = .\testing\getCoverageValues.ps1 -Series 4
           $cover = $info[0]
           $color = $info[1]
           echo "COVERAGE4=$cover" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
