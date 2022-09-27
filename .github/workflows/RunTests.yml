@@ -122,13 +122,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: coverage-results-3
-          path: .\testing\
+          path: .\testing\Series3
       
       - name: Download Test Artifacts Series 4
         uses: actions/download-artifact@v2
         with:
           name: coverage-results-4
-          path: .\testing\
+          path: .\testing\Series4
 
       - name: Get Coverage Info 3-Series
         run: |
