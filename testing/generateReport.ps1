@@ -69,7 +69,7 @@ if ($null -ne (Get-Item $resultPath -ErrorAction SilentlyContinue)) {
     Remove-Item $resultPath    
 }
 
-New-Item $resultPath -ItemType "Directory"
+#New-Item $resultPath -ItemType "Directory"
 
 if ($Series -eq "Series3")
 {
@@ -77,7 +77,7 @@ if ($Series -eq "Series3")
 }
 else
 {
-    & $openCover "-target:$testExe" "-targetargs:$sourcePath" -log:all -output:$coveragePath -filter:"+[Evands*]* -[Evands.Pellucid.Tests*]* -[Evands.Pellucid.Fakes*]*"
+    & $openCover "-target:$testExe" "-targetargs:$sourcePath --Logger:""trx;LogFileName=$resultPath""" -log:all -output:$coveragePath -filter:"+[Evands*]* -[Evands.Pellucid.Tests*]* -[Evands.Pellucid.Fakes*]*"
 }
 
 & $reportGenerator -reports:$coveragePath -targetdir:$coverageHtmlPath -reporttypes:Html
