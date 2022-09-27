@@ -148,7 +148,7 @@ jobs:
 
       - name: Get Test Results 3-Series
         run: |
-          $results = .\testing\getTestsResults.ps1
+          $results = .\testing\getTestsResults.ps1 -Series 3
           $passed = $results[0]
           $errors = $results[1]
           $failed = $results[2]
@@ -160,7 +160,7 @@ jobs:
 
       - name: Get Test Results 4-Series
         run: |
-          $results = .\testing\getTestsResults.ps1
+          $results = .\testing\getTestsResults.ps1 -Series 4
           $passed = $results[0]
           $errors = $results[1]
           $failed = $results[2]
