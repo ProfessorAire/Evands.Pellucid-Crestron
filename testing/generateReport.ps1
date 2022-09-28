@@ -69,7 +69,7 @@ if ($null -ne (Get-Item $resultPath -ErrorAction SilentlyContinue)) {
     Remove-Item $resultPath    
 }
 
-#New-Item $resultPath -ItemType "Directory"
+New-Item "$PSScriptRoot\$Series" -ItemType "Directory" -Force
 
 if ($Series -eq "Series3")
 {
