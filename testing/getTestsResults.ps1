@@ -12,7 +12,12 @@ $Series = "Series$Series"
 
 [String]$tests = Get-Content -Path "$PSScriptRoot/$Series/testResults.trx"
 
-$result = $tests -match '^.*Counters.*?passed="(\d*)" error="(\d*)" failed="(\d*)"'
+if ($Series -eq "Series3") {
+    $result = $tests -match '^.*Counters.*?passed="(\d*)" error="(\d*)" failed="(\d*)"'
+}
+else {
+    $result = $tests -match '^.*Counters.*?passed="(\d*)" failed="(\d*)" error="(\d*)"'
+}
 
 if ($result -eq $true)
 {

@@ -61,7 +61,7 @@ if ($null -eq (Get-Command $reportGenerator -ErrorAction SilentlyContinue))
 
 if ($null -eq (Get-Item $testExe -ErrorAction SilentlyContinue))
 {
-    Write-Warning "Unable to locate the 'MSTest.exe' application. Unable to continue."
+    Write-Warning "Unable to locate the $testExe application. Unable to continue."
     exit 1003
 }
 
