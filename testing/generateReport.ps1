@@ -69,6 +69,10 @@ if ($null -ne (Get-Item $resultPath -ErrorAction SilentlyContinue)) {
     Remove-Item $resultPath    
 }
 
+if ($null -ne (Get-Item "$PSScriptRoot\$Series" -ErrorAction SilentlyContinue)) {
+    Remove-Item "$PSScriptRoot\$Series" -Recurse -Force
+}
+
 New-Item "$PSScriptRoot\$Series" -ItemType "Directory" -Force
 
 if ($Series -eq "Series3")
