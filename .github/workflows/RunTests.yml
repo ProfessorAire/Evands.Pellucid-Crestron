@@ -220,7 +220,7 @@ jobs:
       
       - name: Check For Failure
         run: |
-          if(${{ env.ERRORS }} -gt 0 -or ${{ env.FAILED }} -gt 0)
+          if(${{ env.ERRORS3 }} -gt 0 -or ${{ env.FAILED3 }} -gt 0 -or ${{ env.ERRORS4 }} -gt 0 -or ${{ env.FAILED4 }} -gt 0)
           {
             exit 1
           }
