@@ -50,11 +50,11 @@ if ($exitCode -eq 0)
     $lib3Xml = "$PSScriptRoot/../src/Series3/Evands.Pellucid/bin/Release/Evands.Pellucid.xml"
     $lib3ProDll = "$PSScriptRoot/../src/Series3/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.dll"
     $lib3ProXml = "$PSScriptRoot/../src/Series3/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.xml"
-    $lib4Dll = "$PSScriptRoot/../src/Series3/Evands.Pellucid/bin/Release/Evands.Pellucid.dll"
-    $lib4Xml = "$PSScriptRoot/../src/Series3/Evands.Pellucid/bin/Release/Evands.Pellucid.xml"
-    $lib4ProDll = "$PSScriptRoot/../src/Series3/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.dll"
-    $lib4ProXml = "$PSScriptRoot/../src/Series3/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.xml"
     $demo = "$PSScriptRoot/../src/Series3/Evands.Pellucid.ProDemo/bin/Release/Evands.Pellucid.ProDemo.cpz"
+    $lib4Dll = "$PSScriptRoot/../src/Series4/Evands.Pellucid/bin/Release/Evands.Pellucid.dll"
+    $lib4Xml = "$PSScriptRoot/../src/Series4/Evands.Pellucid/bin/Release/Evands.Pellucid.xml"
+    $lib4ProDll = "$PSScriptRoot/../src/Series4/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.dll"
+    $lib4ProXml = "$PSScriptRoot/../src/Series4/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.xml"
     
     $archivePath = "$outPath\Evands.Pellucid-Crestron-v$libVersion.zip"
     Write-Host "Preparing release archive."
@@ -96,11 +96,11 @@ if ($exitCode -eq 0)
         Copy-Item $lib3Xml -Destination $temp3BuildPath -Force
         Copy-Item $lib3ProDll -Destination $temp3BuildPath -Force
         Copy-Item $lib3ProXml -Destination $temp3BuildPath -Force
+        Copy-Item $demo -Destination $tempBuildPath -Force
         Copy-Item $lib4Dll -Destination $temp4BuildPath -Force
         Copy-Item $lib4Xml -Destination $temp4BuildPath -Force
         Copy-Item $lib4ProDll -Destination $temp4BuildPath -Force
         Copy-Item $lib4ProXml -Destination $temp4BuildPath -Force
-        Copy-Item $demo -Destination $tempBuildPath -Force
 
         Write-Host "Compressing release archive."
         Get-ChildItem -Path $tempBuildPath | 
