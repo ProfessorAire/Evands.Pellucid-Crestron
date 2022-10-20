@@ -8,7 +8,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get Versions
         run: |
@@ -49,9 +49,9 @@ jobs:
           .\scripts\buildProject.ps1 -Mode Release -Series 3
       
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: release-output
+          name: release-output-3
           path: |
             .\src\Series3\Evands.Pellucid\bin\Release\Evands.Pellucid.dll
             .\src\Series3\Evands.Pellucid\bin\Release\Evands.Pellucid.xml
@@ -68,9 +68,9 @@ jobs:
           .\scripts\buildProject.ps1 -Mode Release -Series 4
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifacts@v2
+        uses: actions/upload-artifacts@v3
         with:
-          name: release-output
+          name: release-output-4
           path: |
             .\src\Series4\Evands.Pellucid\bin\Release\Evands.Pellucid.dll
             .\src\Series4\Evands.Pellucid\bin\Release\Evands.Pellucid.xml
@@ -81,11 +81,17 @@ jobs:
     runs-on: self-hosted
     needs: [build-3, build-4, getVersions]
     steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v2
+      - name: Download Build Artifacts Series 3
+        uses: actions/download-artifact@v3
         with:
-          name: release-output
-          path: .\src\
+          name: release-output-3
+          path: .\src\Series3
+
+      - name: Download Build Artifacts Series 4
+        uses: actions/download-artifact@v3
+        with:
+          name: release-output-4
+          path: .\src\Series4
       
       - name: Create Packages
         run: |
@@ -98,7 +104,7 @@ jobs:
           echo "ZIPPATH=$zip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       
       - name: Upload Package Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: package-output
           path: |
@@ -110,12 +116,12 @@ jobs:
     needs: [createPackages, getVersions]
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           
       - name: Download Package Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: package-output
           path: .\packaging\.releases\
@@ -125,7 +131,15 @@ jobs:
         run: |
           .\scripts\generateChangelog.ps1
 
+      - name: Upload Changelog Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelog-output
+          path: changelog.md
+        
+
       - name: Create Github Release
+        if: github.ref == 'refs/heads/main'
         uses: ncipollo/release-action@v1.8.6
         with:
           name: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
@@ -139,10 +153,12 @@ jobs:
           token: ${{ secrets.RELEASE_TOKEN }}
       
       - name: Push Nuget Packages
+        if: github.ref == 'refs/heads/main'
         run:
           .\packaging\pushPackages.ps1 'packaging/.releases/*.nupkg' ${{ secrets.NUGET_API_KEY }}
 
   createVersionBadge:
+    if: github.ref == 'refs/heads/main'
     runs-on: self-hosted
     needs: [createRelease, getVersions]
     steps:
