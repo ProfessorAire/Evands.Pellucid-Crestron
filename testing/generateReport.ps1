@@ -92,6 +92,7 @@ foreach($item in $dir)
 {
     if ($item.Name -ne 'coverage')
     {
+        "Cleaning up the item $item"
         DeleteAll $item.FullName
         $item.Delete($true)
     }

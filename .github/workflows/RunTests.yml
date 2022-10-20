@@ -36,7 +36,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: test-output
+          name: test-output-3
           path: |
             .\src\Series3\Evands.Pellucid.Tests\bin\Test\
 
@@ -54,7 +54,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: test-output
+          name: test-output-4
           path: |
             .\src\Series4\Evands.Pellucid.Tests\bin\Test\
 
@@ -69,7 +69,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: test-output
+          name: test-output-3
           path: .\src\Series3\Evands.Pellucid.Tests\bin\Test\
       
       - name: Generate Coverage Report
@@ -81,8 +81,8 @@ jobs:
         with:
           name: coverage-results-3
           path: |
-            .\testing\series3\coverage\index.html
-            .\testing\series3\testResults.trx
+            .\testing\Series3\coverage\index.html
+            .\testing\Series3\testResults.trx
 
   generateReportSeries4:
     runs-on: self-hosted
@@ -94,7 +94,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: test-output
+          name: test-output-4
           path: .\src\Series4\Evands.Pellucid.Tests\bin\Test\
       
       - name: Generate Coverage Report
@@ -106,8 +106,8 @@ jobs:
         with:
           name: coverage-results-4
           path: |
-            .\testing\series4\coverage\index.html
-            .\testing\series4\testResults.trx
+            .\testing\Series4\coverage\index.html
+            .\testing\Series4\testResults.trx
           
   validateCoverage:
     runs-on: self-hosted
