@@ -260,6 +260,9 @@ namespace Evands.Pellucid.Diagnostics
             Options.Instance.ColorizeConsoleOutput = true;
             Options.Instance.UseTimestamps = false;
 
+            Debug.WriteLine("Test");
+            this.writer.Messages.Clear();
+
             var expected = string.Format(
                 "{0} {1}",
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
