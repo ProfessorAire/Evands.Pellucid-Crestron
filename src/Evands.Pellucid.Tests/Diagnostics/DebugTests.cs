@@ -25,6 +25,7 @@ namespace Evands.Pellucid.Diagnostics
             ConsoleBase.OptionalHeader = string.Empty;
             Options.Instance.Suppressed.Clear();
             Options.Instance.Allowed.Clear();
+            Options.Instance.UseTimestamps = true;
         }
 
         private TestContext testContextInstance;
@@ -156,6 +157,168 @@ namespace Evands.Pellucid.Diagnostics
             var expected = ConsoleBase.Colors.Subtle.FormatText(string.Format("[{0}]", headerText)) + " ";
             var actual = Debug.GetMessageHeader(headerText, false, true);
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void WriteLineWithLevelWritesExpectedLevel()
+        {
+            Options.Instance.ColorizeConsoleOutput = true;
+            Options.Instance.UseTimestamps = false;
+
+            var expected = string.Format(
+                "{0} {1}\r\n",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Debug.FormatText(true, "Test Message with Argument."));
+            Debug.WriteLine(DebugLevels.Debug, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            expected = string.Format(
+                "{0} {1}\r\n",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Notice.FormatText(true, "Test Message with Argument."));
+            Debug.WriteLine(DebugLevels.Notice, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[1]);
+
+            expected = string.Format(
+                "{0} {1}\r\n",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Error.FormatText(true, "Test Message with Argument."));
+            Debug.WriteLine(DebugLevels.Error, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[2]);
+
+            expected = string.Format(
+                "{0} {1}\r\n",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Progress.FormatText(true, "Test Message with Argument."));
+            Debug.WriteLine(DebugLevels.Progress, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[3]);
+
+            expected = string.Format(
+                "{0} {1}\r\n",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Success.FormatText(true, "Test Message with Argument."));
+            Debug.WriteLine(DebugLevels.Success, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[4]);
+
+            expected = string.Format(
+                "{0} {1}\r\n",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Warning.FormatText(true, "Test Message with Argument."));
+            Debug.WriteLine(DebugLevels.Warning, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[5]);
+        }
+
+        [TestMethod]
+        public void WriteWithLevelWritesExpectedLevel()
+        {
+            Options.Instance.ColorizeConsoleOutput = true;
+            Options.Instance.UseTimestamps = false;
+
+            Debug.Write("Test");
+            this.writer.Messages.Clear();
+
+            var expected = string.Format(
+                "{0}",
+                ConsoleBase.Colors.Debug.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Debug, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            expected = string.Format(
+                "{0}",
+                ConsoleBase.Colors.Notice.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Notice, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[1]);
+
+            expected = string.Format(
+                "{0}",
+                ConsoleBase.Colors.Error.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Error, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[2]);
+
+            expected = string.Format(
+                "{0}",
+                ConsoleBase.Colors.Progress.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Progress, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[3]);
+
+            expected = string.Format(
+                "{0}",
+                ConsoleBase.Colors.Success.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Success, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[4]);
+
+            expected = string.Format(
+                "{0}",
+                ConsoleBase.Colors.Warning.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Warning, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[5]);
+        }
+
+        [TestMethod]
+        public void WriteWithLevelWritesExpectedLevelWithHeader()
+        {
+            Options.Instance.ColorizeConsoleOutput = true;
+            Options.Instance.UseTimestamps = false;
+
+            var expected = string.Format(
+                "{0} {1}",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Debug.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Debug, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            Debug.WriteLine("Test");
+            this.writer.Messages.Clear();
+
+            expected = string.Format(
+                "{0} {1}",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Notice.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Notice, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            Debug.WriteLine("Test");
+            this.writer.Messages.Clear();
+
+            expected = string.Format(
+                "{0} {1}",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Error.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Error, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            Debug.WriteLine("Test");
+            this.writer.Messages.Clear();
+
+            expected = string.Format(
+                "{0} {1}",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Progress.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Progress, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            Debug.WriteLine("Test");
+            this.writer.Messages.Clear();
+
+            expected = string.Format(
+                "{0} {1}",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Success.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Success, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            Debug.WriteLine("Test");
+            this.writer.Messages.Clear();
+
+            expected = string.Format(
+                "{0} {1}",
+                ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
+                ConsoleBase.Colors.Warning.FormatText(true, "Test Message with Argument."));
+            Debug.Write(DebugLevels.Warning, "DebugTests", "Test Message with {0}.", "Argument");
+            Assert.AreEqual(expected, this.writer.Messages[0]);
+
+            Debug.WriteLine("Test");
+            this.writer.Messages.Clear();
         }
 
         private class ThrowAway1

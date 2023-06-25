@@ -86,9 +86,43 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
+        /// Writes a message to the log at the specified debug level.
+        /// </summary>
+        /// <param name="level">A single <see cref="DebugLevels"/> value. If multiple are specified only the first valid will be printed.
+        /// <para>Valid values are <see cref="DebugLevels.Debug"/>, <see cref="DebugLevels.Notice"/>, <see cref="DebugLevels.Error"/>,
+        /// <see cref="DebugLevels.Progress"/>, <see cref="DebugLevels.Success"/>, and <see cref="DebugLevels.Warning"/>.</para></param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
+        /// <param name="message">The message to write to the console.</param>
+        /// <param name="args">Optional arguments to use when formatting the message.</param>
+        public static void Write(DebugLevels level, object obj, string message, params object[] args)
+        {
+            switch (level)
+            {
+                case DebugLevels.Debug:
+                    WriteDebug(obj, message, args);
+                    break;
+                case DebugLevels.Notice:
+                    WriteNotice(obj, message, args);
+                    break;
+                case DebugLevels.Error:
+                    WriteError(obj, message, args);
+                    break;
+                case DebugLevels.Progress:
+                    WriteProgress(obj, message, args);
+                    break;
+                case DebugLevels.Success:
+                    WriteSuccess(obj, message, args);
+                    break;
+                case DebugLevels.Warning:
+                    WriteWarning(obj, message, args);
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="colors">The ColorFormat to use when writing the message.</param>
         /// <param name="message">The message to write to the console.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -107,7 +141,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="foreground">The message foreground color.</param>
         /// <param name="message">The message to write to the console.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -119,7 +153,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="foreground">The message foreground color.</param>
         /// <param name="background">The message background color.</param>
         /// <param name="message">The message to write to the console.</param>
@@ -144,9 +178,43 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         /// <summary>
+        /// Writes a message to the log at the specified debug level.
+        /// </summary>
+        /// <param name="level">A single <see cref="DebugLevels"/> value. If multiple are specified only the first valid will be printed.
+        /// <para>Valid values are <see cref="DebugLevels.Debug"/>, <see cref="DebugLevels.Notice"/>, <see cref="DebugLevels.Error"/>,
+        /// <see cref="DebugLevels.Progress"/>, <see cref="DebugLevels.Success"/>, and <see cref="DebugLevels.Warning"/>.</para></param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
+        /// <param name="message">The message to write to the console.</param>
+        /// <param name="args">Optional arguments to use when formatting the message.</param>
+        public static void WriteLine(DebugLevels level, object obj, string message, params object[] args)
+        {
+            switch (level)
+            {
+                case DebugLevels.Debug:
+                    WriteDebugLine(obj, message, args);
+                    break;
+                case DebugLevels.Notice:
+                    WriteNoticeLine(obj, message, args);
+                    break;
+                case DebugLevels.Error:
+                    WriteErrorLine(obj, message, args);
+                    break;
+                case DebugLevels.Progress:
+                    WriteProgressLine(obj, message, args);
+                    break;
+                case DebugLevels.Success:
+                    WriteSuccessLine(obj, message, args);
+                    break;
+                case DebugLevels.Warning:
+                    WriteWarningLine(obj, message, args);
+                    break;
+            }
+        }
+
+        /// <summary>
         /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="colors">The ColorFormat to use when writing the message.</param>
         /// <param name="message">The message to write to the console.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -171,7 +239,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="foreground">The message foreground color.</param>
         /// <param name="message">The message to write to the console.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -183,7 +251,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes an uncategorized message to the console, with the specified color formatting.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="foreground">The message foreground color.</param>
         /// <param name="background">The message background color.</param>
         /// <param name="message">The message to write to the console.</param>
@@ -209,7 +277,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a debug message to the console, using the console's DebugColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteDebug(object obj, string message, params object[] args)
@@ -233,7 +301,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a debug message to the console, using the console's DebugColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteDebugLine(object obj, string message, params object[] args)
@@ -249,7 +317,7 @@ namespace Evands.Pellucid.Diagnostics
                 }
                 else
                 {
-                    ForceWriteLine(ConsoleBase.Colors.Debug.FormatText(TruncateMessage(message, args)));
+                    ForceWriteLine(message);
                 }
             }
         }
@@ -257,7 +325,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a success message to the console, using the console's SuccessColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteSuccess(object obj, string message, params object[] args)
@@ -281,7 +349,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a success message to the console, using the console's SuccessColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteSuccessLine(object obj, string message, params object[] args)
@@ -305,7 +373,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a progress message to the console, using the console's ProgressColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteProgress(object obj, string message, params object[] args)
@@ -329,7 +397,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a progress message to the console, using the console's ProgressColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteProgressLine(object obj, string message, params object[] args)
@@ -353,7 +421,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a notice message to the console, using the console's Notice ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteNotice(object obj, string message, params object[] args)
@@ -377,7 +445,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a notice message to the console, using the console's Notice ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteNoticeLine(object obj, string message, params object[] args)
@@ -401,7 +469,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a warning message to the console, using the console's Warning ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteWarning(object obj, string message, params object[] args)
@@ -425,7 +493,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes a warning message to the console, using the console's Warning ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteWarningLine(object obj, string message, params object[] args)
@@ -449,7 +517,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes an error message to the console, using the console's ErrorColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteError(object obj, string message, params object[] args)
@@ -473,7 +541,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes an error message to the console, using the console's ErrorColors ColorFormat.
         /// </summary>
-        /// <param name="obj">The object the message is originating from. Can be null.</param>
+        /// <param name="obj">The object the message is originating from. Can be <see langword="null"/>.</param>
         /// <param name="message">The message to write.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
         public static void WriteErrorLine(object obj, string message, params object[] args)
@@ -497,7 +565,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Writes an exception to the console.
         /// </summary>
-        /// <param name="obj">The object the exception originated from. Can be null.</param>
+        /// <param name="obj">The object the exception originated from. Can be <see langword="null"/>.</param>
         /// <param name="ex">The exception being written.</param>
         /// <param name="message">The message to write before the exception.</param>
         /// <param name="args">Optional arguments to use when formatting the message.</param>
@@ -600,7 +668,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Returns a header snippet based on the object provided.
         /// </summary>
-        /// <param name="obj">The object to use when formatting the header.<para>Can be null.</para></param>
+        /// <param name="obj">The object to use when formatting the header.<para>Can be <see langword="null"/>.</para></param>
         /// <returns>A string with header information for a terminal message.</returns>
         [Obsolete("This method has been deprecated and will be removed in a future version.", false)]
         public static string GetMessageHeaderWithTimestamp(object obj)
@@ -611,7 +679,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Returns a header snippet based on the object provided. Has no timestamp and no color.
         /// </summary>
-        /// <param name="obj">The object to use when formatting the header.<para>Can be null.</para></param>
+        /// <param name="obj">The object to use when formatting the header.<para>Can be <see langword="null"/>.</para></param>
         /// <returns>A string with header information for a terminal message.</returns>
         public static string GetMessageHeader(object obj)
         {
@@ -621,9 +689,9 @@ namespace Evands.Pellucid.Diagnostics
         /// <summary>
         /// Returns a header snippet based on the object provided.
         /// </summary>
-        /// <param name="obj">The object to use when formatting the header.<para>Can be null.</para></param>
+        /// <param name="obj">The object to use when formatting the header.<para>Can be <see langword="null"/>.</para></param>
         /// <param name="withTimestamp">Indicates whether to get a timestamp, provided the <see cref="Options.UseTimestamps"/> property is true.</param>
-        /// <param name="withColor">Indicates whether to get a colored header, provided the <see cref="Options.ColorizeConsoleOutput"/> property is true.</param>
+        /// <param name="withColor">Indicates whether to get a colored header, provided the <see cref="Options.ColorizeConsoleOutput"/> property is <see langword="true"/>.</param>
         /// <returns>A string with header information for a terminal message.</returns>
         public static string GetMessageHeader(object obj, bool withTimestamp, bool withColor)
         {
