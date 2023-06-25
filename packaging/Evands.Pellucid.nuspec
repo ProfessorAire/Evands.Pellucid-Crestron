@@ -11,7 +11,7 @@
         <icon>images\icon.png</icon>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <releaseNotes>https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases</releaseNotes>
-        <copyright>Christopher McNeely 2021</copyright>
+        <copyright>Christopher McNeely 2023</copyright>
         <tags>Crestron S# Simpl# Simpl</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.7" />
