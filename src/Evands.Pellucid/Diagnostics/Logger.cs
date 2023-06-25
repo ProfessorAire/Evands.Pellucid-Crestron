@@ -65,7 +65,7 @@ namespace Evands.Pellucid.Diagnostics
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj, false, false), message.OptionalFormat(args));
-                loggers.ForEach(l => l.WriteNotice(msg));
+                loggers.ForEach(l => l.WriteDebug(msg));
             }           
         }
 

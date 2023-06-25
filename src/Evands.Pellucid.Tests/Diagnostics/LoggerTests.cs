@@ -282,10 +282,10 @@ namespace Evands.Pellucid.Diagnostics
         {
             var ltc = new LogTestClass();
             Logger.LogDebug(ltc, "Test message.");
-            Assert.IsTrue(logger.Messages[0] == "[Debug][Some Object][Another Name] Test message.");
+            Assert.AreEqual("[Debug][Some Object][Another Name] Test message.", logger.Messages[0]);
 
             ltc.LogDebug("Second test {0}.", "message");
-            Assert.IsTrue(logger.Messages[1] == "[Debug][Some Object][Another Name] Second test message.");
+            Assert.AreEqual("[Debug][Some Object][Another Name] Second test message.", logger.Messages[1]);
         }
 
         [TestMethod]
@@ -293,10 +293,10 @@ namespace Evands.Pellucid.Diagnostics
         {
             var ltc = new LogTestClass();
             Logger.LogNotice(ltc, "Test message.");
-            Assert.IsTrue(logger.Messages[0] == "[Notice][Some Object][Another Name] Test message.");
+            Assert.AreEqual("[Notice][Some Object][Another Name] Test message.", logger.Messages[0]);
 
             ltc.LogNotice("Second test {0}.", "message");
-            Assert.IsTrue(logger.Messages[1] == "[Notice][Some Object][Another Name] Second test message.");
+            Assert.AreEqual("[Notice][Some Object][Another Name] Second test message.", logger.Messages[1]);
         }
 
         [TestMethod]
@@ -304,10 +304,10 @@ namespace Evands.Pellucid.Diagnostics
         {
             var ltc = new LogTestClass();
             Logger.LogWarning(ltc, "Test message.");
-            Assert.IsTrue(logger.Messages[0] == "[Warning][Some Object][Another Name] Test message.");
+            Assert.AreEqual("[Warning][Some Object][Another Name] Test message.", logger.Messages[0]);
 
             ltc.LogWarning("Second test {0}.", "message");
-            Assert.IsTrue(logger.Messages[1] == "[Warning][Some Object][Another Name] Second test message.");
+            Assert.AreEqual("[Warning][Some Object][Another Name] Second test message.", logger.Messages[1]);
         }
 
         [TestMethod]
@@ -315,10 +315,10 @@ namespace Evands.Pellucid.Diagnostics
         {
             var ltc = new LogTestClass();
             Logger.LogError(ltc, "Test message.");
-            Assert.IsTrue(logger.Messages[0] == "[Error][Some Object][Another Name] Test message.");
+            Assert.AreEqual("[Error][Some Object][Another Name] Test message.", logger.Messages[0]);
 
             ltc.LogError("Second test {0}.", "message");
-            Assert.IsTrue(logger.Messages[1] == "[Error][Some Object][Another Name] Second test message.");
+            Assert.AreEqual("[Error][Some Object][Another Name] Second test message.", logger.Messages[1]);
         }
 
         private class LogTestClass : IDebugData
