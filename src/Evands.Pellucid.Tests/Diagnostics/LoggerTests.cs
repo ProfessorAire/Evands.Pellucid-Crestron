@@ -274,5 +274,66 @@ namespace Evands.Pellucid.Diagnostics
         }
 
         #endregion
+
+        #region LogExplicitTests
+
+        [TestMethod]
+        public void LogDebugWritesEntireHeaderWithDebugData()
+        {
+            var ltc = new LogTestClass();
+            Logger.LogDebug(ltc, "Test message.");
+            Assert.IsTrue(logger.Messages[0] == "[Debug][Some Object][Another Name] Test message.");
+
+            ltc.LogDebug("Second test {0}.", "message");
+            Assert.IsTrue(logger.Messages[1] == "[Debug][Some Object][Another Name] Second test message.");
+        }
+
+        [TestMethod]
+        public void LogNoticeWritesEntireHeaderWithDebugData()
+        {
+            var ltc = new LogTestClass();
+            Logger.LogNotice(ltc, "Test message.");
+            Assert.IsTrue(logger.Messages[0] == "[Notice][Some Object][Another Name] Test message.");
+
+            ltc.LogNotice("Second test {0}.", "message");
+            Assert.IsTrue(logger.Messages[1] == "[Notice][Some Object][Another Name] Second test message.");
+        }
+
+        [TestMethod]
+        public void LogWarningWritesEntireHeaderWithDebugData()
+        {
+            var ltc = new LogTestClass();
+            Logger.LogWarning(ltc, "Test message.");
+            Assert.IsTrue(logger.Messages[0] == "[Warning][Some Object][Another Name] Test message.");
+
+            ltc.LogWarning("Second test {0}.", "message");
+            Assert.IsTrue(logger.Messages[1] == "[Warning][Some Object][Another Name] Second test message.");
+        }
+
+        [TestMethod]
+        public void LogErrorWritesEntireHeaderWithDebugData()
+        {
+            var ltc = new LogTestClass();
+            Logger.LogError(ltc, "Test message.");
+            Assert.IsTrue(logger.Messages[0] == "[Error][Some Object][Another Name] Test message.");
+
+            ltc.LogError("Second test {0}.", "message");
+            Assert.IsTrue(logger.Messages[1] == "[Error][Some Object][Another Name] Second test message.");
+        }
+
+        private class LogTestClass : IDebugData
+        {
+            public string Header
+            {
+                get { return "Some Object][Another Name"; }
+            }
+
+            public Terminal.Formatting.ColorFormat HeaderColor
+            {
+                get { return ConsoleBase.Colors.BrightRed; }
+            }
+        }
+
+        #endregion
     }
 }
