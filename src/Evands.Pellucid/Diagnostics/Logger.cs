@@ -164,7 +164,7 @@ namespace Evands.Pellucid.Diagnostics
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
-                loggers.ForEach(l => l.WriteWarning(message));
+                loggers.ForEach(l => l.WriteWarning(msg));
             }
         }
 
@@ -186,7 +186,7 @@ namespace Evands.Pellucid.Diagnostics
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
-                loggers.ForEach(l => l.WriteError(message));
+                loggers.ForEach(l => l.WriteError(msg));
             }
         }
 
