@@ -117,7 +117,15 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 
             if (!string.IsNullOrEmpty(this.Name))
             {
-                rootPadding = this.Name.Length + 3;
+                // Use minimal spacing (2 chars) for nested collections when the option is enabled
+                if (Options.Instance.UseMinimalSpacingWhenDumping && currentDepth > 0)
+                {
+                    rootPadding = 2;
+                }
+                else
+                {
+                    rootPadding = this.Name.Length + 3;
+                }
             }
 
             if (this.items.Count > 0)
