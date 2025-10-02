@@ -36,16 +36,18 @@ There are a variety of options available for the `ConsoleBase`, `Debug`, and `Lo
 This also means that it's possible to provide a default configuration file with your program. Using your preferred method of configuration transformation you can create a different version for `Debug` and `Release` configurations and load them automatically with the code to the processor.
 
 The available options are:
-| Name                    | Type           | DefaultValue      | Description                                                                                                                                     |
-| ----------------------- | -------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ColorizeConsoleOutput` | `bool`         | `true`            | Indicates whether console output should be colorized.                                                                                           |
-| `UseTimestamps`         | `bool`         | `true`            | Indicates whether debug messages should have timestamps prepended to them.                                                                      |
-| `Use24HourTime`         | `bool`         | `true`            | Indicates whether debug timestamps should be formatted as `13:00:15` or `1:00:15 PM`                                                            |
-| `LogLevels`             | `LogLevels`    | `LogLevels.None`  | Flagged enumeration indicating what types of messages should be logged.                                                                         |
-| `DebugLevels`           | `DebugLevels`  | `DebugLevels.All` | Flagged enumeration indicating what debug messages should be printed.                                                                           |
-| `Suppressed`            | `List<string>` | Empty list        | List of strings matching suppressed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Debug` class methods, instead of the `Options` class. |
-| `Allowed`               | `List<string>` | Empty list        | List of strings matching allowed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Logger` class methods, instead of directly through the `Options` class.    |
-|`AutoSave`|`bool`|`true`| Indicates whether or not the file will be auto-saved on program shutdown.
+| Name                           | Type           | DefaultValue      | Description                                                                                                                                     |
+| ------------------------------ | -------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ColorizeConsoleOutput`        | `bool`         | `true`            | Indicates whether console output should be colorized.                                                                                           |
+| `UseTimestamps`                | `bool`         | `true`            | Indicates whether debug messages should have timestamps prepended to them.                                                                      |
+| `Use24HourTime`                | `bool`         | `true`            | Indicates whether debug timestamps should be formatted as `13:00:15` or `1:00:15 PM`                                                            |
+| `UseFullTypeNamesWhenDumping`  | `bool`         | `false`           | Indicates whether dumping items to the console will use full type names by default.                                                             |
+| `UseMinimalSpacingWhenDumping` | `bool`         | `false`           | Indicates whether dumping items to the console will use minimal spacing (2 chars) for nested objects instead of aligning based on property name length. |
+| `LogLevels`                    | `LogLevels`    | `LogLevels.None`  | Flagged enumeration indicating what types of messages should be logged.                                                                         |
+| `DebugLevels`                  | `DebugLevels`  | `DebugLevels.All` | Flagged enumeration indicating what debug messages should be printed.                                                                           |
+| `Suppressed`                   | `List<string>` | Empty list        | List of strings matching suppressed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Debug` class methods, instead of the `Options` class. |
+| `Allowed`                      | `List<string>` | Empty list        | List of strings matching allowed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Logger` class methods, instead of directly through the `Options` class.    |
+|`AutoSave`                      |`bool`          |`true`             | Indicates whether or not the file will be auto-saved on program shutdown.
 
 The default values saved to disk will look like:
 
@@ -55,6 +57,8 @@ console-colorizeOutput = "True"
 debugging-useTimestamps = "True"
 debugging-shortTimestamps = "True"
 debugging-levels = "All"
+dump-useFullTypeNames = "False"
+dump-useMinimalSpacing = "False"
 suppressed = [  ]
 allowed = [  ]
 autosave = "True"
