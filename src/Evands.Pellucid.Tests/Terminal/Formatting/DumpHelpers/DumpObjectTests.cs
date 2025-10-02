@@ -307,6 +307,42 @@ TestClassWithList (2 Properties)
         }
 
         [TestMethod]
+        public void ToString_WithMinimalSpacing_With_ListProperty_Prints_Correct()
+        {
+            Options.Instance.UseMinimalSpacingWhenDumping = true;
+            
+            var underTest = new DumpObject(
+                new TestClassWithList()
+                {
+                    IntList = new List<int>() { 0, 1, 2, 3 },
+                    StringList = new List<string>() { "OneItem" } 
+                });
+
+            var expected = @"
+TestClassWithList (2 Properties)
+--------------------------------
+| IntList    = List`1 (4 Items)
+|  ----------------
+|  | 0: 0
+|  | 1: 1
+|  | 2: 2
+|  | 3: 3
+|  ----------------
+| StringList = List`1 (1 Item)
+|  ---------------
+|  | 0: ""OneItem""
+|  ---------------
+--------------------------------
+";
+
+            var actual = "\r\n" + underTest.ToString();
+            
+            Options.Instance.UseMinimalSpacingWhenDumping = false;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void ToString_With_GetPropertyValueFailures_AddsFailureObjects()
         {
             var underTest = new DumpObject(new TestFailureClass());
@@ -385,6 +421,46 @@ TestFailureClass (1 Property)
         {
             var underTest = new DumpObject(Options.Instance);
             Assert.IsFalse(underTest.ToString().Contains("Instance"));
+        }
+
+        [TestMethod]
+        public void ToString_WithMinimalSpacing_WithDeepNestedProperties_Writes_Correct()
+        {
+            Options.Instance.UseMinimalSpacingWhenDumping = true;
+            
+            var underTest = new DumpObject(
+                new TestClass3()
+                {
+                    One = true,
+                    Two = "Two",
+                    Three = 3,
+                    Fourth = new TestClass2() { First = 2.5, Second = this.GetTestClass("First", "Second", 3, false) }
+                });
+            var expected = @"
+Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass3 (4 Properties)
+-----------------------------------------------------------------------------------------
+| One    = True
+| Two    = ""Two""
+| Three  = 3
+| Fourth = Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass2 (2 Properties)
+|  -----------------------------------------------------------------------------------------
+|  | First  = 2.5
+|  | Second = Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass (4 Properties)
+|  |  ----------------------------------------------------------------------------------------
+|  |  | FirstProperty  = ""First""
+|  |  | SecondProperty = ""Second""
+|  |  | ThirdProperty  = 3
+|  |  | FourthProperty = False
+|  |  ----------------------------------------------------------------------------------------
+|  -----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+";
+
+            var actual = "\r\n" + underTest.ToString(true);
+            
+            Options.Instance.UseMinimalSpacingWhenDumping = false;
+
+            Assert.AreEqual(expected, actual);
         }
 
         private DumpObject GetObject()
