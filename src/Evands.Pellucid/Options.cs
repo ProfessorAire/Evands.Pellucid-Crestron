@@ -114,6 +114,13 @@ namespace Evands.Pellucid
         public bool UseFullTypeNamesWhenDumping { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether dumping items to the console will use minimal spacing for nested objects.
+        /// When true, uses 2 character indentation. When false, uses the default spacing based on property names.
+        /// </summary>
+        [TomlProperty("dump-useMinimalSpacing")]
+        public bool UseMinimalSpacingWhenDumping { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether debug messages will use shorter 24 hour timestamps, or longer 12 hour timestamps.
         /// </summary>        
         [TomlProperty("debugging-shortTimestamps")]
@@ -305,6 +312,7 @@ namespace Evands.Pellucid
         private Options WithDefaults()
         {
             this.UseFullTypeNamesWhenDumping = false;
+            this.UseMinimalSpacingWhenDumping = false;
             this.ColorizeConsoleOutput = true;
             this.UseTimestamps = true;
             this.Use24HourTime = true;

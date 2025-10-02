@@ -120,7 +120,16 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                     "{0} {1} ",
                     ConsoleBase.Colors.DumpPropertyName.FormatText(this.Name),
                     ConsoleBase.Colors.DumpObjectChrome.FormatText("="));
-                padding += this.Name.Length + 3;
+                
+                // Use minimal spacing (2 chars) for nested objects when the option is enabled
+                if (Options.Instance.UseMinimalSpacingWhenDumping && currentDepth > 0)
+                {
+                    padding = 2;
+                }
+                else
+                {
+                    padding += this.Name.Length + 3;
+                }
             }
             else if (this.Children.Count > 0)
             {
