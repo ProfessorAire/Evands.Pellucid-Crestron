@@ -841,5 +841,57 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
             Assert.AreEqual(expected, t.ToString());
         }
+
+        [TestMethod]
+        public void ToString_WithHeadersAndEmptyCellContent_AutoSizesColumnToHeaderWidth()
+        {
+            var headers = new string[] { "room-01", "room-02", "room-03" };
+            var t = Table.Create()
+                .WithHeaders(headers)
+                .AddRow(string.Empty, string.Empty, string.Empty);
+
+            var sb = new StringBuilder();
+            sb.Append('-', 31);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append("| room-01 | room-02 | room-03 |");
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append('-', 31);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append("|         |         |         |");
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append('-', 31);
+            sb.Append(ConsoleBase.NewLine);
+
+            var expected = sb.ToString();
+            var actual = t.ToString(false);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ToString_WithHeadersAndShortCellContent_AutoSizesColumnToHeaderWidth()
+        {
+            var headers = new string[] { "room-01", "room-02", "room-03" };
+            var t = Table.Create()
+                .WithHeaders(headers)
+                .AddRow("x", "x", "x");
+
+            var sb = new StringBuilder();
+            sb.Append('-', 31);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append("| room-01 | room-02 | room-03 |");
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append('-', 31);
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append("| x       | x       | x       |");
+            sb.Append(ConsoleBase.NewLine);
+            sb.Append('-', 31);
+            sb.Append(ConsoleBase.NewLine);
+
+            var expected = sb.ToString();
+            var actual = t.ToString(false);
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
