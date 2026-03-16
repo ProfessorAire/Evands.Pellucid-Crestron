@@ -669,7 +669,13 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
             if (maxWidth == 0)
             {
-                maxWidth = this.rows.Max(r => r.Max(c => c.GetTotalWidth())) * numCols;
+                var maxCellWidth = this.rows.Count > 0 ? this.rows.Max(r => r.Max(c => c.GetTotalWidth())) : 0;
+                if (headers.Count > 0)
+                {
+                    maxCellWidth = Math.Max(maxCellWidth, headers.Max(h => h.GetTotalWidth()));
+                }
+
+                maxWidth = maxCellWidth * numCols;
             }
 
             var columnWidths = new int[numCols];
