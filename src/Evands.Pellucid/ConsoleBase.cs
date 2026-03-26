@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using Crestron.SimplSharp;
 using System.Reflection;
 using Evands.Pellucid.Terminal;
 using Evands.Pellucid.Terminal.Formatting;
@@ -121,11 +120,12 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
-        /// Configures the console to use the current program's slot as the first header value.
+        /// Configures the console to use the specified program slot number as the first header value.
         /// </summary>
-        public static void UseProgramSlotAsHeader()
+        /// <param name="slotNumber">The program slot number to use as the header.</param>
+        public static void UseProgramSlotAsHeader(int slotNumber)
         {
-            OptionalHeader = InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0');
+            OptionalHeader = slotNumber.ToString().PadLeft(2, '0');
         }
 
         /// <summary>
@@ -491,7 +491,7 @@ namespace Evands.Pellucid
         {
             if (writers.Count == 0)
             {
-                writers.Add(new CrestronConsoleWriter());
+                writers.Add(PlatformServices.Current.CreateDefaultConsoleWriter());
             }
 
             writers.ForEach(w => w.WriteLine());
@@ -600,7 +600,7 @@ namespace Evands.Pellucid
         {
             if (writers.Count == 0)
             {
-                RegisterConsoleWriter(new CrestronConsoleWriter());
+                RegisterConsoleWriter(PlatformServices.Current.CreateDefaultConsoleWriter());
             }
 
             writers.ForEach(w => w.Write(message.OptionalFormat(args)));
@@ -616,7 +616,7 @@ namespace Evands.Pellucid
         {
             if (writers.Count == 0)
             {
-                RegisterConsoleWriter(new CrestronConsoleWriter());
+                RegisterConsoleWriter(PlatformServices.Current.CreateDefaultConsoleWriter());
             }
 
             writers.ForEach(w => w.WriteLine(message.OptionalFormat(args)));
@@ -632,7 +632,7 @@ namespace Evands.Pellucid
         {
             if (writers.Count == 0)
             {
-                RegisterConsoleWriter(new CrestronConsoleWriter());
+                RegisterConsoleWriter(PlatformServices.Current.CreateDefaultConsoleWriter());
             }
 
             writers.ForEach(w => w.WriteCommandResponse(message.OptionalFormat(args)));
