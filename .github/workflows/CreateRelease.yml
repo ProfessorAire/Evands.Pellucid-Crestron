@@ -1,16 +1,30 @@
-name: CreateRelease
+name: Release-Workflow
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
-
-permissions:
-  contents: read
+    inputs:
+      create_release:
+        description: 'Create the GitHub release (automatic on main push, manual on other branches for pre-release)'
+        required: false
+        default: 'false'
+      upload_asset:
+        description: 'Upload the release asset'
+        required: false
+        default: 'false'
 
 jobs:
-  build-and-release:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: ./.github/workflows
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -20,18 +34,45 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore
-        run: dotnet restore src/Evands.Pellucid.slnx --property:Configuration=Release
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+        working-directory: ./
 
-      - name: Build
-        run: dotnet build src/Evands.Pellucid.slnx --configuration Release --no-restore
-
-      - name: Pack
-        run: dotnet pack src/Evands.Pellucid/Evands.Pellucid.csproj --configuration Release --no-build --output ./packaging/.releases
-
-      - name: Upload Package Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Run Clean
+        uses: cake-build/cake-action@v3
         with:
-          name: package-output
-          path: |
-            ./packaging/.releases/*.nupkg
+          script-path: ./.github/workflows/Clean.cake
+
+      - name: Run DetermineVersion
+        uses: cake-build/cake-action@v3
+        with:
+          script-path: ./.github/workflows/DetermineVersion.cake
+
+      - name: Build solution
+        run: dotnet build src/Evands.Pellucid.slnx --configuration Release -p:PackageVersion=${{ env.RELEASE_VERSION || '0.0.0' }}
+        working-directory: ./
+
+      - name: Pack NuGet
+        run: dotnet pack src/Evands.Pellucid/Evands.Pellucid.csproj --configuration Release --no-build -p:PackageVersion=${{ env.RELEASE_VERSION || '0.0.0' }} --output ./artifacts
+        working-directory: ./
+
+      - name: Package assets
+        uses: cake-build/cake-action@v3
+        with:
+          script-path: ./.github/workflows/PackageAssets.cake
+
+      - name: Create release via Cake
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release == 'true') }}
+        uses: cake-build/cake-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script-path: ./.github/workflows/CreateGitHubRelease.cake
+
+      - name: Upload asset via Cake
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.upload_asset == 'true') }}
+        uses: cake-build/cake-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script-path: ./.github/workflows/UploadGitHubAssets.cake
