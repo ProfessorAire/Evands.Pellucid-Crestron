@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Evands.Pellucid</RootNamespace>
+    <AssemblyName>Evands.Pellucid.Crestron</AssemblyName>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <Version>2.0.0</Version>
+    <PackageId>Evands.Pellucid.Crestron</PackageId>
+    <Description>Crestron platform integration for Evands.Pellucid. Provides CrestronConsoleWriter, CrestronLogWriter, ErrorLogFormatters, and CrestronPlatformServices for Crestron 4-Series programs.</Description>
+    <Authors>christopher.mcneely</Authors>
+    <PackageProjectUrl>https://github.com/ProfessorAire/Evands.Pellucid-Crestron</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases</PackageReleaseNotes>
+    <PackageTags>Crestron S#Pro Simpl# Console Logging</PackageTags>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Evands.Pellucid\Evands.Pellucid.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Test'">
+    <PackageReference Include="Crestron.SimplSharp.SDK.Library" Version="2.21.226" GeneratePathProperty="true" ExcludeAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Test'">
+    <Reference Include="SimplSharpHelperInterface">
+      <HintPath>$(PkgCrestron_SimplSharp_SDK_Library)\lib\SimplSharpHelperInterface.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Test'">
+    <ProjectReference Include="..\Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj" />
+  </ItemGroup>
+</Project>

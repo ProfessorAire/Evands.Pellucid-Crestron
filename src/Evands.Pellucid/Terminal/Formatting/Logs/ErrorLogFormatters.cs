@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Crestron.SimplSharp;
 
 namespace Evands.Pellucid.Terminal.Formatting.Logs
 {
@@ -32,14 +31,14 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         /// <returns>An enumerable of <see cref="LogMessage"/> instances.</returns>
         public static IEnumerable<LogMessage> ParseCrestronErrorLog(string logContents)
         {
-            if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance)
+            if (PlatformServices.Current.IsAppliance)
             {
-                if (CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Series3)
+                if (PlatformServices.Current.IsSeries3)
                 {
                     return ParseThreeSeriesErrorLog(logContents);
                 }
                 
-                if ((CrestronEnvironment.ProgramCompatibility & eCrestronSeries.Series4) == eCrestronSeries.Series4)
+                if (PlatformServices.Current.IsSeries4)
                 {
                     return ParseFourSeriesErrorLog(logContents);
                 }

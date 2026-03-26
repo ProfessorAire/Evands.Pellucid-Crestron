@@ -87,5 +87,28 @@ namespace Evands.Pellucid
         /// </summary>
         /// <returns>The current local <see cref="DateTime"/>.</returns>
         DateTime GetLocalTime();
+
+        /// <summary>
+        /// Sends a command to the platform's control system and retrieves the response.
+        /// On Crestron, this sends a command to the CrestronConsole.
+        /// </summary>
+        /// <param name="command">The command to send.</param>
+        /// <param name="response">The response from the control system.</param>
+        void SendControlSystemCommand(string command, ref string response);
+
+        /// <summary>
+        /// Gets whether the current platform is an appliance (as opposed to a server/virtual platform).
+        /// </summary>
+        bool IsAppliance { get; }
+
+        /// <summary>
+        /// Gets whether the current platform is a 3-Series system.
+        /// </summary>
+        bool IsSeries3 { get; }
+
+        /// <summary>
+        /// Gets whether the current platform is a 4-Series system.
+        /// </summary>
+        bool IsSeries4 { get; }
     }
 }

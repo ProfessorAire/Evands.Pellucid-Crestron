@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="Evands.Pellucid/Evands.Pellucid.csproj" />
+  <Project Path="Evands.Pellucid.Crestron/Evands.Pellucid.Crestron.csproj" />
   <Project Path="Evands.Pellucid.ProDemo/Evands.Pellucid.ProDemo.csproj" />
   <Project Path="Evands.Pellucid.Fakes/Evands.Pellucid.Fakes.csproj" />
   <Project Path="Evands.Pellucid.Tests/Evands.Pellucid.Tests.csproj" />
