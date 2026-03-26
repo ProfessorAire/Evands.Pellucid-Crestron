@@ -89,5 +89,29 @@ namespace Evands.Pellucid
         {
             return DateTime.Now;
         }
+
+        /// <inheritdoc/>
+        public void SendControlSystemCommand(string command, ref string response)
+        {
+            response = string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public bool IsAppliance
+        {
+            get { return false; }
+        }
+
+        /// <inheritdoc/>
+        public bool IsSeries3
+        {
+            get { return false; }
+        }
+
+        /// <inheritdoc/>
+        public bool IsSeries4
+        {
+            get { return false; }
+        }
     }
 }

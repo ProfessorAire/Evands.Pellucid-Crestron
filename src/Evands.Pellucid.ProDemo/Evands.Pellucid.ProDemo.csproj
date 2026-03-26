@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Evands.Pellucid\Evands.Pellucid.csproj" />
+    <ProjectReference Include="..\Evands.Pellucid.Crestron\Evands.Pellucid.Crestron.csproj" />
   </ItemGroup>
 </Project>
