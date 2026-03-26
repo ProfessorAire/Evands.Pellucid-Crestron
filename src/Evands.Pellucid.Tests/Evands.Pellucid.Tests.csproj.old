@@ -1,0 +1,118 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BC372062-5208-4B9D-9AD4-E36501DC2BEA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Evands.Pellucid</RootNamespace>
+    <AssemblyName>Evands.Pellucid.Tests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConsoleBaseTests.cs" />
+    <Compile Include="ConsoleCommandsTests.cs" />
+    <Compile Include="Diagnostics\DebugTests.cs" />
+    <Compile Include="Diagnostics\LoggerCommandsTests.cs" />
+    <Compile Include="Diagnostics\LoggerExtensionsTests.cs" />
+    <Compile Include="Helpers\ErrorLogData.cs" />
+    <Compile Include="OptionsTests.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpCollectionTests.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpFactoryTests.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpObjectTests.cs" />
+    <Compile Include="Terminal\Formatting\DumpHelpers\DumpNodeTests.cs" />
+    <Compile Include="Terminal\Formatting\Logs\ErrorLogFormattersTests.cs" />
+    <Compile Include="Terminal\Formatting\Logs\LogMessageTests.cs" />
+    <Compile Include="Terminal\Formatting\Markup\ConsoleMarkupTests.cs" />
+    <Compile Include="TestLogWriter.cs" />
+    <Compile Include="Diagnostics\EnumExtensionsTests.cs" />
+    <Compile Include="Diagnostics\DebugWriteDebugLineTests.cs" />
+    <Compile Include="Diagnostics\DebugBraceTests.cs" />
+    <Compile Include="Diagnostics\DebugOptionalHeaderTests.cs" />
+    <Compile Include="Diagnostics\DebugWriteExceptionTests.cs" />
+    <Compile Include="Diagnostics\LoggerTests.cs" />
+    <Compile Include="DumpTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Terminal\Commands\Attributes\CommandAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\VerbAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\SampleAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\OperandAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\Attributes\FlagAttributeTests.cs" />
+    <Compile Include="Terminal\Commands\TerminalCommandBaseTests.cs" />
+    <Compile Include="Terminal\Commands\GlobalCommandTests.cs" />
+    <Compile Include="Terminal\Commands\ManagerTests.cs" />
+    <Compile Include="Terminal\Commands\TerminalCommandBaseOfTTests.cs" />
+    <Compile Include="Terminal\Commands\TestCommand.cs" />
+    <Compile Include="Terminal\Commands\TerminalCommandTests.cs" />
+    <Compile Include="Terminal\Formatting\Tables\CellTests.cs" />
+    <Compile Include="Terminal\Formatting\Tables\ColumnTests.cs" />
+    <Compile Include="Terminal\Formatting\Tables\ColumnCollectionTests.cs" />
+    <Compile Include="Terminal\Formatting\Tables\RowCollectionTests.cs" />
+    <Compile Include="Terminal\Formatting\Tables\RowTests.cs" />
+    <Compile Include="Terminal\Formatting\Tables\TableTests.cs" />
+    <Compile Include="TestConsoleWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj">
+      <Project>{5A2D7A75-F172-43BE-AF04-18A89560D79E}</Project>
+      <Name>Evands.Pellucid.Fakes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Evands.Pellucid.Pro\Evands.Pellucid.Pro.csproj">
+      <Project>{72D8FC8F-9480-4872-8321-F83F9E65AE9B}</Project>
+      <Name>Evands.Pellucid.Pro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Evands.Pellucid\Evands.Pellucid.csproj">
+      <Project>{906AE64A-D167-4567-AD60-FDA6C90C3291}</Project>
+      <Name>Evands.Pellucid</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
