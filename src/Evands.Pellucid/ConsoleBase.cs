@@ -71,6 +71,11 @@ namespace Evands.Pellucid
         private static bool defaultConsoleCommandsInitialized;
 
         /// <summary>
+        /// Lock object for initializing default console commands.
+        /// </summary>
+        private static readonly object defaultConsoleCommandsLock = new object();
+
+        /// <summary>
         /// Initializes static members of the <see cref="ConsoleBase"/> class.
         /// </summary>
         static ConsoleBase()
@@ -643,25 +648,31 @@ namespace Evands.Pellucid
         {
             if (!defaultConsoleCommandsInitialized)
             {
-                defaultConsoleCommandsInitialized = true;
-                defaultConsoleCommands = new ConsoleCommands();
-                defaultDebuggingCommands = new Diagnostics.DebuggingCommands();
-                defaultLoggingCommands = new Diagnostics.LoggerCommands();
-                WriteLine();
-                Diagnostics.Debug.WriteDebugLine("ConsoleBase", "Initializing global console commands.");
-                for (var i = 0; i < globalCommandNames.Length; i++)
+                lock (defaultConsoleCommandsLock)
                 {
-                    Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Registering console commands with global command '{0}'", globalCommandNames[i]);
-                    var result = defaultConsoleCommands.RegisterCommand(globalCommandNames[i]);
-                    Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Register result '{0}'.", result);
+                    if (!defaultConsoleCommandsInitialized)
+                    {
+                        defaultConsoleCommands = new ConsoleCommands();
+                        defaultDebuggingCommands = new Diagnostics.DebuggingCommands();
+                        defaultLoggingCommands = new Diagnostics.LoggerCommands();
+                        defaultConsoleCommandsInitialized = true;
+                        WriteLine();
+                        Diagnostics.Debug.WriteDebugLine("ConsoleBase", "Initializing global console commands.");
+                        for (var i = 0; i < globalCommandNames.Length; i++)
+                        {
+                            Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Registering console commands with global command '{0}'", globalCommandNames[i]);
+                            var result = defaultConsoleCommands.RegisterCommand(globalCommandNames[i]);
+                            Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Register result '{0}'.", result);
 
-                    Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Registering debugging commands with global command '{0}'", globalCommandNames[i]);
-                    result = defaultDebuggingCommands.RegisterCommand(globalCommandNames[i]);
-                    Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Register result '{0}'.", result);
+                            Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Registering debugging commands with global command '{0}'", globalCommandNames[i]);
+                            result = defaultDebuggingCommands.RegisterCommand(globalCommandNames[i]);
+                            Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Register result '{0}'.", result);
 
-                    Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Registering logging commands with global command '{0}'", globalCommandNames[i]);
-                    result = defaultLoggingCommands.RegisterCommand(globalCommandNames[i]);
-                    Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Register result '{0}'.", result);
+                            Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Registering logging commands with global command '{0}'", globalCommandNames[i]);
+                            result = defaultLoggingCommands.RegisterCommand(globalCommandNames[i]);
+                            Diagnostics.Debug.WriteProgressLine("ConsoleBase", "Register result '{0}'.", result);
+                        }
+                    }
                 }
             }
         }
