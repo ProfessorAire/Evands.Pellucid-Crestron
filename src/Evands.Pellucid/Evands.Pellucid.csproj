@@ -3,9 +3,33 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Evands.Pellucid</RootNamespace>
     <AssemblyName>Evands.Pellucid</AssemblyName>
-    <AssemblyVersion>1.5.2.1000</AssemblyVersion>
-    <Version>1.5.2</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <Version>2.0.0</Version>
+    <PackageId>Evands.Pellucid</PackageId>
+    <Description>Evands.Pellucid provides a flexible framework for console interactions, debug messaging, logging, and terminal commands for Crestron 4-Series and modern .NET projects. Includes the Pro command framework previously in Evands.Pellucid.Pro.</Description>
+    <Authors>christopher.mcneely</Authors>
+    <PackageProjectUrl>https://github.com/ProfessorAire/Evands.Pellucid-Crestron</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases</PackageReleaseNotes>
+    <PackageTags>Crestron S#Pro Simpl# Console Logging</PackageTags>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Test'">
     <InternalsVisibleTo Include="Evands.Pellucid.Tests" />

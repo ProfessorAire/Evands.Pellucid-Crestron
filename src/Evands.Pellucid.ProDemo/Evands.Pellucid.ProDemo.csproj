@@ -9,18 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Crestron.SimplSharp.SDK.Program" Version="2.21.226" GeneratePathProperty="true" ExcludeAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="SimplSharpHelperInterface">
-      <HintPath>$(PkgCrestron_SimplSharp_SDK_Program)\lib\SimplSharpHelperInterface.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
+    <PackageReference Include="Crestron.SimplSharp.SDK.Program" Version="2.21.226" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Evands.Pellucid\Evands.Pellucid.csproj" />
-    <ProjectReference Include="..\Evands.Pellucid.CwsConsole\Evands.Pellucid.CwsConsole.csproj" />
   </ItemGroup>
 </Project>

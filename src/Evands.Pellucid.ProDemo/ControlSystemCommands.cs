@@ -37,7 +37,7 @@ namespace Evands.Pellucid.ProDemo
         [Verb("info", "Lists the details of the control system.")]
         public void Details()
         {
-            ProConsole.WriteLine();
+            ConsoleBase.WriteLine();
             Debug.WriteDebugLine(ControlSystem.Instance, "Supports Audio = '{0}'", ControlSystem.Instance.SupportsAudio);
             Debug.WriteDebugLine(ControlSystem.Instance, "Supports BACNet = '{0}'", ControlSystem.Instance.SupportsBACNet);
             Debug.WriteDebugLine(ControlSystem.Instance, "Supports Bluetooth = '{0}'", ControlSystem.Instance.SupportsBluetooth);

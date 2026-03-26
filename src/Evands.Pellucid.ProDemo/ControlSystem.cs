@@ -65,7 +65,7 @@ namespace Evands.Pellucid.ProDemo
                 Options.FilePath = "/USER/pellucid.console-options.toml";
 
                 // Add a console writer to the console.
-                // This could be done with the ProConsole class as well, or your own
+                // This could be done with your own
                 // implementation extending the ConsoleBase class.
                 // Technically if no writer is registered then the CrestronConsoleWriter
                 // gets registered by default, precluding the need for this, but it shows
@@ -102,7 +102,7 @@ namespace Evands.Pellucid.ProDemo
                 }
 
                 // Initialize specific global commands.
-                ProConsole.InitializeConsole("app");
+                ConsoleBase.InitializeDefaultConsoleCommands("app");
 
                 var csc = new ControlSystemCommands();
                 csc.RegisterCommand("app");
