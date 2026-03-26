@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Crestron.SimplSharp.Reflection;
+using System.Reflection;
 using Evands.Pellucid.Internal.Parts;
 
 namespace Evands.Pellucid.Internal
@@ -84,7 +84,7 @@ namespace Evands.Pellucid.Internal
         /// <returns>A value of the type T.</returns>
         public static T DeserializeObject<T>(string contents)
         {
-            return (T)DeserializeTopLevelObject(typeof(T).GetCType(), contents);
+            return (T)DeserializeTopLevelObject(typeof(T), contents);
         }
 
         /// <summary>
@@ -133,11 +133,11 @@ namespace Evands.Pellucid.Internal
         /// <param name="type">The type of the object to deserialize.</param>
         /// <param name="contents">The string to deserialize from.</param>
         /// <returns>A basic object.</returns>        
-        private static object DeserializeTopLevelObject(CType type, string contents)
+        private static object DeserializeTopLevelObject(Type type, string contents)
         {
             var matches = regex.Matches(contents);
 
-            var value = Crestron.SimplSharp.Reflection.Activator.CreateInstance(type);
+            var value = System.Activator.CreateInstance(type);
 
             var props = type.GetProperties().Where(p => p.IsDefined(typeof(TomlPropertyAttribute), true));
 
@@ -145,7 +145,7 @@ namespace Evands.Pellucid.Internal
             {
                 var match = matches[i];
 
-                var prop = props.Where(p => ((TomlPropertyAttribute)p.GetCustomAttributes(typeof(TomlPropertyAttribute).GetCType(), true).FirstOrDefault() ?? new TomlPropertyAttribute(string.Empty)).Name == match.Groups["key"].Value).FirstOrDefault();
+                var prop = props.Where(p => ((TomlPropertyAttribute)p.GetCustomAttributes(typeof(TomlPropertyAttribute), true).FirstOrDefault() ?? new TomlPropertyAttribute(string.Empty)).Name == match.Groups["key"].Value).FirstOrDefault();
                 if (prop != null)
                 {
                     if (!match.Groups["array"].Success && match.Groups["value"].Success)
@@ -172,7 +172,7 @@ namespace Evands.Pellucid.Internal
         /// <param name="type">The type of the object to deserialize.</param>
         /// <param name="contents">The string to deserialize from.</param>
         /// <returns>A basic object.</returns>        
-        private static object DeserializeObject(CType type, string contents)
+        private static object DeserializeObject(Type type, string contents)
         {
             if (type.IsEnum)
             {
@@ -200,7 +200,7 @@ namespace Evands.Pellucid.Internal
             else if (type.IsClass)
             {
                 object value = null;
-                CType listGen = null;
+                Type listGen = null;
 
                 if (type.Name.StartsWith("List`1"))
                 {
@@ -258,7 +258,7 @@ namespace Evands.Pellucid.Internal
         /// <returns>a <see cref="IPrintToml"/> object.</returns>    
         private static IPrintToml SerializeEnum(object obj, Type type)
         {
-            var flags = type.GetCustomAttributes(typeof(FlagsAttribute).GetCType(), true).Any();
+            var flags = type.GetCustomAttributes(typeof(FlagsAttribute), true).Any();
             if (flags)
             {
                 var items = obj.ToString().Split(',');
@@ -341,19 +341,19 @@ namespace Evands.Pellucid.Internal
         /// <returns>a <see cref="IPrintToml"/> object.</returns> 
         private static TomlClass SerializeClass(object obj, Type type)
         {
-            var props = obj.GetType().GetCType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var props = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             var l = new List<IPrintToml>();
 
             foreach (var prop in props)
             {
-                if (prop.GetCustomAttributes(typeof(NonSerializedAttribute).GetCType(), true).Any())
+                if (prop.GetCustomAttributes(typeof(NonSerializedAttribute), true).Any())
                 {
                     continue;
                 }
 
                 string name;
 
-                var nameAttribute = (TomlPropertyAttribute)prop.GetCustomAttributes(typeof(TomlPropertyAttribute).GetCType(), true).FirstOrDefault();
+                var nameAttribute = (TomlPropertyAttribute)prop.GetCustomAttributes(typeof(TomlPropertyAttribute), true).FirstOrDefault();
                 if (nameAttribute != null)
                 {
                     name = nameAttribute.Name;
@@ -387,7 +387,7 @@ namespace Evands.Pellucid.Internal
         /// <returns>A string representing the name of the object.</returns>        
         private static string GetName(object obj)
         {
-            var t = obj.GetType().GetCType();
+            var t = obj.GetType();
             var atts = t.GetCustomAttributes(true);
 
             var propertyName = atts.OfType<TomlPropertyAttribute>().FirstOrDefault();

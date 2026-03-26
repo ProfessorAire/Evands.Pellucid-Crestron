@@ -24,7 +24,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Crestron.SimplSharp;
-using Crestron.SimplSharp.Reflection;
+using System.Reflection;
 using Evands.Pellucid.Terminal;
 using Evands.Pellucid.Terminal.Formatting;
 

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using Crestron.SimplSharp.Reflection;
+using System.Reflection;
 
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
@@ -100,11 +100,11 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 
             if (useFullTypeNames)
             {
-                typeName = this.ValueType != null ? this.ValueType.GetCType().FullName : "<unknown type>";
+                typeName = this.ValueType != null ? this.ValueType.FullName : "<unknown type>";
             }
             else
             {
-                typeName = this.ValueType != null ? this.ValueType.GetCType().Name : "<unknown type>";
+                typeName = this.ValueType != null ? this.ValueType.Name : "<unknown type>";
             }
 
             var underscoreLength = typeName.Length + 10 + this.Children.Count.ToString().Length + (this.Children.Count == 1 ? 1 : 3);
@@ -212,7 +212,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 
                     try
                     {
-                        props[0] = this.Value.GetType().GetCType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                        props[0] = this.Value.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                     }
                     catch (Exception ex)
                     {
@@ -227,7 +227,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 
                     try
                     {
-                        props[1] = this.Value.GetType().GetCType().GetProperties(BindingFlags.Static | BindingFlags.Public);
+                        props[1] = this.Value.GetType().GetProperties(BindingFlags.Static | BindingFlags.Public);
                     }
                     catch (Exception ex)
                     {
