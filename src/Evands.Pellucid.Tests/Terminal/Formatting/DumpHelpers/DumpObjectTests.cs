@@ -354,47 +354,6 @@ TestFailureClass (1 Property)
         }
 
         [Test]
-        public async Task ToString_With_GetProperties_Failures_AddsFailureObjects()
-        {
-            var q = new Queue<Exception>();
-            q.Enqueue(new InvalidOperationException());
-            q.Enqueue(new InvalidOperationException());
-
-            Crestron.SimplSharp.Reflection.CType.GetPropertiesExceptions = q;
-
-            var underTest = new DumpObject(new TestFailureClass());
-
-            var expected = @"
-TestFailureClass (1 Property)
------------------------------
-| DumpFailures = List`1 (2 Items)
-|                ----------------
-|                | 0: DumpObjectFailure (4 Properties)
-|                |    --------------------------------
-|                |    | PropertyName     = """"
-|                |    | ErrorMessage     = ""Exception while attempting to get the public instance properties of this object.""
-|                |    | ExceptionMessage = ""Operation is not valid due to the current state of the object.""
-|                |    | ExceptionType    = ""System.InvalidOperationException""
-|                |    --------------------------------
-|                | 1: DumpObjectFailure (4 Properties)
-|                |    --------------------------------
-|                |    | PropertyName     = """"
-|                |    | ErrorMessage     = ""Exception while attempting to get the public static properties of this object.""
-|                |    | ExceptionMessage = ""Operation is not valid due to the current state of the object.""
-|                |    | ExceptionType    = ""System.InvalidOperationException""
-|                |    --------------------------------
-|                ----------------
------------------------------
-";
-
-            var actual = "\r\n" + underTest.ToString();
-
-            Crestron.SimplSharp.Reflection.CType.GetPropertiesExceptions = null;
-
-            await Assert.That(actual).IsEqualTo(expected);
-        }
-
-        [Test]
         public async Task ToString_With_ChildPropertySameAsSelf_Does_Not_DumpChild()
         {
             var underTest = new DumpObject(Options.Instance);

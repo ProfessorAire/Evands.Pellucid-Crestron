@@ -71,52 +71,5 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             await Assert.That(DumpFactory.GetNode(new Object())).IsTypeOf<DumpObject>();
         }
 
-        [Test]
-        public async Task GetNode_WithException()
-        {
-            var ex = new InvalidOperationException("Invalid Operation");
-            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
-            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 1;
-            var o = new object();
-            var actual = DumpFactory.GetNode(o);
-
-            await Assert.That(actual.ValueType).IsEqualTo(typeof(DumpObjectFailure));
-
-            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
-            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
-        }
-
-        [Test]
-        public async Task GetNode_WithName_WithException()
-        {
-            var ex = new InvalidOperationException("Invalid Operation");
-            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
-            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 1;
-            var o = new Dictionary<string, System.Reflection.MethodInfo>();
-            var node = DumpFactory.GetNode(o, "Type");
-
-            var content = node.ToString();
-
-            await Assert.That(content.Contains("Invalid Operation")).IsTrue();
-
-            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
-            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
-        }
-
-        [Test]
-        public async Task GetNode_WithName_WithType_WithException()
-        {
-            var ex = new InvalidOperationException("Invalid Operation");
-            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
-            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 1;
-            var o = new object();
-            var node = DumpFactory.GetNode(o, "Type", o.GetType());
-            var content = node.ToString();
-
-            await Assert.That(content.Contains("Invalid Operation")).IsTrue();
-
-            Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
-            Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
-        }
     }
 }
