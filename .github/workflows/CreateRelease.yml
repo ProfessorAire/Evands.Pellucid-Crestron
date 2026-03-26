@@ -3,6 +3,9 @@ name: CreateRelease
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
