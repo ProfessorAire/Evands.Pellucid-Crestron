@@ -1,24 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections;
 
 namespace Evands.Pellucid
 {
-    [TestClass]
     public class DumpTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
             writer.Messages.Clear();
@@ -30,48 +28,7 @@ namespace Evands.Pellucid
         public DumpTests()
         {
         }
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
-        private class EnumerableObject : IEnumerable
+private class EnumerableObject : IEnumerable
         {
             private object[] internalItems;
 
@@ -188,65 +145,65 @@ namespace Evands.Pellucid
             return this.writer.Messages.Any(m => m.Contains(value));
         }
 
-        [TestMethod]
-        public void Dump_WritesCorrectDepth_One()
+        [Test]
+        public async Task Dump_WritesCorrectDepth_One()
         {
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(1);
-            Assert.IsTrue(ContainsText("TestValue") && !ContainsText("42"));
+            await Assert.That(ContainsText("TestValue") && !ContainsText("42")).IsTrue();
         }
 
-        [TestMethod]
-        public void Dump_WritesCorrectDepth_Two()
+        [Test]
+        public async Task Dump_WritesCorrectDepth_Two()
         {
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(2);
-            Assert.IsTrue(ContainsText("TestValue") && ContainsText("42") && !ContainsText("ThirdLevel"));
+            await Assert.That(ContainsText("TestValue") && ContainsText("42") && !ContainsText("ThirdLevel")).IsTrue();
         }
 
-        [TestMethod]
-        public void Dump_WritesCorrectDepth_Three()
+        [Test]
+        public async Task Dump_WritesCorrectDepth_Three()
         {
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(3);
-            Assert.IsTrue(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel"));
+            await Assert.That(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel")).IsTrue();
         }
 
-        [TestMethod]
-        public void Dump_WritesCorrectDepth_Zero()
+        [Test]
+        public async Task Dump_WritesCorrectDepth_Zero()
         {
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(0);
-            Assert.IsTrue(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel"));
+            await Assert.That(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel")).IsTrue();
         }
 
-        [TestMethod]
-        public void Dump_WritesNull_WithNullObject()
+        [Test]
+        public async Task Dump_WritesNull_WithNullObject()
         {
             string testValue = null;
             var expected = "<null>";
             testValue.Dump();
 
-            Assert.IsTrue(ContainsText(expected));
+            await Assert.That(ContainsText(expected)).IsTrue();
         }
 
-        [TestMethod]
-        public void Dump_WritesCorrect_WithNullProperty()
+        [Test]
+        public async Task Dump_WritesCorrect_WithNullProperty()
         {
             Options.Instance.ColorizeConsoleOutput = false;
             var testValue = new TestObject("test");
             var expected = "<null>";
             testValue.Dump();
 
-            Assert.IsTrue(ContainsText(expected));
+            await Assert.That(ContainsText(expected)).IsTrue();
         }
 
-        [TestMethod]
-        public void Dump_Writes_Dictionary_Correct()
+        [Test]
+        public async Task Dump_Writes_Dictionary_Correct()
         {
             Options.Instance.ColorizeConsoleOutput = false;
             var testValue = new Dictionary<int, TestWithSameName>()
@@ -272,7 +229,7 @@ namespace Evands.Pellucid
 ";
             testValue.Dump(true);
 
-            Assert.IsTrue(ContainsText(expected), "Complex Object Dictionary Failed.");
+            await Assert.That(ContainsText(expected)).IsTrue();
 
             writer.Messages.Clear();
 
@@ -292,7 +249,7 @@ namespace Evands.Pellucid
 
             testValue2.Dump();
 
-            Assert.IsTrue(ContainsText(expected), "Simple Object Dictionary Failed.");
+            await Assert.That(ContainsText(expected)).IsTrue();
         }
     }
 }

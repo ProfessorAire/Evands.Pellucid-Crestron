@@ -1,26 +1,23 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Evands.Pellucid
 {
     /// <summary>
     /// Summary description for ConsoleBaseTests
     /// </summary>
-    [TestClass]
     public class ConsoleBaseTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
             writer.Messages.Clear();
@@ -32,82 +29,42 @@ namespace Evands.Pellucid
         {
         }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
+        [Test]
+        public async Task HeaderTextIsEmptyByDefault()
         {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
+            await Assert.That(string.IsNullOrEmpty(ConsoleBase.OptionalHeader)).IsTrue();
         }
 
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
-        [TestMethod]
-        public void HeaderTextIsEmptyByDefault()
-        {
-            Assert.IsTrue(string.IsNullOrEmpty(ConsoleBase.OptionalHeader));
-        }
-
-        [TestMethod]
-        public void HeaderText_GetSet_Functions()
+        [Test]
+        public async Task HeaderText_GetSet_Functions()
         {
             var expected = "01";
             ConsoleBase.OptionalHeader = expected;
-            Assert.IsTrue(ConsoleBase.OptionalHeader == string.Format("[{0}]", expected));
+            await Assert.That(ConsoleBase.OptionalHeader == string.Format("[{0}]", expected)).IsTrue();
 
             ConsoleBase.OptionalHeader = string.Empty;
-            Assert.IsTrue(ConsoleBase.OptionalHeader == string.Empty);
+            await Assert.That(ConsoleBase.OptionalHeader == string.Empty).IsTrue();
         }
 
-        [TestMethod]
-        public void WriteLine_WithEmptyHeader_WritesLineWithNoHeader()
+        [Test]
+        public async Task WriteLine_WithEmptyHeader_WritesLineWithNoHeader()
         {
             var invalidStart = "[01]";
             var expectedEnd = "Test Message";
             ConsoleBase.WriteLine(expectedEnd);
             var msg = writer.Messages.Last();
-            Assert.IsTrue(!msg.StartsWith(invalidStart) && msg.Contains(expectedEnd));
+            await Assert.That(!msg.StartsWith(invalidStart) && msg.Contains(expectedEnd)).IsTrue();
         }
 
-        [TestMethod]
-        public void WriteLine_WithNonEmptyHeader_WritesLineWithHeader()
+        [Test]
+        public async Task WriteLine_WithNonEmptyHeader_WritesLineWithHeader()
         {
             ConsoleBase.OptionalHeader = "01";
             var expectedStart = "[01]";
             var expectedEnd = "Test Message";
             ConsoleBase.WriteLine(expectedEnd);
             var msg = writer.Messages.Last();
-            Assert.IsTrue(msg.StartsWith(expectedStart) && msg.Contains(expectedEnd));
+            await Assert.That(msg.StartsWith(expectedStart) && msg.Contains(expectedEnd)).IsTrue();
         }
     }
 }

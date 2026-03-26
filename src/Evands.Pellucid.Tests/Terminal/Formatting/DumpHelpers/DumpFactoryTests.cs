@@ -1,24 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
-    [TestClass]
     public class DumpFactoryTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
             Options.Instance.ColorizeConsoleOutput = false;
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
             writer.Messages.Clear();
@@ -31,69 +28,51 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         {
         }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
+        [Test]
+        public async Task GetNode_WithNull_Returns_DumpNode()
         {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
+            await Assert.That(DumpFactory.GetNode(null)).IsTypeOf<DumpNode>();
         }
 
-        [TestMethod]
-        public void GetNode_WithNull_Returns_DumpNode()
+        [Test]
+        public async Task GetNode_WithValueType_Returns_DumpNode()
         {
-            Assert.IsInstanceOfType(DumpFactory.GetNode(null), typeof(DumpNode));
+            await Assert.That(DumpFactory.GetNode(123)).IsTypeOf<DumpNode>();
         }
 
-        [TestMethod]
-        public void GetNode_WithValueType_Returns_DumpNode()
+        [Test]
+        public async Task GetNode_WithStringType_Returns_DumpNode()
         {
-            Assert.IsInstanceOfType(DumpFactory.GetNode(123), typeof(DumpNode));
+            await Assert.That(DumpFactory.GetNode("123")).IsTypeOf<DumpNode>();
         }
 
-        [TestMethod]
-        public void GetNode_WithStringType_Returns_DumpNode()
+        [Test]
+        public async Task GetNode_WithIDictionary_Returns_DumpCollection()
         {
-            Assert.IsInstanceOfType(DumpFactory.GetNode("123"), typeof(DumpNode));
-        }
-
-        [TestMethod]
-        public void GetNode_WithIDictionary_Returns_DumpCollection()
-        {
-            Assert.IsInstanceOfType(DumpFactory.GetNode(new Dictionary<string, string>()), typeof(DumpCollection));
+            await Assert.That(DumpFactory.GetNode(new Dictionary<string, string>())).IsTypeOf<DumpCollection>();
         }
         
-        [TestMethod]
-        public void GetNode_WithIList_Returns_DumpCollection()
+        [Test]
+        public async Task GetNode_WithIList_Returns_DumpCollection()
         {
-            Assert.IsInstanceOfType(DumpFactory.GetNode(new List<string>()), typeof(DumpCollection));
+            await Assert.That(DumpFactory.GetNode(new List<string>())).IsTypeOf<DumpCollection>();
         }
 
-        [TestMethod]
-        public void GetNode_WithIEnumerable_Returns_DumpCollection()
+        [Test]
+        public async Task GetNode_WithIEnumerable_Returns_DumpCollection()
         {
             IEnumerable<string> ienum = new List<string>().AsEnumerable<string>();
-            Assert.IsInstanceOfType(DumpFactory.GetNode(ienum), typeof(DumpCollection));
+            await Assert.That(DumpFactory.GetNode(ienum)).IsTypeOf<DumpCollection>();
         }
 
-        [TestMethod]
-        public void GetNode_WithOtherObject_Returns_DumpObject()
+        [Test]
+        public async Task GetNode_WithOtherObject_Returns_DumpObject()
         {
-            Assert.IsInstanceOfType(DumpFactory.GetNode(new Object()), typeof(DumpObject));
+            await Assert.That(DumpFactory.GetNode(new Object())).IsTypeOf<DumpObject>();
         }
 
-        [TestMethod]
-        public void GetNode_WithException()
+        [Test]
+        public async Task GetNode_WithException()
         {
             var ex = new InvalidOperationException("Invalid Operation");
             Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
@@ -101,14 +80,14 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             var o = new object();
             var actual = DumpFactory.GetNode(o);
 
-            Assert.AreEqual(typeof(DumpObjectFailure), actual.ValueType);
+            await Assert.That(actual.ValueType).IsEqualTo(typeof(DumpObjectFailure));
 
             Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
             Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
         }
 
-        [TestMethod]
-        public void GetNode_WithName_WithException()
+        [Test]
+        public async Task GetNode_WithName_WithException()
         {
             var ex = new InvalidOperationException("Invalid Operation");
             Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
@@ -118,14 +97,14 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 
             var content = node.ToString();
 
-            Assert.IsTrue(content.Contains("Invalid Operation"));
+            await Assert.That(content.Contains("Invalid Operation")).IsTrue();
 
             Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
             Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;
         }
 
-        [TestMethod]
-        public void GetNode_WithName_WithType_WithException()
+        [Test]
+        public async Task GetNode_WithName_WithType_WithException()
         {
             var ex = new InvalidOperationException("Invalid Operation");
             Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = ex;
@@ -134,7 +113,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             var node = DumpFactory.GetNode(o, "Type", o.GetType());
             var content = node.ToString();
 
-            Assert.IsTrue(content.Contains("Invalid Operation"));
+            await Assert.That(content.Contains("Invalid Operation")).IsTrue();
 
             Crestron.SimplSharp.Reflection.ExtensionMethods.ExceptionToThrowOnGetCType = null;
             Crestron.SimplSharp.Reflection.ExtensionMethods.QuantityToThrowOnGetCType = 0;

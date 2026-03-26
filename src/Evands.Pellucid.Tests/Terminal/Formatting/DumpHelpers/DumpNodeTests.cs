@@ -1,24 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
-    [TestClass]
     public class DumpNodeTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
             Options.Instance.ColorizeConsoleOutput = false;
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
             writer.Messages.Clear();
@@ -31,133 +28,115 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         {
         }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestMethod]
-        public void ToString_BasicValue_NoParameters_Writes_Correct()
+        [Test]
+        public async Task ToString_BasicValue_NoParameters_Writes_Correct()
         {
             var underTest = new DumpNode("TestValue", "TestName");
             var expected = "TestName = \"TestValue\"";
 
             var actual = underTest.ToString();
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_BasicValue_MaxDepth0_And_CurrentDepthNegative_Writes_Correct()
+        [Test]
+        public async Task ToString_BasicValue_MaxDepth0_And_CurrentDepthNegative_Writes_Correct()
         {
             var underTest = new DumpNode("TestValue", "TestName");
             var expected = "TestName = \"TestValue\"";
 
             var actual = underTest.ToString(0, -1);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_BasicValue_MaxDepthTwo_Writes_Correct()
+        [Test]
+        public async Task ToString_BasicValue_MaxDepthTwo_Writes_Correct()
         {
             var underTest = new DumpNode("TestValue", "TestName");
             var expected = "TestName = \"TestValue\"";
 
             var actual = underTest.ToString(2);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_BasicValue_FullNamesFalse_Writes_Correct()
+        [Test]
+        public async Task ToString_BasicValue_FullNamesFalse_Writes_Correct()
         {
             var underTest = new DumpNode("TestValue", "TestName");
             var expected = "TestName = \"TestValue\"";
 
             var actual = underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_BasicValue_MaxDepthOne_And_FullNamesFalse_Writes_Correct()
+        [Test]
+        public async Task ToString_BasicValue_MaxDepthOne_And_FullNamesFalse_Writes_Correct()
         {
             var underTest = new DumpNode("TestValue", "TestName");
             var expected = "TestName = \"TestValue\"";
 
             var actual = underTest.ToString(1, false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_BasicValue_NoName_Writes_Correct()
+        [Test]
+        public async Task ToString_BasicValue_NoName_Writes_Correct()
         {
             var underTest = new DumpNode("TestValue", string.Empty);
             var expected = "\"TestValue\"";
             var actual = underTest.ToString();
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_NullValue_NoName_Writes_Correct()
+        [Test]
+        public async Task ToString_NullValue_NoName_Writes_Correct()
         {
             var underTest = new DumpNode(null, string.Empty);
             var expected = "<null>";
             var actual = underTest.ToString();
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_NullValue_WithName_Writes_Correct()
+        [Test]
+        public async Task ToString_NullValue_WithName_Writes_Correct()
         {
             var underTest = new DumpNode(null, "TestName");
             var expected = "TestName = <null>";
             var actual = underTest.ToString();
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void CTor_WithNullName_Creates_WithEmptyName()
+        [Test]
+        public async Task CTor_WithNullName_Creates_WithEmptyName()
         {
             var underTest = new DumpNode("TestValue", null);
-            Assert.AreEqual(string.Empty, underTest.Name);
+            await Assert.That(underTest.Name).IsEqualTo(string.Empty);
         }
 
-        [TestMethod]
-        public void CTor_AssignsName_Correctly()
+        [Test]
+        public async Task CTor_AssignsName_Correctly()
         {
             var expected = "TestName";
             var underTest = new DumpNode("TestValue", expected);
-            Assert.AreEqual(expected, underTest.Name);
+            await Assert.That(underTest.Name).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void CTor_AssignsStringValue_WithQuotes()
+        [Test]
+        public async Task CTor_AssignsStringValue_WithQuotes()
         {
             var expected = "TestValue";
             var underTest = new DumpNode(expected, "TestName");
-            Assert.AreEqual("\"" + expected + "\"", underTest.Value);
+            await Assert.That(underTest.Value).IsEqualTo("\"" + expected + "\"");
         }
 
-        [TestMethod]
-        public void CTor_AssignsNonStringValue_Directly()
+        [Test]
+        public async Task CTor_AssignsNonStringValue_Directly()
         {
             var expected = 1234;
             var underTest = new DumpNode(expected, "TestName");
-            Assert.AreEqual(expected, underTest.Value);
+            await Assert.That(underTest.Value).IsEqualTo(expected);
         }
     }
 }

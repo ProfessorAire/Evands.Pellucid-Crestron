@@ -1,24 +1,21 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
-    [TestClass]
     public class DumpCollectionTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
             Options.Instance.ColorizeConsoleOutput = false;
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
             writer.Messages.Clear();
@@ -31,26 +28,8 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         {
         }
 
-        private TestContext testContextInstance;
-        
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestMethod]
-        public void ToString_WithNullValue_Prints_UnknownType()
+        [Test]
+        public async Task ToString_WithNullValue_Prints_UnknownType()
         {
             IDictionary<object, object> dict = null;
             var underTest = new DumpCollection(dict);
@@ -60,11 +39,11 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 -----------------------------------
 ";
             var actual = "\r\n" + underTest.ToString();
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNullValue_ShortNames_Prints_UnknownType()
+        [Test]
+        public async Task ToString_WithNullValue_ShortNames_Prints_UnknownType()
         {
             IDictionary<object, object> dict = null;
             var underTest = new DumpCollection(dict);
@@ -74,11 +53,11 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 -----------------------------------
 ";
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithList_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithList_Writes_Correct()
         {
             var underTest = new DumpCollection(new List<object>() { "Item1", 2, 245.43, EventArgs.Empty});
             var expected = @"
@@ -92,11 +71,11 @@ List`1 (4 Items)
 ";
 
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_CurrentLevelNegative_WithList_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_CurrentLevelNegative_WithList_Writes_Correct()
         {
             var underTest = new DumpCollection(new List<object>() { "Item1", 2, 245.43, EventArgs.Empty });
             var expected = @"
@@ -110,11 +89,11 @@ List`1 (4 Items)
 ";
 
             var actual = "\r\n" + underTest.ToString(0, -1, false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithList_RealObjects_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithList_RealObjects_Writes_Correct()
         {
             var underTest = new DumpCollection(new List<object>()
             {
@@ -138,11 +117,11 @@ List`1 (4 Items)
 ";
 
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithArray_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithArray_Writes_Correct()
         {
             var underTest = new DumpCollection(new object[] { "Item1", 2, 245.43, EventArgs.Empty });
             var expected = @"
@@ -156,11 +135,11 @@ Object[] (4 Items)
 ";
 
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithDictionary_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithDictionary_Writes_Correct()
         {
             var underTest = new DumpCollection(new Dictionary<object, object>()
             {
@@ -185,11 +164,11 @@ Dictionary`2 (4 Items)
 ";
 
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithDictionary_WithObjects_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithDictionary_WithObjects_Writes_Correct()
         {
             var underTest = new DumpCollection(new Dictionary<int, object>()
             {
@@ -209,11 +188,11 @@ Dictionary`2 (1 Item)
 ";
 
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithEmptyDictionary_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithEmptyDictionary_Writes_Correct()
         {
             var underTest = new DumpCollection(new Dictionary<object, object>() {});
 
@@ -224,11 +203,11 @@ Dictionary`2 (0 Items)
 ";
 
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithEmptyEnumerable_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithEmptyEnumerable_Writes_Correct()
         {
             var underTest = new DumpCollection(new Object[0]);
 
@@ -239,11 +218,11 @@ Object[] (0 Items)
 ";
 
             var actual = "\r\n" + underTest.ToString(false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_WithNoPadding_WithShortTypeNames_WithList_WithName_Writes_Correct()
+        [Test]
+        public async Task ToString_WithNoPadding_WithShortTypeNames_WithList_WithName_Writes_Correct()
         {
             var underTest = new DumpCollection(new int[] { 1, 2, 3, 4 }, "ItemOne");
             var expected = @"
@@ -258,11 +237,11 @@ ItemOne = Int32[] (4 Items)
 
             var actual = "\r\n" + underTest.ToString();
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_OfObjects_WithName_Writes_Correct()
+        [Test]
+        public async Task ToString_OfObjects_WithName_Writes_Correct()
         {
             var underTest = new DumpCollection(
                 new List<TestObject1>()
@@ -289,11 +268,11 @@ TestValue = List`1 (2 Items)
 
             var actual = expected.ToString();
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void Dump_WithExtended_PrintsCorrect()
+        [Test]
+        public async Task Dump_WithExtended_PrintsCorrect()
         {
             var col = new DumpCollection(new string[] { "One", "Two", "Three"}, "Collection");
             var chrome = new RoundedChrome();
@@ -302,7 +281,7 @@ TestValue = List`1 (2 Items)
             ConsoleBase.WriteLineNoHeader(col.ToString());
             Formatters.Chrome = new BasicChrome();
 
-            Assert.IsTrue(actual.Contains(chrome.BodyTopLeft) && actual.Contains(chrome.BodyLeft) && actual.Contains(chrome.BodyBottomLeft));
+            await Assert.That(actual.Contains(chrome.BodyTopLeft) && actual.Contains(chrome.BodyLeft) && actual.Contains(chrome.BodyBottomLeft)).IsTrue();
         }
 
         private class TestObject1

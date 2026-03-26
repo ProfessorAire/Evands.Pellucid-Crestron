@@ -1,187 +1,144 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Evands.Pellucid.Terminal.Formatting.Tables
 {
     /// <summary>
     /// Summary description for CellTests
     /// </summary>
-    [TestClass]
     public class CellTests
     {
         public CellTests()
         {
         }
 
-        private TestContext testContextInstance;
-
-        [TestInitialize]
+        [Before(Test)]
         public void TestSetup()
         {
             UnderTest = new Cell();
         }
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
         public Cell UnderTest { get; set; }
 
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
-        [TestMethod]
-        public void DefaultCtor_Creates_Empty_Cell()
+        [Test]
+        public async Task DefaultCtor_Creates_Empty_Cell()
         {
-            Assert.IsNotNull(UnderTest);
-            Assert.IsTrue(UnderTest.Contents == string.Empty);
-            Assert.IsTrue(UnderTest.Color == ColorFormat.None);
+            await Assert.That(UnderTest).IsNotNull();
+            await Assert.That(UnderTest.Contents == string.Empty).IsTrue();
+            await Assert.That(UnderTest.Color == ColorFormat.None).IsTrue();
         }
 
-        [TestMethod]
-        public void Contents_Ctor_Creates_Cell_WithContents_NoColor()
+        [Test]
+        public async Task Contents_Ctor_Creates_Cell_WithContents_NoColor()
         {
             var expected = "Test Value";
             UnderTest = new Cell(expected);
-            Assert.IsNotNull(UnderTest);
-            Assert.IsTrue(UnderTest.Contents == expected);
-            Assert.IsTrue(UnderTest.Color == ColorFormat.None);
+            await Assert.That(UnderTest).IsNotNull();
+            await Assert.That(UnderTest.Contents == expected).IsTrue();
+            await Assert.That(UnderTest.Color == ColorFormat.None).IsTrue();
         }
 
-        [TestMethod]
-        public void ContentsAndColor_Ctor_Creates_Cell_WithContentsAndColor()
+        [Test]
+        public async Task ContentsAndColor_Ctor_Creates_Cell_WithContentsAndColor()
         {
             var expectedContents = "Test Value";
             var expectedColorFormat = ConsoleBase.Colors.BrightGreen;
             UnderTest = new Cell(expectedContents, expectedColorFormat);
-            Assert.IsNotNull(UnderTest);
-            Assert.IsTrue(UnderTest.Contents == expectedContents);
-            Assert.IsTrue(UnderTest.Color == expectedColorFormat);
+            await Assert.That(UnderTest).IsNotNull();
+            await Assert.That(UnderTest.Contents == expectedContents).IsTrue();
+            await Assert.That(UnderTest.Color == expectedColorFormat).IsTrue();
         }
 
-        [TestMethod]
-        public void ColorFormat_GetsSets_CorrectValue()
+        [Test]
+        public async Task ColorFormat_GetsSets_CorrectValue()
         {
             var expectedColorFormat = ConsoleBase.Colors.BrightGreen;
             UnderTest.Color = expectedColorFormat;
-            Assert.IsTrue(UnderTest.Color == expectedColorFormat);
+            await Assert.That(UnderTest.Color == expectedColorFormat).IsTrue();
         }
 
-        [TestMethod]
-        public void HorizontalAlignment_GetsSets_CorrectValue()
+        [Test]
+        public async Task HorizontalAlignment_GetsSets_CorrectValue()
         {
             var expected = HorizontalAlignment.Center;
             UnderTest.HorizontalAlignment = expected;
-            Assert.IsTrue(UnderTest.HorizontalAlignment == expected);
+            await Assert.That(UnderTest.HorizontalAlignment == expected).IsTrue();
             expected = HorizontalAlignment.Left;
             UnderTest.HorizontalAlignment = expected;
-            Assert.IsTrue(UnderTest.HorizontalAlignment == expected);
+            await Assert.That(UnderTest.HorizontalAlignment == expected).IsTrue();
             expected = HorizontalAlignment.Right;
             UnderTest.HorizontalAlignment = expected;
-            Assert.IsTrue(UnderTest.HorizontalAlignment == expected);
+            await Assert.That(UnderTest.HorizontalAlignment == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void Contents_GetsSets_CorrectValue()
+        [Test]
+        public async Task Contents_GetsSets_CorrectValue()
         {
             var expected = "This is a test.";
             UnderTest.Contents = expected;
-            Assert.IsTrue(UnderTest.Contents == expected);
+            await Assert.That(UnderTest.Contents == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void GetTotalWidth_Returns_AccurateValue_WhenTextHasColorFormatting()
+        [Test]
+        public async Task GetTotalWidth_Returns_AccurateValue_WhenTextHasColorFormatting()
         {
             var text = "This is just some text.";
             var content = ConsoleBase.Colors.BrightRed.FormatText(text);
             UnderTest.Contents = content;
-            Assert.IsTrue(UnderTest.GetTotalWidth() == text.Length);
+            await Assert.That(UnderTest.GetTotalWidth() == text.Length).IsTrue();
         }
 
-        [TestMethod]
-        public void GetTotalWidth_Returns_AccurateValue_WhenTextHasNoColorFormatting()
+        [Test]
+        public async Task GetTotalWidth_Returns_AccurateValue_WhenTextHasNoColorFormatting()
         {
             var expected = "This is just a text test.";
             UnderTest.Contents = expected;
-            Assert.IsTrue(UnderTest.GetTotalWidth() == expected.Length);
+            await Assert.That(UnderTest.GetTotalWidth() == expected.Length).IsTrue();
         }
 
-        [TestMethod]
-        public void GetTotalWidth_Returns_AccurateValue_WhenLineBreaksIncluded()
+        [Test]
+        public async Task GetTotalWidth_Returns_AccurateValue_WhenLineBreaksIncluded()
         {
             var lineToTest = "This is line 1.\r\nThis is line two.\r\nThis is line three.";
             UnderTest.Contents = lineToTest;
             var expected = lineToTest.Replace("\r\n", "\n").Split('\n').Max(l => l.Length);
 
-            Assert.AreEqual(expected, UnderTest.GetTotalWidth());
+            await Assert.That(UnderTest.GetTotalWidth()).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void GetNumberOfLines_IsAccurate()
+        [Test]
+        public async Task GetNumberOfLines_IsAccurate()
         {
             var text = "Line1\nLine2\nLine3";
             UnderTest.Contents = text;
-            Assert.AreEqual(3, UnderTest.GetNumberOfLines(100));
+            await Assert.That(UnderTest.GetNumberOfLines(100)).IsEqualTo(3);
             text = "Line1Line2Line3Line4";
             UnderTest.Contents = text;
-            Assert.AreEqual(4, UnderTest.GetNumberOfLines(5));
-            Assert.AreEqual(2, UnderTest.GetNumberOfLines(10));
+            await Assert.That(UnderTest.GetNumberOfLines(5)).IsEqualTo(4);
+            await Assert.That(UnderTest.GetNumberOfLines(10)).IsEqualTo(2);
             text = "Some text.";
             UnderTest.Contents = text;
-            Assert.AreEqual(1, UnderTest.GetNumberOfLines(100));
+            await Assert.That(UnderTest.GetNumberOfLines(100)).IsEqualTo(1);
         }
 
-        [TestMethod]
-        public void GetNumberOfLines_IsAccurate_WhenColorIncluded()
+        [Test]
+        public async Task GetNumberOfLines_IsAccurate_WhenColorIncluded()
         {
             var text = ConsoleBase.Colors.Blue.FormatText("Line1\nLine2\nLine3");
             UnderTest.Contents = text;
-            Assert.AreEqual(3, UnderTest.GetNumberOfLines(100));
+            await Assert.That(UnderTest.GetNumberOfLines(100)).IsEqualTo(3);
             text = ConsoleBase.Colors.Blue.FormatText("Line1Line2Line3Line4");
             UnderTest.Contents = text;
-            Assert.AreEqual(4, UnderTest.GetNumberOfLines(5));
-            Assert.AreEqual(2, UnderTest.GetNumberOfLines(10));
+            await Assert.That(UnderTest.GetNumberOfLines(5)).IsEqualTo(4);
+            await Assert.That(UnderTest.GetNumberOfLines(10)).IsEqualTo(2);
             text = ConsoleBase.Colors.Blue.FormatText("Some text.");
             UnderTest.Contents = text;
-            Assert.AreEqual(1, UnderTest.GetNumberOfLines(100));
+            await Assert.That(UnderTest.GetNumberOfLines(100)).IsEqualTo(1);
         }
 
-        [TestMethod]
-        public void GetLine_Returns_CorrectValue_WithoutColor()
+        [Test]
+        public async Task GetLine_Returns_CorrectValue_WithoutColor()
         {
             var text = "Line1Line2Line3Line4";
             var items = new string[] { "Line1", "Line2", "Line3", "Line4" };
@@ -190,12 +147,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
             for (var i = 0; i < items.Length; i++)
             {
-                Assert.IsTrue(UnderTest.GetLine(i, 5, false) == items[i]);
+                await Assert.That(UnderTest.GetLine(i, 5, false) == items[i]).IsTrue();
             }
         }
 
-        [TestMethod]
-        public void GetLine_Returns_CorrectValue_WithColor()
+        [Test]
+        public async Task GetLine_Returns_CorrectValue_WithColor()
         {
             var text = "Line1\nLine2\nLine3\nLine4";
             UnderTest.Contents = text;
@@ -207,12 +164,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             {
                 var line = UnderTest.GetLine(i, 5, true);
                 var expected = UnderTest.Color.FormatText(items[i]);
-                Assert.IsTrue(line == expected, "Index '{0}' failed.", i);
+                await Assert.That(line == expected).IsTrue();
             }            
         }
 
-        [TestMethod]
-        public void GetLine_WithTerminatingParenthesis_Returns_CorrectValue_WithoutColor()
+        [Test]
+        public async Task GetLine_WithTerminatingParenthesis_Returns_CorrectValue_WithoutColor()
         {
             var text = "Line1 (1)\r\nLine2 (2)\r\nLine3 (1)\r\nLine 5 (123)";
             UnderTest.Contents = text;
@@ -221,12 +178,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
             for (var i = 0; i < items.Length; i++)
             {
-                Assert.AreEqual(items[i], UnderTest.GetLine(i, 12, false).TrimEnd());
+                await Assert.That(UnderTest.GetLine(i, 12, false).TrimEnd()).IsEqualTo(items[i]);
             }
         }
 
-        [TestMethod]
-        public void GetLine_WithTerminatingBracket_Returns_CorrectValue_WithoutColor()
+        [Test]
+        public async Task GetLine_WithTerminatingBracket_Returns_CorrectValue_WithoutColor()
         {
             var text = "Line1 [1]\nLine2 [2]\nLine3 [1]\nLine5 [4]";
             UnderTest.Contents = text;
@@ -235,48 +192,48 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 
             for (var i = 0; i < items.Length; i++)
             {
-                Assert.AreEqual(items[i], UnderTest.GetLine(i, 9, false));
+                await Assert.That(UnderTest.GetLine(i, 9, false)).IsEqualTo(items[i]);
             }
         }
 
-        [TestMethod]
-        public void GetLine_Returns_LeftAlignedValue()
+        [Test]
+        public async Task GetLine_Returns_LeftAlignedValue()
         {
             var text = "This is some long text.";
             var width = text.Length + 10;
             UnderTest.Contents = text;
             UnderTest.HorizontalAlignment = HorizontalAlignment.Left;
 
-            Assert.IsTrue(UnderTest.GetLine(0, width, false) == text.PadRight(width));
+            await Assert.That(UnderTest.GetLine(0, width, false) == text.PadRight(width)).IsTrue();
         }
 
-        [TestMethod]
-        public void GetLine_Returns_CenterAlignedValue()
+        [Test]
+        public async Task GetLine_Returns_CenterAlignedValue()
         {
             var text = "This is some long text.";
             var width = text.Length + 10;
             UnderTest.Contents = text;
             UnderTest.HorizontalAlignment = HorizontalAlignment.Center;
 
-            Assert.IsTrue(UnderTest.GetLine(0, width, false) == text.Pad(width));
+            await Assert.That(UnderTest.GetLine(0, width, false) == text.Pad(width)).IsTrue();
         }
 
-        [TestMethod]
-        public void GetLine_Returns_RightAlignedValue()
+        [Test]
+        public async Task GetLine_Returns_RightAlignedValue()
         {
             var text = "This is some long text.";
             var width = text.Length + 10;
             UnderTest.Contents = text;
             UnderTest.HorizontalAlignment = HorizontalAlignment.Right;
 
-            Assert.IsTrue(UnderTest.GetLine(0, width, false) == text.PadLeft(width));
+            await Assert.That(UnderTest.GetLine(0, width, false) == text.PadLeft(width)).IsTrue();
         }
 
-        [TestMethod]
-        public void SetNullValue_SetsCellContents_ToEmptyString()
+        [Test]
+        public async Task SetNullValue_SetsCellContents_ToEmptyString()
         {
             UnderTest.Contents = null;
-            Assert.IsTrue(UnderTest.Contents == string.Empty);
+            await Assert.That(UnderTest.Contents == string.Empty).IsTrue();
         }
     }
 }

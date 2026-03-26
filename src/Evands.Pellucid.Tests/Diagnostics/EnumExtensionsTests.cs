@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Evands.Pellucid;
 
 namespace Evands.Pellucid.Diagnostics
@@ -10,7 +9,6 @@ namespace Evands.Pellucid.Diagnostics
     /// <summary>
     /// Tests extensions for enumerations.
     /// </summary>
-    [TestClass]
     public class EnumExtensionsTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
@@ -19,139 +17,121 @@ namespace Evands.Pellucid.Diagnostics
         {
         }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
             writer.Messages.Clear();
             ConsoleBase.UnregisterConsoleWriter(writer);
         }
 
-        [TestMethod]
-        public void DebugEnumeration_All_Contains_All_Tests()
+        [Test]
+        public async Task DebugEnumeration_All_Contains_All_Tests()
         {
             var d1 = DebugLevels.All;
-            Assert.IsTrue(d1.Contains(DebugLevels.All));
-            Assert.IsTrue(d1.Contains(DebugLevels.Debug));
-            Assert.IsTrue(d1.Contains(DebugLevels.Error));
-            Assert.IsTrue(d1.Contains(DebugLevels.Exception));
-            Assert.IsTrue(d1.Contains(DebugLevels.Notice));
-            Assert.IsTrue(d1.Contains(DebugLevels.Progress));
-            Assert.IsTrue(d1.Contains(DebugLevels.Success));
-            Assert.IsTrue(d1.Contains(DebugLevels.Uncategorized));
-            Assert.IsTrue(d1.Contains(DebugLevels.Warning));
+            await Assert.That(d1.Contains(DebugLevels.All)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Debug)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Error)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Exception)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Notice)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Progress)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Success)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Uncategorized)).IsTrue();
+            await Assert.That(d1.Contains(DebugLevels.Warning)).IsTrue();
         }
 
-        [TestMethod]
-        public void DebugEnumeration_All_NotContains_None_Test()
+        [Test]
+        public async Task DebugEnumeration_All_NotContains_None_Test()
         {
             var d1 = DebugLevels.All;
-            Assert.IsFalse(d1.Contains(DebugLevels.None));
+            await Assert.That(d1.Contains(DebugLevels.None)).IsFalse();
         }
 
-        [TestMethod]
-        public void DebugEnumeration_Debug_Contains_Debug_Test()
+        [Test]
+        public async Task DebugEnumeration_Debug_Contains_Debug_Test()
         {
             var d1 = DebugLevels.Debug;
-            Assert.IsTrue(d1.Contains(DebugLevels.Debug));
+            await Assert.That(d1.Contains(DebugLevels.Debug)).IsTrue();
         }
 
-        [TestMethod]
-        public void DebugEnumeration_Debug_NotContains_Test()
+        [Test]
+        public async Task DebugEnumeration_Debug_NotContains_Test()
         {
             var d1 = DebugLevels.Debug;
-            Assert.IsFalse(d1.Contains(DebugLevels.All));
-            Assert.IsFalse(d1.Contains(DebugLevels.AllButDebug));
-            Assert.IsFalse(d1.Contains(DebugLevels.Error));
-            Assert.IsFalse(d1.Contains(DebugLevels.Exception));
-            Assert.IsFalse(d1.Contains(DebugLevels.None));
-            Assert.IsFalse(d1.Contains(DebugLevels.Notice));
-            Assert.IsFalse(d1.Contains(DebugLevels.Progress));
-            Assert.IsFalse(d1.Contains(DebugLevels.Success));
-            Assert.IsFalse(d1.Contains(DebugLevels.Uncategorized));
-            Assert.IsFalse(d1.Contains(DebugLevels.Warning));
+            await Assert.That(d1.Contains(DebugLevels.All)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.AllButDebug)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.Error)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.Exception)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.None)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.Notice)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.Progress)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.Success)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.Uncategorized)).IsFalse();
+            await Assert.That(d1.Contains(DebugLevels.Warning)).IsFalse();
         }
 
-        [TestMethod]
-        public void LoggerEnumeration_All_Contains_All_Tests()
+        [Test]
+        public async Task LoggerEnumeration_All_Contains_All_Tests()
         {
             var d1 = LogLevels.All;
-            Assert.IsTrue(d1.Contains(LogLevels.All));
-            Assert.IsTrue(d1.Contains(LogLevels.AllButDebug));
-            Assert.IsTrue(d1.Contains(LogLevels.Debug));
-            Assert.IsTrue(d1.Contains(LogLevels.Error));
-            Assert.IsTrue(d1.Contains(LogLevels.Exception));
-            Assert.IsTrue(d1.Contains(LogLevels.Notice));
-            Assert.IsTrue(d1.Contains(LogLevels.Warning));
+            await Assert.That(d1.Contains(LogLevels.All)).IsTrue();
+            await Assert.That(d1.Contains(LogLevels.AllButDebug)).IsTrue();
+            await Assert.That(d1.Contains(LogLevels.Debug)).IsTrue();
+            await Assert.That(d1.Contains(LogLevels.Error)).IsTrue();
+            await Assert.That(d1.Contains(LogLevels.Exception)).IsTrue();
+            await Assert.That(d1.Contains(LogLevels.Notice)).IsTrue();
+            await Assert.That(d1.Contains(LogLevels.Warning)).IsTrue();
         }
 
-        [TestMethod]
-        public void LoggerEnumeration_All_NotContains_None_Test()
+        [Test]
+        public async Task LoggerEnumeration_All_NotContains_None_Test()
         {
             var d1 = LogLevels.All;
-            Assert.IsFalse(d1.Contains(LogLevels.None));
+            await Assert.That(d1.Contains(LogLevels.None)).IsFalse();
         }
 
-        [TestMethod]
-        public void LoggerEnumeration_Debug_Contains_Debug_Test()
+        [Test]
+        public async Task LoggerEnumeration_Debug_Contains_Debug_Test()
         {
             var d1 = LogLevels.Debug;
-            Assert.IsTrue(d1.Contains(LogLevels.Debug));
+            await Assert.That(d1.Contains(LogLevels.Debug)).IsTrue();
         }
 
-        [TestMethod]
-        public void LoggerEnumeration_Debug_NotContains_All_Tests()
+        [Test]
+        public async Task LoggerEnumeration_Debug_NotContains_All_Tests()
         {
             var d1 = LogLevels.Debug;
-            Assert.IsFalse(d1.Contains(LogLevels.All));
-            Assert.IsFalse(d1.Contains(LogLevels.AllButDebug));
-            Assert.IsFalse(d1.Contains(LogLevels.Error));
-            Assert.IsFalse(d1.Contains(LogLevels.Exception));
-            Assert.IsFalse(d1.Contains(LogLevels.None));
-            Assert.IsFalse(d1.Contains(LogLevels.Notice));
-            Assert.IsFalse(d1.Contains(LogLevels.Warning));
+            await Assert.That(d1.Contains(LogLevels.All)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.AllButDebug)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Error)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Exception)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.None)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Notice)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Warning)).IsFalse();
         }
 
-        [TestMethod]
-        public void LoggerEnumeration_None_Contains_None_Test()
+        [Test]
+        public async Task LoggerEnumeration_None_Contains_None_Test()
         {
             var d1 = LogLevels.None;
-            Assert.IsTrue(d1.Contains(LogLevels.None));
+            await Assert.That(d1.Contains(LogLevels.None)).IsTrue();
         }
 
-        [TestMethod]
-        public void LoggerEnumeration_None_NotContains_Any_Test()
+        [Test]
+        public async Task LoggerEnumeration_None_NotContains_Any_Test()
         {
             var d1 = LogLevels.None;
-            Assert.IsFalse(d1.Contains(LogLevels.All));
-            Assert.IsFalse(d1.Contains(LogLevels.AllButDebug));
-            Assert.IsFalse(d1.Contains(LogLevels.Error));
-            Assert.IsFalse(d1.Contains(LogLevels.Exception));
-            Assert.IsFalse(d1.Contains(LogLevels.Notice));
-            Assert.IsFalse(d1.Contains(LogLevels.Warning));
+            await Assert.That(d1.Contains(LogLevels.All)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.AllButDebug)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Error)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Exception)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Notice)).IsFalse();
+            await Assert.That(d1.Contains(LogLevels.Warning)).IsFalse();
         }
     }
 }
