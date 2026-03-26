@@ -18,10 +18,12 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         [After(Test)]
         public void TestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
+            Formatters.Chrome = new BasicChrome();
             writer.Messages.Clear();
             ConsoleBase.UnregisterConsoleWriter(writer);
             ConsoleBase.OptionalHeader = string.Empty;
-            Options.Instance.ColorizeConsoleOutput = true;
         }
 
         public DumpCollectionTests()

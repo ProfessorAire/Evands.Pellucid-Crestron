@@ -21,12 +21,13 @@ namespace Evands.Pellucid.Diagnostics
         [After(Test)]
         public void TestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             writer.Messages.Clear();
             logger.Messages.Clear();
             ConsoleBase.UnregisterConsoleWriter(writer);
             Logger.UnregisterLogWriter(logger);
             ConsoleBase.OptionalHeader = string.Empty;
-            Options.Instance.LogLevels = LogLevels.None;
         }
         private string[] linesToTest = new string[]
         {

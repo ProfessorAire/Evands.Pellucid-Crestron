@@ -17,12 +17,13 @@ namespace Evands.Pellucid.Diagnostics
         [After(Test)]
         public void TestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             writer.Messages.Clear();
             ConsoleBase.UnregisterConsoleWriter(writer);
             ConsoleBase.OptionalHeader = string.Empty;
             Options.Instance.Suppressed.Clear();
             Options.Instance.Allowed.Clear();
-            Options.Instance.UseTimestamps = true;
         }
 
         [Test]

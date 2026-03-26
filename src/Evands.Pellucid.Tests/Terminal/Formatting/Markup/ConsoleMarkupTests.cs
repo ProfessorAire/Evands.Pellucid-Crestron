@@ -11,6 +11,14 @@ namespace Evands.Pellucid.Terminal.Formatting.Markup
         {
             Options.Instance.EnableMarkup = true;
         }
+
+        [After(Test)]
+        public void TestCleanup()
+        {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
+        }
+
         public ConsoleMarkupTests()
         {
         }

@@ -6,6 +6,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
 {
     public class LogMessageTests
     {
+        [After(Test)]
+        public void TestCleanup()
+        {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
+        }
 
         [Test]
         public async Task TimestampFormat_Get_Returns_DefaultValue()

@@ -90,6 +90,8 @@ namespace Evands.Pellucid.Terminal.Commands
         [After(Test)]
         public void MyTestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             underTest.RemoveFromConsole();
             underTest.Dispose();
             underTest = null;

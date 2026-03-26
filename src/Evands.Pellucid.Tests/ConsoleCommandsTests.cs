@@ -8,6 +8,13 @@ namespace Evands.Pellucid
 {
     public class ConsoleCommandsTests
     {
+        [After(Test)]
+        public void TestCleanup()
+        {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
+        }
+
         private class TestBaseCommand : TerminalCommandBase
         {
         }

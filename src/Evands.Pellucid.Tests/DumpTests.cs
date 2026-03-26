@@ -19,10 +19,11 @@ namespace Evands.Pellucid
         [After(Test)]
         public void TestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             writer.Messages.Clear();
             ConsoleBase.UnregisterConsoleWriter(writer);
             ConsoleBase.OptionalHeader = string.Empty;
-            Options.Instance.ColorizeConsoleOutput = true;
         }
 
         public DumpTests()

@@ -35,6 +35,8 @@ namespace Evands.Pellucid.Terminal.Commands
          [After(Test)]
          public void MyTestCleanup()
          {
+             Options.UseDefault();
+             ConsoleBase.NewLine = Environment.NewLine;
              global.RemoveCommand(command);
              global = null;
              command = null;
