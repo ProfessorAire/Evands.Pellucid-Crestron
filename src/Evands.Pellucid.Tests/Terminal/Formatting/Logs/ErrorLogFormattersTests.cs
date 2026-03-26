@@ -12,6 +12,8 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [After(Test)]
         public void Cleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
         }
 

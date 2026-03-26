@@ -9,6 +9,13 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
     /// </summary>
     public class TableTests
     {
+        [After(Test)]
+        public void TestCleanup()
+        {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
+        }
+
         public TableTests()
         {
         }

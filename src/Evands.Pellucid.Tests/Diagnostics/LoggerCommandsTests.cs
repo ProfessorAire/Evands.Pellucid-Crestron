@@ -27,6 +27,8 @@ namespace Evands.Pellucid.Diagnostics
         [After(Test)]
         public void TestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             CrestronConsole.Messages.Length = 0;
             CrestronConsole.CommandResponse = string.Empty;
         }
