@@ -12,7 +12,7 @@
 
 using System;
 using System.Text;
-using Crestron.SimplSharp.CrestronIO;
+using System.IO;
 using Evands.Pellucid.Diagnostics;
 
 namespace Evands.Pellucid.Diagnostics
@@ -81,13 +81,7 @@ namespace Evands.Pellucid.Diagnostics
             logBuilder = new StringBuilder(5000);
             LoggingFrequency = TimeSpan.FromMinutes(10);
 
-            Crestron.SimplSharp.CrestronEnvironment.ProgramStatusEventHandler += (args) =>
-                {
-                    if (args == Crestron.SimplSharp.eProgramStatusEventType.Stopping || args == Crestron.SimplSharp.eProgramStatusEventType.Paused)
-                    {
-                        Flush(true);
-                    }
-                };
+            PlatformServices.Current.RegisterProgramStoppingHandler(() => Flush(true));
         }
 
         /// <summary>
@@ -124,7 +118,7 @@ namespace Evands.Pellucid.Diagnostics
         /// </summary>
         private void FormatFileName()
         {
-            var now = Crestron.SimplSharp.CrestronEnvironment.GetLocalTime();
+            var now = PlatformServices.Current.GetLocalTime();
 
             if (fileStamp.ToShortDateString() != now.ToShortDateString())
             {
@@ -149,7 +143,7 @@ namespace Evands.Pellucid.Diagnostics
         /// <param name="force">When true will flush to disk regardless of whether the log requires it.</param>
         private void Flush(bool force)
         {
-            if (logBuilder.Length > 0 && (force || Crestron.SimplSharp.CrestronEnvironment.GetLocalTime() - lastFlushStamp >= LoggingFrequency))
+            if (logBuilder.Length > 0 && (force || PlatformServices.Current.GetLocalTime() - lastFlushStamp >= LoggingFrequency))
             {
                 try
                 {
@@ -173,7 +167,7 @@ namespace Evands.Pellucid.Diagnostics
                     {
                         if (numberOfMessages == 0)
                         {
-                            var msg = File.ReadToEnd(fileName, Encoding.UTF8);
+                            var msg = File.ReadAllText(fileName, Encoding.UTF8);
                             var m = System.Text.RegularExpressions.Regex.Matches(msg, @"\d+: ", System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.Multiline);
                             numberOfMessages = m.Count;
                         }
@@ -185,9 +179,9 @@ namespace Evands.Pellucid.Diagnostics
                     }
 
                     logBuilder.Length = 0;
-                    lastFlushStamp = Crestron.SimplSharp.CrestronEnvironment.GetLocalTime();
+                    lastFlushStamp = PlatformServices.Current.GetLocalTime();
                 }
-                catch (InvalidDirectoryLocationException ex)
+                catch (DirectoryNotFoundException ex)
                 {
                     Logger.UnregisterLogWriter(this);
                     Logger.LogException(this, ex, "The specifed directory appears to be invalid. Unable to flush the log to the file '{1}'. The SimpleFileLogger has been unregistered from the Logger.", fileName);

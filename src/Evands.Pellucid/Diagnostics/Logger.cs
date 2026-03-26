@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
-using Crestron.SimplSharp;
 using Evands.Pellucid.Terminal;
 
 namespace Evands.Pellucid.Diagnostics
@@ -53,7 +52,7 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (loggers.Count == 0)
                 {
-                    loggers.Add(new CrestronLogWriter());
+                    loggers.Add(PlatformServices.Current.CreateDefaultLogWriter());
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj, false, false), message.OptionalFormat(args));
@@ -75,7 +74,7 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (loggers.Count == 0)
                 {
-                    loggers.Add(new CrestronLogWriter());
+                    loggers.Add(PlatformServices.Current.CreateDefaultLogWriter());
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
@@ -111,7 +110,7 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (loggers.Count == 0)
                 {
-                    loggers.Add(new CrestronLogWriter());
+                    loggers.Add(PlatformServices.Current.CreateDefaultLogWriter());
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
@@ -152,7 +151,7 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (loggers.Count == 0)
                 {
-                    loggers.Add(new CrestronLogWriter());
+                    loggers.Add(PlatformServices.Current.CreateDefaultLogWriter());
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
@@ -174,7 +173,7 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (loggers.Count == 0)
                 {
-                    loggers.Add(new CrestronLogWriter());
+                    loggers.Add(PlatformServices.Current.CreateDefaultLogWriter());
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));
@@ -197,7 +196,7 @@ namespace Evands.Pellucid.Diagnostics
             {
                 if (loggers.Count == 0)
                 {
-                    loggers.Add(new CrestronLogWriter());
+                    loggers.Add(PlatformServices.Current.CreateDefaultLogWriter());
                 }
 
                 var msg = string.Format("{0}{1}", Debug.GetMessageHeader(obj), message.OptionalFormat(args));

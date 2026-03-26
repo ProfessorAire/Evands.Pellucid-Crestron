@@ -47,7 +47,7 @@ namespace Evands.Pellucid.Internal
         public static void SerializeToDisk(object obj, string filePath)
         {
             var contents = SerializeObject(obj);
-            using (var f = Crestron.SimplSharp.CrestronIO.File.CreateText(filePath))
+            using (var f = System.IO.File.CreateText(filePath))
             {
                 if (f != null)
                 {
@@ -64,7 +64,7 @@ namespace Evands.Pellucid.Internal
         /// <returns>A value of the type T.</returns>        
         public static T DeserializeFromDisk<T>(string filePath) where T : new()
         {
-            var contents = Crestron.SimplSharp.CrestronIO.File.ReadToEnd(filePath, Encoding.UTF8);
+            var contents = System.IO.File.ReadAllText(filePath, Encoding.UTF8);
             return DeserializeObject<T>(contents);
         }
 
