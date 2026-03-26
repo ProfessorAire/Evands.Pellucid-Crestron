@@ -29,7 +29,7 @@ if ($exitCode -eq 0)
 {
     $libDll = "$PSScriptRoot/../src/Evands.Pellucid/bin/Release/netstandard2.0/Evands.Pellucid.dll"
     $libXml = "$PSScriptRoot/../src/Evands.Pellucid/bin/Release/netstandard2.0/Evands.Pellucid.xml"
-    $demo = "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/bin/Release/net8.0/Evands.Pellucid.ProDemo.dll"
+    $demo = "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/bin/Release/net8.0/Evands.Pellucid.ProDemo.cpz"
     
     $archivePath = "$outPath/Evands.Pellucid-Crestron-v$libVersion.zip"
     Write-Host "Creating release archive."

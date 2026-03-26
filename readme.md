@@ -85,8 +85,6 @@ The `ConsoleBase` class is a bit of a unique one, as it's an `abstract` class th
 
 The `ConsoleBase` class provides `InitializeDefaultConsoleCommands`, which registers the built-in `ConsoleCommands`, `DebuggingCommands`, and `LoggerCommands` with the global commands you specify. In most cases if you're writing an S# Pro Library or Program you'll want to call this method to register the default commands.
 
-Generally it's easiest to call the console if you create your own implementation named `Console` that exists in the root of your project namespace. If it exists in the project's root namespace it will supersede the `System.Console` class, which will allow you to call `Console.[CommandName]` instead of `ConsoleBase.[CommandName]`.
-
 In addition, the console has a variety of options for printing colorized text, which makes it far easier to differentiate messages when reading a busy console. You can specify a variety of standard console colors, or use an implementation of the `Evands.Pellucid.Terminal.Formatting.IConsoleColor` interface, such as `Evands.Pellucid.Terminal.Formatting.RgbColor` to specify a custom color. These colors are only printed if the `Evands.Pellucid.Options.Instance.ColorizeConsoleOutput` property is set to `true`. (By default it is.)
 
 Finally, messages printed to the console using the `Write` and `WriteLine` methods are prefixed with the numer of the program slot that the code is executing in, formatted like `"[01] Your message here."`, which can make it easier to differentiate between programs writing to the console.

@@ -53,17 +53,17 @@ namespace Evands.Pellucid
         /// <summary>
         /// Used for configuring console settings from the console itself.
         /// </summary>
-        private static readonly ConsoleCommands defaultConsoleCommands = new ConsoleCommands();
+        private static ConsoleCommands defaultConsoleCommands;
 
         /// <summary>
         /// Used for configuring debugging commands.
         /// </summary>
-        private static readonly Diagnostics.DebuggingCommands defaultDebuggingCommands = new Diagnostics.DebuggingCommands();
+        private static Diagnostics.DebuggingCommands defaultDebuggingCommands;
 
         /// <summary>
         /// Used for configuring logging commands.
         /// </summary>
-        private static readonly Diagnostics.LoggerCommands defaultLoggingCommands = new Diagnostics.LoggerCommands();
+        private static Diagnostics.LoggerCommands defaultLoggingCommands;
 
         /// <summary>
         /// Tracks whether the default console commands have been initialized.
@@ -644,6 +644,9 @@ namespace Evands.Pellucid
             if (!defaultConsoleCommandsInitialized)
             {
                 defaultConsoleCommandsInitialized = true;
+                defaultConsoleCommands = new ConsoleCommands();
+                defaultDebuggingCommands = new Diagnostics.DebuggingCommands();
+                defaultLoggingCommands = new Diagnostics.LoggerCommands();
                 WriteLine();
                 Diagnostics.Debug.WriteDebugLine("ConsoleBase", "Initializing global console commands.");
                 for (var i = 0; i < globalCommandNames.Length; i++)
