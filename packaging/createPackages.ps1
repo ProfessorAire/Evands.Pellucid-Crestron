@@ -1,9 +1,8 @@
 param(
-[Parameter(Mandatory=$true)][string]$libVersion,
-[Parameter(Mandatory=$true)][string]$proVersion
+[Parameter(Mandatory=$true)][string]$libVersion
 )
 
-$outPath = "$PSScriptRoot\.releases"
+$outPath = "$PSScriptRoot/.releases"
 
 if ([System.IO.Directory]::Exists($outPath) -eq $false)
 {
@@ -12,47 +11,26 @@ if ([System.IO.Directory]::Exists($outPath) -eq $false)
 }
 
 Write-Host "Evands.Pellucid Version: $libVersion"
-Write-Host "Evands.Pellucid.Pro Version: $proVersion"
 
 Write-Host "Creating Nuget Package for Evands.Pellucid"
-nuget pack $PSScriptRoot\Evands.Pellucid.nuspec -Version $libVersion -OutputDirectory $outPath -Verbosity quiet
+dotnet pack "$PSScriptRoot/../src/Evands.Pellucid/Evands.Pellucid.csproj" --configuration Release -p:PackageVersion=$libVersion --output $outPath
 
 $exitCode = 0
 
-$libPath = "$outPath\Evands.Pellucid.$libVersion.nupkg"
-$proPath = "$outPath\Evands.Pellucid.Pro.$proVersion.nupkg"
+$libPath = "$outPath/Evands.Pellucid.$libVersion.nupkg"
 
 if ([System.IO.File]::Exists($libPath) -eq $false)
 {
     Write-Warning "Unable to create nuget package for Evands.Pellucid"
     $exitCode = 1002
 }
-else
-{
-    Write-Host "Creating Nuget Package for Evands.Pellucid.Pro"
-    (Get-Content -Path "$PSScriptRoot\Evands.Pellucid.Pro.nuspec") -Replace "depVer", $libVersion | Set-Content -Path "$PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec"
-    nuget pack $PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec -Version $proVersion -OutputDirectory $outPath -Verbosity quiet
-    if ([System.IO.File]::Exists($proPath) -eq $false)
-    {
-        Write-Warning "Unable to create nuget package for Evands.Pellucid.Pro"
-        $exitCode = 1003
-    }
-
-    if ([System.IO.File]::Exists("$PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec") -eq $true)
-    {
-        Remove-Item -Path "$PSScriptRoot\Evands.Pellucid.Pro.temp.nuspec"
-    }
-}
 
 if ($exitCode -eq 0)
 {
-    $libDll = "$PSScriptRoot/../src/Evands.Pellucid/bin/Release/Evands.Pellucid.dll"
-    $libXml = "$PSScriptRoot/../src/Evands.Pellucid/bin/Release/Evands.Pellucid.xml"
-    $libProDll = "$PSScriptRoot/../src/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.dll"
-    $libProXml = "$PSScriptRoot/../src/Evands.Pellucid.Pro/bin/Release/Evands.Pellucid.Pro.xml"
-    $demo = "$PSScriptRoot/../src/Evands.Pellucid.ProDemo/bin/Release/Evands.Pellucid.ProDemo.cpz"
+    $libDll = "$PSScriptRoot/../src/Evands.Pellucid/bin/Release/netstandard2.0/Evands.Pellucid.dll"
+    $libXml = "$PSScriptRoot/../src/Evands.Pellucid/bin/Release/netstandard2.0/Evands.Pellucid.xml"
     
-    $archivePath = "$outPath\Evands.Pellucid-Crestron-v$libVersion.zip"
+    $archivePath = "$outPath/Evands.Pellucid-Crestron-v$libVersion.zip"
     Write-Host "Creating release archive."
 
     if ([System.IO.File]::Exists($archivePath) -eq $true)
@@ -63,7 +41,7 @@ if ($exitCode -eq 0)
 
     try
     {
-        Compress-Archive $libDll, $libXml, $libProDll, $libProXml, $demo -DestinationPath $archivePath
+        Compress-Archive $libDll, $libXml -DestinationPath $archivePath
         Write-Host "Created release archive '$archivePath'."
     }
     catch
@@ -79,7 +57,7 @@ if ($exitCode -eq 0)
 
 if ($exitCode -eq 0)
 {
-    $libPath, $proPath, $archivePath
+    $libPath, $archivePath
 }
 
 exit $exitCode
