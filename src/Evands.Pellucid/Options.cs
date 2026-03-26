@@ -12,8 +12,7 @@
 
 using System;
 using System.Collections.Generic;
-using Crestron.SimplSharp;
-using Crestron.SimplSharp.CrestronIO;
+using System.IO;
 using Evands.Pellucid.Diagnostics;
 using Evands.Pellucid.Internal;
 
@@ -146,11 +145,12 @@ namespace Evands.Pellucid
 
                     if (value)
                     {
-                        CrestronEnvironment.ProgramStatusEventHandler += HandleAutoLoad;
+                        PlatformServices.Current.RegisterProgramStoppingHandler(OnProgramStopping);
+                        PlatformServices.Current.RegisterProgramResumingHandler(OnProgramResuming);
                     }
                     else
                     {
-                        CrestronEnvironment.ProgramStatusEventHandler -= HandleAutoLoad;
+                        PlatformServices.Current.UnregisterProgramHandlers(OnProgramStopping, OnProgramResuming);
                     }
                 }
             }
@@ -234,7 +234,6 @@ namespace Evands.Pellucid
             }
             catch (Exception ex)
             {
-                ErrorLog.Exception("Pellucid.Options", ex);
                 Debug.WriteException(this, ex, "Exception while saving Pellucid.Options to disk.");
             }
         }
@@ -255,11 +254,12 @@ namespace Evands.Pellucid
                 try
                 {
                     var options = MinimalTomlParser.DeserializeFromDisk<Options>(FilePath);
-                    CrestronEnvironment.ProgramStatusEventHandler -= options.HandleAutoLoad;
+                    PlatformServices.Current.UnregisterProgramHandlers(options.OnProgramStopping, options.OnProgramResuming);
 
                     if (options.AutoSave)
                     {
-                        CrestronEnvironment.ProgramStatusEventHandler += options.HandleAutoLoad;
+                        PlatformServices.Current.RegisterProgramStoppingHandler(options.OnProgramStopping);
+                        PlatformServices.Current.RegisterProgramResumingHandler(options.OnProgramResuming);
                     }
 
                     return options;
@@ -283,17 +283,23 @@ namespace Evands.Pellucid
         {
             if (string.IsNullOrEmpty(FilePath))
             {
-                string fileName;
-                if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance)
+                var dir = PlatformServices.Current.GetDefaultConfigDirectory();
+                var fileName = PlatformServices.Current.GetDefaultConfigFileName();
+
+                if (!Directory.Exists(dir))
                 {
-                    fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
-                }
-                else
-                {
-                    fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.RoomId);
+                    try
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    catch
+                    {
+                        // Fall back to app directory if we can't create the config directory
+                        dir = AppDomain.CurrentDomain.BaseDirectory;
+                    }
                 }
 
-                FilePath = Path.Combine(Path.Combine("/USER", "Pellucid"), fileName);
+                FilePath = Path.Combine(dir, fileName);
             }
         }
 
@@ -318,21 +324,19 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
-        /// Handles auto saving and loading.
+        /// Handles auto saving when the program is stopping.
         /// </summary>
-        /// <param name="status">The status of the program.</param>
-        private void HandleAutoLoad(eProgramStatusEventType status)
+        private void OnProgramStopping()
         {
-            switch (status)
-            {
-                case eProgramStatusEventType.Stopping:
-                case eProgramStatusEventType.Paused:
-                    Save();
-                    break;
-                case eProgramStatusEventType.Resumed:
-                    Load();
-                    break;
-            }
+            Save();
+        }
+
+        /// <summary>
+        /// Handles auto loading when the program is resuming.
+        /// </summary>
+        private void OnProgramResuming()
+        {
+            Load();
         }
     }
 }
