@@ -1,23 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Evands.Pellucid.Diagnostics
 {
-    [TestClass]
     public class DebugTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
             writer.Messages.Clear();
@@ -28,26 +25,8 @@ namespace Evands.Pellucid.Diagnostics
             Options.Instance.UseTimestamps = true;
         }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestMethod]
-        public void RegisterHeaderObject_AsString_AddsValueToHeaders_WithColor()
+        [Test]
+        public async Task RegisterHeaderObject_AsString_AddsValueToHeaders_WithColor()
         {
             var value = "TestValue4321";
             var expected = ConsoleBase.Colors.Cyan;
@@ -55,11 +34,11 @@ namespace Evands.Pellucid.Diagnostics
 
             var actual = Debug.RegisteredClasses[value];
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void RegisterHeaderObject_AsObject_AddsValueToHeaders_WithColor()
+        [Test]
+        public async Task RegisterHeaderObject_AsObject_AddsValueToHeaders_WithColor()
         {
             var value = new ThrowAway1();
             var name = value.GetType().FullName;
@@ -68,11 +47,11 @@ namespace Evands.Pellucid.Diagnostics
 
             var actual = Debug.RegisteredClasses[name];
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void RegisterHeaderObject_WhenAlreadyExisting_ReplacesColor()
+        [Test]
+        public async Task RegisterHeaderObject_WhenAlreadyExisting_ReplacesColor()
         {
             var value = new ThrowAway2();
             var name = value.GetType().FullName;
@@ -80,87 +59,87 @@ namespace Evands.Pellucid.Diagnostics
 
             Debug.RegisterHeaderObject(value, expected);
             var actual = Debug.RegisteredClasses[name];
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
             expected = ConsoleBase.Colors.BrightYellow;
 
             Debug.RegisterHeaderObject(value, expected);
             actual = Debug.RegisteredClasses[name];
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void AddSuppression_AddsItem_To_SuppressionList()
+        [Test]
+        public async Task AddSuppression_AddsItem_To_SuppressionList()
         {
             var suppression = "Suppression";
-            Assert.IsTrue(Debug.AddSuppression(suppression));
-            Assert.IsTrue(Options.Instance.Suppressed.Contains(suppression));
+            await Assert.That(Debug.AddSuppression(suppression)).IsTrue();
+            await Assert.That(Options.Instance.Suppressed.Contains(suppression)).IsTrue();
         }
 
-        [TestMethod]
-        public void AddAllowed_AddsItem_To_AllowedList()
+        [Test]
+        public async Task AddAllowed_AddsItem_To_AllowedList()
         {
             var allowed = "Allowed";
-            Assert.IsTrue(Debug.AddAllowed(allowed));
-            Assert.IsTrue(Options.Instance.Allowed.Contains(allowed));
+            await Assert.That(Debug.AddAllowed(allowed)).IsTrue();
+            await Assert.That(Options.Instance.Allowed.Contains(allowed)).IsTrue();
         }
 
-        [TestMethod]
-        public void RemoveSuppression_RemovesItem_From_SuppressionList()
+        [Test]
+        public async Task RemoveSuppression_RemovesItem_From_SuppressionList()
         {
             var suppression = "SuppressionToRemove";
-            Assert.IsTrue(Debug.AddSuppression(suppression));
-            Assert.IsTrue(Options.Instance.Suppressed.Contains(suppression));
-            Assert.IsTrue(Debug.RemoveSuppression(suppression));
-            Assert.IsFalse(Options.Instance.Suppressed.Contains(suppression));
+            await Assert.That(Debug.AddSuppression(suppression)).IsTrue();
+            await Assert.That(Options.Instance.Suppressed.Contains(suppression)).IsTrue();
+            await Assert.That(Debug.RemoveSuppression(suppression)).IsTrue();
+            await Assert.That(Options.Instance.Suppressed.Contains(suppression)).IsFalse();
         }
 
-        [TestMethod]
-        public void RemoveAllowed_RemovesItem_From_AllowedList()
+        [Test]
+        public async Task RemoveAllowed_RemovesItem_From_AllowedList()
         {
             var allowed = "AllowedToRemove";
-            Assert.IsTrue(Debug.AddAllowed(allowed));
-            Assert.IsTrue(Options.Instance.Allowed.Contains(allowed));
-            Assert.IsTrue(Debug.RemoveAllowed(allowed));
-            Assert.IsFalse(Options.Instance.Allowed.Contains(allowed));
+            await Assert.That(Debug.AddAllowed(allowed)).IsTrue();
+            await Assert.That(Options.Instance.Allowed.Contains(allowed)).IsTrue();
+            await Assert.That(Debug.RemoveAllowed(allowed)).IsTrue();
+            await Assert.That(Options.Instance.Allowed.Contains(allowed)).IsFalse();
         }
 
-        [TestMethod]
-        public void RemoveSuppression_WhenNotAdded_ReturnsFalse()
+        [Test]
+        public async Task RemoveSuppression_WhenNotAdded_ReturnsFalse()
         {
             var suppression = "SuppressionToRemove";
-            Assert.IsFalse(Debug.RemoveSuppression(suppression));
+            await Assert.That(Debug.RemoveSuppression(suppression)).IsFalse();
         }
 
-        [TestMethod]
-        public void RemoveAllowed_WhenNotAdded_ReturnsFalse()
+        [Test]
+        public async Task RemoveAllowed_WhenNotAdded_ReturnsFalse()
         {
             var allowed = "AllowedToRemove";
-            Assert.IsFalse(Debug.RemoveAllowed(allowed));
+            await Assert.That(Debug.RemoveAllowed(allowed)).IsFalse();
         }
 
-        [TestMethod]
-        public void WriteLine_WithSuppressed_DoesNotWrite()
+        [Test]
+        public async Task WriteLine_WithSuppressed_DoesNotWrite()
         {
             var suppressed = "Suppressed";
-            Assert.IsTrue(Debug.AddSuppression(suppressed), "Suppression failed to add.");
+            await Assert.That(Debug.AddSuppression(suppressed)).IsTrue();
             var notExpected = "This message should be missing.";
             Debug.WriteLine((object)suppressed, Evands.Pellucid.Terminal.ColorCode.Blue, notExpected);
-            Assert.IsFalse(this.writer.Contains(notExpected));
+            await Assert.That(this.writer.Contains(notExpected)).IsFalse();
             Debug.RemoveSuppression(suppressed);
         }
 
-        [TestMethod]
-        public void GetMessageHeader_ReturnsColoredHeader_WithoutTrailingSpaceColored()
+        [Test]
+        public async Task GetMessageHeader_ReturnsColoredHeader_WithoutTrailingSpaceColored()
         {
             Options.Instance.ColorizeConsoleOutput = true;
             var headerText = "HeaderTest";
             var expected = ConsoleBase.Colors.Subtle.FormatText(string.Format("[{0}]", headerText)) + " ";
             var actual = Debug.GetMessageHeader(headerText, false, true);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void WriteLineWithLevelWritesExpectedLevel()
+        [Test]
+        public async Task WriteLineWithLevelWritesExpectedLevel()
         {
             Options.Instance.ColorizeConsoleOutput = true;
             Options.Instance.UseTimestamps = false;
@@ -170,46 +149,46 @@ namespace Evands.Pellucid.Diagnostics
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Debug.FormatText(true, "Test Message with Argument."));
             Debug.WriteLine(DebugLevels.Debug, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0} {1}\r\n",
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Notice.FormatText(true, "Test Message with Argument."));
             Debug.WriteLine(DebugLevels.Notice, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[1]);
+            await Assert.That(this.writer.Messages[1]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0} {1}\r\n",
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Error.FormatText(true, "Test Message with Argument."));
             Debug.WriteLine(DebugLevels.Error, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[2]);
+            await Assert.That(this.writer.Messages[2]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0} {1}\r\n",
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Progress.FormatText(true, "Test Message with Argument."));
             Debug.WriteLine(DebugLevels.Progress, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[3]);
+            await Assert.That(this.writer.Messages[3]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0} {1}\r\n",
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Success.FormatText(true, "Test Message with Argument."));
             Debug.WriteLine(DebugLevels.Success, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[4]);
+            await Assert.That(this.writer.Messages[4]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0} {1}\r\n",
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Warning.FormatText(true, "Test Message with Argument."));
             Debug.WriteLine(DebugLevels.Warning, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[5]);
+            await Assert.That(this.writer.Messages[5]).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void WriteWithLevelWritesExpectedLevel()
+        [Test]
+        public async Task WriteWithLevelWritesExpectedLevel()
         {
             Options.Instance.ColorizeConsoleOutput = true;
             Options.Instance.UseTimestamps = false;
@@ -221,41 +200,41 @@ namespace Evands.Pellucid.Diagnostics
                 "{0}",
                 ConsoleBase.Colors.Debug.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Debug, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0}",
                 ConsoleBase.Colors.Notice.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Notice, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[1]);
+            await Assert.That(this.writer.Messages[1]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0}",
                 ConsoleBase.Colors.Error.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Error, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[2]);
+            await Assert.That(this.writer.Messages[2]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0}",
                 ConsoleBase.Colors.Progress.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Progress, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[3]);
+            await Assert.That(this.writer.Messages[3]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0}",
                 ConsoleBase.Colors.Success.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Success, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[4]);
+            await Assert.That(this.writer.Messages[4]).IsEqualTo(expected);
 
             expected = string.Format(
                 "{0}",
                 ConsoleBase.Colors.Warning.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Warning, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[5]);
+            await Assert.That(this.writer.Messages[5]).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void WriteWithLevelWritesExpectedLevelWithHeader()
+        [Test]
+        public async Task WriteWithLevelWritesExpectedLevelWithHeader()
         {
             Options.Instance.ColorizeConsoleOutput = true;
             Options.Instance.UseTimestamps = false;
@@ -268,7 +247,7 @@ namespace Evands.Pellucid.Diagnostics
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Debug.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Debug, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             Debug.WriteLine("Test");
             this.writer.Messages.Clear();
@@ -278,7 +257,7 @@ namespace Evands.Pellucid.Diagnostics
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Notice.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Notice, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             Debug.WriteLine("Test");
             this.writer.Messages.Clear();
@@ -288,7 +267,7 @@ namespace Evands.Pellucid.Diagnostics
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Error.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Error, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             Debug.WriteLine("Test");
             this.writer.Messages.Clear();
@@ -298,7 +277,7 @@ namespace Evands.Pellucid.Diagnostics
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Progress.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Progress, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             Debug.WriteLine("Test");
             this.writer.Messages.Clear();
@@ -308,7 +287,7 @@ namespace Evands.Pellucid.Diagnostics
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Success.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Success, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             Debug.WriteLine("Test");
             this.writer.Messages.Clear();
@@ -318,7 +297,7 @@ namespace Evands.Pellucid.Diagnostics
                 ConsoleBase.Colors.Subtle.FormatText(true, "[DebugTests]"),
                 ConsoleBase.Colors.Warning.FormatText(true, "Test Message with Argument."));
             Debug.Write(DebugLevels.Warning, "DebugTests", "Test Message with {0}.", "Argument");
-            Assert.AreEqual(expected, this.writer.Messages[0]);
+            await Assert.That(this.writer.Messages[0]).IsEqualTo(expected);
 
             Debug.WriteLine("Test");
             this.writer.Messages.Clear();

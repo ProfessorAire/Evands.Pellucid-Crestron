@@ -5,9 +5,8 @@
   <Project Path="Evands.Pellucid.Fakes/Evands.Pellucid.Fakes.csproj" />
   <Project Path="Evands.Pellucid.Tests/Evands.Pellucid.Tests.csproj" />
   <Configurations>
-    <Platform Name="Any CPU" />
-    <Configuration Name="Debug" />
-    <Configuration Name="Release" />
-    <Configuration Name="Test" />
+    <Configuration Name="Debug" Platform="Any CPU" />
+    <Configuration Name="Release" Platform="Any CPU" />
+    <Configuration Name="Test" Platform="Any CPU" />
   </Configurations>
 </Solution>

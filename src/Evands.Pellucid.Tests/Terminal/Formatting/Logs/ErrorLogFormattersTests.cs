@@ -1,39 +1,32 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Crestron.SimplSharp;
 using Evands.Pellucid.Helpers;
 
 namespace Evands.Pellucid.Terminal.Formatting.Logs
 {
-    [TestClass]
     public class ErrorLogFormattersTests
     {
-        [TestInitialize]
-        public void Setup()
-        {
-        }
-
-        [TestCleanup]
+        [After(Test)]
         public void Cleanup()
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
         }
 
-        [TestMethod]
-        public void ParseCrestronErrorLog_With_Server_Returns_NoEntries()
+        [Test]
+        public async Task ParseCrestronErrorLog_With_Server_Returns_NoEntries()
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Server;
             var actual = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetThreeSeriesLog()).ToList();
-            Assert.AreEqual(actual.Count, 0);
+            await Assert.That(0).IsEqualTo(actual.Count);
         }
 
         #region ParseCrestronErrorLogThreeSeries
 
-        [TestMethod]
-        public void ParseCrestronErrorLog_With_ThreeSeriesLog_Returns_Expected()
+        [Test]
+        public async Task ParseCrestronErrorLog_With_ThreeSeriesLog_Returns_Expected()
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
             CrestronEnvironment.ProgramCompatibility = eCrestronSeries.Series3;
@@ -44,14 +37,14 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
 
             var logItems = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetThreeSeriesLog()).ToList();
 
-            Assert.IsTrue(expectedItem0.Equals(logItems[0]), "Item0 Didn't Match: Expected <{0}> was <{1}>", expectedItem0, logItems[0]);
-            Assert.IsTrue(expectedItem3.Equals(logItems[3]), "Item3 Didn't Match: Expected <{0}> was <{1}>", expectedItem3, logItems[3]);
-            Assert.IsTrue(expectedItem6.Equals(logItems[6]), "Item6 Didn't Match: Expected <{0}> was <{1}>", expectedItem6, logItems[6]);
-            Assert.IsTrue(expectedItem56.Equals(logItems[56]), "Item56 Didn't Match: Expected <{0}> was <{1}>", expectedItem56, logItems[56]);
+            await Assert.That(expectedItem0.Equals(logItems[0])).IsTrue();
+            await Assert.That(expectedItem3.Equals(logItems[3])).IsTrue();
+            await Assert.That(expectedItem6.Equals(logItems[6])).IsTrue();
+            await Assert.That(expectedItem56.Equals(logItems[56])).IsTrue();
         }
 
-        [TestMethod]
-        public void ParseCrestronErrorLog_With_ThreeSeriesLog_And_BrokenErrors_Returns_Expected()
+        [Test]
+        public async Task ParseCrestronErrorLog_With_ThreeSeriesLog_And_BrokenErrors_Returns_Expected()
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
             CrestronEnvironment.ProgramCompatibility = eCrestronSeries.Series3;
@@ -77,16 +70,16 @@ System.FormatException: FormatException
 
             var logItems = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetBrokenThreeSeriesLog()).ToList();
 
-            Assert.IsTrue(logItems.Count == expectedCount, "Expected <{0}> items and there were <{1}>", expectedCount, logItems.Count);
-            Assert.IsTrue(expectedItem1.Equals(logItems[1]), "Item1 Didn't Match. Expected\r\n<{0}>\r\nActual was\r\n<{1}>", expectedItem1, logItems[1]);
+            await Assert.That(logItems.Count == expectedCount).IsTrue();
+            await Assert.That(expectedItem1.Equals(logItems[1])).IsTrue();
         }
 
         #endregion
 
         #region ParseCrestronErrorLogFourSeries
 
-        [TestMethod]
-        public void ParseCrestronErrorLog_With_FourSeriesLog_Returns_Expected()
+        [Test]
+        public async Task ParseCrestronErrorLog_With_FourSeriesLog_Returns_Expected()
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
             CrestronEnvironment.ProgramCompatibility = eCrestronSeries.Series3 | eCrestronSeries.Series4;
@@ -97,14 +90,14 @@ System.FormatException: FormatException
 
             var logItems = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetFourSeriesLog()).ToList();
 
-            Assert.IsTrue(expectedItem0.Equals(logItems[0]), "Item0 Didn't Match: Expected <{0}> was <{1}>", expectedItem0, logItems[0]);
-            Assert.IsTrue(expectedItem1.Equals(logItems[1]), "Item1 Didn't Match: Expected <{0}> was <{1}>", expectedItem1, logItems[1]);
-            Assert.IsTrue(expectedItem4.Equals(logItems[4]), "Item4 Didn't Match: Expected <{0}> was <{1}>", expectedItem4, logItems[4]);
-            Assert.IsTrue(expectedItem5.Equals(logItems[5]), "Item5 Didn't Match: Expected <{0}> was <{1}>", expectedItem5, logItems[5]);
+            await Assert.That(expectedItem0.Equals(logItems[0])).IsTrue();
+            await Assert.That(expectedItem1.Equals(logItems[1])).IsTrue();
+            await Assert.That(expectedItem4.Equals(logItems[4])).IsTrue();
+            await Assert.That(expectedItem5.Equals(logItems[5])).IsTrue();
         }
 
-        [TestMethod]
-        public void ParseCrestronErrorLog_With_FourSeriesLog_And_BrokenErrors_Returns_Expected()
+        [Test]
+        public async Task ParseCrestronErrorLog_With_FourSeriesLog_And_BrokenErrors_Returns_Expected()
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Appliance;
             CrestronEnvironment.ProgramCompatibility = eCrestronSeries.Series3 | eCrestronSeries.Series4;
@@ -122,39 +115,43 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
 
             var logItems = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetBrokenFourSeriesLog()).ToList();
 
-            Assert.IsTrue(logItems.Count == expectedCount, "Expected <{0}> items and there were <{1}>", expectedCount, logItems.Count);
-            Assert.IsTrue(expectedItem2.Equals(logItems[2]), "Item2 Didn't Match. Expected\r\n<{0}>\r\nActual was\r\n<{1}>", expectedItem2, logItems[2]);
+            await Assert.That(logItems.Count == expectedCount).IsTrue();
+            await Assert.That(expectedItem2.Equals(logItems[2])).IsTrue();
         }
 
         #endregion
 
         #region PrettyPrintErrorLog
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void PrettyPrintErrorLog_Throws_ArgumentNullException_With_Null_Enumerable()
+        [Test]
+        public async Task PrettyPrintErrorLog_Throws_ArgumentNullException_With_Null_Enumerable()
         {
-            ErrorLogFormatters.PrintPrettyErrorLog(null, false);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+
+                ErrorLogFormatters.PrintPrettyErrorLog(null, false);
+        
+            });
         }
 
-        [TestMethod]
-        public void PrettyPrintErrorLog_NoColor_Returns_ExpectedMessage_When_Items_Empty()
+        [Test]
+        public async Task PrettyPrintErrorLog_NoColor_Returns_ExpectedMessage_When_Items_Empty()
         {
             var expected = "No Messages to Display";
             var actual = ErrorLogFormatters.PrintPrettyErrorLog(new List<LogMessage>() as IEnumerable<LogMessage>, false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void PrettyPrintErrorLog_Color_Returns_ExpectedMessage_When_Items_Empty()
+        [Test]
+        public async Task PrettyPrintErrorLog_Color_Returns_ExpectedMessage_When_Items_Empty()
         {
             var expected = ConsoleBase.Colors.Warning.FormatText("No Messages to Display");
             var actual = ErrorLogFormatters.PrintPrettyErrorLog(new List<LogMessage>() as IEnumerable<LogMessage>, true);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void PrettyPrintErrorLog_ThreeSeries_NoColor_Returns_Expected_String()
+        [Test]
+        public async Task PrettyPrintErrorLog_ThreeSeries_NoColor_Returns_Expected_String()
         {
             var items = new List<LogMessage>
             {
@@ -188,11 +185,11 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
 
             var actual = ErrorLogFormatters.PrintPrettyErrorLog(items.AsEnumerable(), false);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void PrettyPrintErrorLog_ThreeSeries_Color_Returns_Expected_String()
+        [Test]
+        public async Task PrettyPrintErrorLog_ThreeSeries_Color_Returns_Expected_String()
         {
             var items = new List<LogMessage>
             {
@@ -231,7 +228,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
 
             var actual = ErrorLogFormatters.PrintPrettyErrorLog(items.AsEnumerable(), true);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
         #endregion

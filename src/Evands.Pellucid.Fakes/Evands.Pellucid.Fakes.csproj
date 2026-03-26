@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Evands.Pellucid.Fakes</RootNamespace>
     <AssemblyName>Evands.Pellucid.Fakes</AssemblyName>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
