@@ -12,7 +12,6 @@
 
 using System;
 using System.Linq;
-using Crestron.SimplSharp;
 using Evands.Pellucid.Terminal.Commands;
 using Evands.Pellucid.Terminal.Commands.Attributes;
 using Evands.Pellucid.Terminal.Formatting.Tables;
@@ -276,37 +275,7 @@ namespace Evands.Pellucid.Diagnostics
             [Operand("Message", "When specified will only print messages that contain the provided text.")] string filterMessage,
             [Operand("Level", "When specified will only print messages with a message level that contain the provided text. Can be used to filter messages by 'Error', 'Notice', etc.")] string filterLevel)
         {
-            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "Retrieving the error log...\r\n");
-
-            var response = string.Empty;
-            CrestronConsole.SendControlSystemCommand(string.Format("err"), ref response);
-            if (string.IsNullOrEmpty(response))
-            {
-                ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Error, "Unable to retrieve the error log. No content returned.\r\n");
-            }
-            else
-            {
-                var msgs = Terminal.Formatting.Logs.ErrorLogFormatters.ParseCrestronErrorLog(response);
-                if (!string.IsNullOrEmpty(filterOrigin))
-                {
-                    var fo = filterOrigin.ToUpper();
-                    msgs = msgs.Where(m => m.Origination.ToUpper().Contains(fo));
-                }
-
-                if (!string.IsNullOrEmpty(filterMessage))
-                {
-                    var fm = filterMessage.ToUpper();
-                    msgs = msgs.Where(m => m.Message.ToUpper().Contains(fm));
-                }
-
-                if (!string.IsNullOrEmpty(filterLevel))
-                {
-                    var filters = filterLevel.Split(',');
-                    msgs = msgs.Where(m => filters.Any(f => m.MessageType.Equals(f, StringComparison.OrdinalIgnoreCase)));
-                }
-
-                ConsoleBase.WriteCommandResponse(Terminal.Formatting.Logs.ErrorLogFormatters.PrintPrettyErrorLog(msgs, !noColor));
-            }
+            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Warning, "The PrettyLog command is only available when running on Crestron hardware with the Evands.Pellucid.Crestron library loaded.\r\n");
         }
 
         /// <summary>
@@ -328,37 +297,7 @@ namespace Evands.Pellucid.Diagnostics
             [Operand("Message", "When specified will only print messages that contain the provided text.")] string filterMessage,
             [Operand("Level", "When specified will only print messages with a message level that contain the provided text. Can be used to filter messages by 'Error', 'Notice', etc.")] string filterLevel)
         {
-            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Progress, "Retrieving the error log...\r\n");
-
-            var response = string.Empty;
-            CrestronConsole.SendControlSystemCommand(string.Format("err"), ref response);
-            if (string.IsNullOrEmpty(response))
-            {
-                ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Error, "Unable to retrieve the error log. No content returned.\r\n");
-            }
-            else
-            {
-                var msgs = Terminal.Formatting.Logs.ErrorLogFormatters.ParseCrestronErrorLog(response);
-                if (!string.IsNullOrEmpty(filterOrigin))
-                {
-                    var fo = filterOrigin.ToUpper();
-                    msgs = msgs.Where(m => m.Origination.ToUpper().Contains(fo));
-                }
-
-                if (!string.IsNullOrEmpty(filterMessage))
-                {
-                    var fm = filterMessage.ToUpper();
-                    msgs = msgs.Where(m => m.Message.ToUpper().Contains(fm));
-                }
-
-                if (!string.IsNullOrEmpty(filterLevel))
-                {
-                    var filters = filterLevel.Split(',');
-                    msgs = msgs.Where(m => filters.Any(f => m.MessageType.Equals(f, StringComparison.OrdinalIgnoreCase)));
-                }
-
-                ConsoleBase.WriteCommandResponse(Terminal.Formatting.Logs.ErrorLogFormatters.PrintPrettyErrorLog(msgs, !noColor,  width, wrapHeaders));
-            }
+            ConsoleBase.WriteCommandResponse(ConsoleBase.Colors.Warning, "The PrettyLog command is only available when running on Crestron hardware with the Evands.Pellucid.Crestron library loaded.\r\n");
         }
 
         // /// <summary>

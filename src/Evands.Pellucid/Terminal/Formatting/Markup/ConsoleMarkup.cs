@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Crestron.SimplSharp;
 
 namespace Evands.Pellucid.Terminal.Formatting.Markup
 {

@@ -13,7 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Crestron.SimplSharp;
+using System.Collections.ObjectModel;
 using Evands.Pellucid.Terminal.Formatting;
 
 namespace Evands.Pellucid.Diagnostics
@@ -805,10 +805,10 @@ namespace Evands.Pellucid.Diagnostics
 
             if (Options.Instance.Use24HourTime)
             {
-                return string.Format("[{0}]", CrestronEnvironment.GetLocalTime().ToString("HH:mm:ss"));
+                return string.Format("[{0}]", PlatformServices.Current.GetLocalTime().ToString("HH:mm:ss"));
             }
 
-            return string.Format("[{0}]", CrestronEnvironment.GetLocalTime().ToLongTimeString());
+            return string.Format("[{0}]", PlatformServices.Current.GetLocalTime().ToLongTimeString());
         }
 
         /// <summary>

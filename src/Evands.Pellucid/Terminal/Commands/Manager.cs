@@ -12,7 +12,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Crestron.SimplSharp;
 
 namespace Evands.Pellucid.Terminal.Commands
 {
@@ -70,7 +69,7 @@ namespace Evands.Pellucid.Terminal.Commands
         /// <returns><see langword="true"/> if the command was removed, otherwise <see langword="false"/>.</returns>
         public static bool RemoveCrestronConsoleCommand(string commandName)
         {
-            CrestronConsole.RemoveConsoleCommand(commandName);
+            PlatformServices.Current.RemoveConsoleCommand(commandName);
             return consoleCommandNames.Remove(commandName);
         }
 
