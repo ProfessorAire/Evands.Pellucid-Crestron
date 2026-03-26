@@ -20,7 +20,7 @@
 
 using System;
 using System.Collections;
-using Crestron.SimplSharp.Reflection;
+using System.Reflection;
 
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
@@ -66,7 +66,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                     return new DumpNode(obj, name, objectType);
                 }
 
-                if (obj.GetType().GetCType().IsValueType || obj is string)
+                if (obj.GetType().IsValueType || obj is string)
                 {
                     return new DumpNode(obj, name, objectType);
                 }
