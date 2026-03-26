@@ -352,5 +352,3 @@ ASALocalRun/
 .localhistory/
 
 *.vsmdi
-# Old project file backups
-*.csproj.old
