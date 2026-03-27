@@ -104,7 +104,21 @@ namespace Evands.Pellucid
         /// </summary>        
         public Options()
         {
-            this.saveTimer = new Timer(_ => Save(), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+            this.saveTimer = new Timer(
+                _ =>
+                {
+                    try
+                    {
+                        Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Trace.WriteLine("Exception while auto-saving Pellucid options: " + ex);
+                    }
+                },
+                null,
+                Timeout.InfiniteTimeSpan,
+                Timeout.InfiniteTimeSpan);
         }
 
         /// <summary>
@@ -403,9 +417,16 @@ namespace Evands.Pellucid
         /// </summary>
         private void ScheduleSave()
         {
-            if (autoSave)
+            if (autoSave && saveTimer != null)
             {
-                saveTimer.Change(TimeSpan.FromSeconds(15), Timeout.InfiniteTimeSpan);
+                try
+                {
+                    saveTimer.Change(TimeSpan.FromSeconds(15), Timeout.InfiniteTimeSpan);
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Timer was disposed; ignore.
+                }
             }
         }
     }
