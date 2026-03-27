@@ -65,7 +65,6 @@ namespace Evands.Pellucid.ProDemo
                 // When Crestron platform services are initialized, the CrestronConsoleWriter
                 // gets registered by default, precluding the need for this, but it shows
                 // how to hook your own console nodes into the system.
-                CrestronPlatformServices.Initialize();
                 ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Terminal.CrestronConsoleWriter());
 
                 // Setup the global command(s).
@@ -98,12 +97,6 @@ namespace Evands.Pellucid.ProDemo
 
                 // Register log nodes.
                 Logger.RegisterLogWriter(new CrestronLogWriter());
-
-                // In addition to the CrestronLogWriter we're registering an additional writer that targets another file.
-                var path = Path.Combine(Directory.GetApplicationRootDirectory(), "/user");
-                path = Path.Combine(path, "logs");
-                path = Path.Combine(path, string.Format("App{0}SimpleLog.log", InitialParametersClass.ApplicationNumber));
-                Logger.RegisterLogWriter(new Evands.Pellucid.Diagnostics.SimpleFileLogger(path));
 
                 // This enables markup, which can make writing messages with formatting easier.
                 Options.Instance.EnableMarkup = true;

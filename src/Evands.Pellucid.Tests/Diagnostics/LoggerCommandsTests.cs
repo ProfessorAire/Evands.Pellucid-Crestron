@@ -10,7 +10,7 @@ namespace Evands.Pellucid.Diagnostics
 {
     public class LoggerCommandsTests
     {
-        private LoggerCommands logCommands = new LoggerCommands();
+        private CrestronErrorLogCommands logCommands = new CrestronErrorLogCommands();
 
         private GlobalCommand global;
 

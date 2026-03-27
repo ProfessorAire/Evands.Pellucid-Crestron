@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Evands.Pellucid.Diagnostics;
 using Evands.Pellucid.Internal;
 
@@ -34,6 +35,61 @@ namespace Evands.Pellucid
         private bool autoSave = true;
 
         /// <summary>
+        /// Timer used to debounce save operations.
+        /// </summary>
+        private Timer saveTimer;
+
+        /// <summary>
+        /// Backing field for the <see cref="ColorizeConsoleOutput"/> property.
+        /// </summary>
+        private bool colorizeConsoleOutput;
+
+        /// <summary>
+        /// Backing field for the <see cref="LogLevels"/> property.
+        /// </summary>
+        private LogLevels logLevels;
+
+        /// <summary>
+        /// Backing field for the <see cref="DebugLevels"/> property.
+        /// </summary>
+        private DebugLevels debugLevels;
+
+        /// <summary>
+        /// Backing field for the <see cref="UseTimestamps"/> property.
+        /// </summary>
+        private bool useTimestamps;
+
+        /// <summary>
+        /// Backing field for the <see cref="UseFullTypeNamesWhenDumping"/> property.
+        /// </summary>
+        private bool useFullTypeNamesWhenDumping;
+
+        /// <summary>
+        /// Backing field for the <see cref="UseMinimalSpacingWhenDumping"/> property.
+        /// </summary>
+        private bool useMinimalSpacingWhenDumping;
+
+        /// <summary>
+        /// Backing field for the <see cref="Use24HourTime"/> property.
+        /// </summary>
+        private bool use24HourTime;
+
+        /// <summary>
+        /// Backing field for the <see cref="Suppressed"/> property.
+        /// </summary>
+        private List<string> suppressed;
+
+        /// <summary>
+        /// Backing field for the <see cref="Allowed"/> property.
+        /// </summary>
+        private List<string> allowed;
+
+        /// <summary>
+        /// Backing field for the <see cref="EnableMarkup"/> property.
+        /// </summary>
+        private bool enableMarkup;
+
+        /// <summary>
         /// Backing field for the <see cref="DefaultLogTimestampFormat"/> property.
         /// </summary>
         private string defaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
@@ -48,6 +104,7 @@ namespace Evands.Pellucid
         /// </summary>        
         public Options()
         {
+            this.saveTimer = new Timer(_ => Save(), null, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
 
         /// <summary>
@@ -78,56 +135,92 @@ namespace Evands.Pellucid
         /// text console in ToolBox.</para>
         /// </summary>
         [TomlProperty("console-colorizeOutput")]
-        public bool ColorizeConsoleOutput { get; set; }
+        public bool ColorizeConsoleOutput
+        {
+            get { return this.colorizeConsoleOutput; }
+            set { this.colorizeConsoleOutput = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="LogLevels"/> used to determine what items are written to the logs.
         /// </summary>        
         [TomlProperty("logging-levels")]
-        public LogLevels LogLevels { get; set; }
+        public LogLevels LogLevels
+        {
+            get { return this.logLevels; }
+            set { this.logLevels = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="DebugLevels"/> used to determine what debug messages are written to the consoles.
         /// </summary>        
         [TomlProperty("debugging-levels")]
-        public DebugLevels DebugLevels { get; set; }
+        public DebugLevels DebugLevels
+        {
+            get { return this.debugLevels; }
+            set { this.debugLevels = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not debug messages will have timestamps prepended to them.
         /// </summary>        
         [TomlProperty("debugging-useTimestamps")]
-        public bool UseTimestamps { get; set; }
+        public bool UseTimestamps
+        {
+            get { return this.useTimestamps; }
+            set { this.useTimestamps = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether dumping items to the console will use full type names by default.
         /// </summary>
         [TomlProperty("dump-useFullTypeNames")]
-        public bool UseFullTypeNamesWhenDumping { get; set; }
+        public bool UseFullTypeNamesWhenDumping
+        {
+            get { return this.useFullTypeNamesWhenDumping; }
+            set { this.useFullTypeNamesWhenDumping = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether dumping items to the console will use minimal spacing for nested objects.
         /// When true, uses 2 character indentation. When false, uses the default spacing based on property names.
         /// </summary>
         [TomlProperty("dump-useMinimalSpacing")]
-        public bool UseMinimalSpacingWhenDumping { get; set; }
+        public bool UseMinimalSpacingWhenDumping
+        {
+            get { return this.useMinimalSpacingWhenDumping; }
+            set { this.useMinimalSpacingWhenDumping = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether debug messages will use shorter 24 hour timestamps, or longer 12 hour timestamps.
         /// </summary>        
         [TomlProperty("debugging-shortTimestamps")]
-        public bool Use24HourTime { get; set; }
+        public bool Use24HourTime
+        {
+            get { return this.use24HourTime; }
+            set { this.use24HourTime = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a list of headers that are suppressed and will not have debug messages of any level print to the console.
         /// </summary>        
         [TomlProperty("suppressed")]
-        public List<string> Suppressed { get; set; }
+        public List<string> Suppressed
+        {
+            get { return this.suppressed; }
+            set { this.suppressed = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a list of headers that are exclusively allowed to print debug messages to the console.
         /// </summary>        
         [TomlProperty("allowed")]
-        public List<string> Allowed { get; set; }
+        public List<string> Allowed
+        {
+            get { return this.allowed; }
+            set { this.allowed = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the options will be auto saved.
@@ -136,24 +229,7 @@ namespace Evands.Pellucid
         public bool AutoSave
         {
             get { return autoSave; }
-
-            set
-            {
-                if (autoSave != value)
-                {
-                    autoSave = value;
-
-                    if (value)
-                    {
-                        PlatformServices.Current.RegisterProgramStoppingHandler(OnProgramStopping);
-                        PlatformServices.Current.RegisterProgramResumingHandler(OnProgramResuming);
-                    }
-                    else
-                    {
-                        PlatformServices.Current.UnregisterProgramHandlers(OnProgramStopping, OnProgramResuming);
-                    }
-                }
-            }
+            set { autoSave = value; ScheduleSave(); }
         }
         
         /// <summary>
@@ -162,7 +238,11 @@ namespace Evands.Pellucid
         /// <para>View the project Github Wiki for more information about Pellucid Console Markup.</para>
         /// </summary>
         [TomlProperty("enableMarkup")]
-        public bool EnableMarkup { get; set; }
+        public bool EnableMarkup
+        {
+            get { return this.enableMarkup; }
+            set { this.enableMarkup = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value representing the default Date/Time format string to use when writing log
@@ -182,6 +262,7 @@ namespace Evands.Pellucid
             set
             {
                 this.defaultLogTimestampFormat = value;
+                ScheduleSave();
             }
         }
 
@@ -202,6 +283,7 @@ namespace Evands.Pellucid
             set
             {
                 this.maxDebugMessageLength = value >= 20 ? value : -1;
+                ScheduleSave();
             }
         }
 
@@ -254,14 +336,6 @@ namespace Evands.Pellucid
                 try
                 {
                     var options = MinimalTomlParser.DeserializeFromDisk<Options>(FilePath);
-                    PlatformServices.Current.UnregisterProgramHandlers(options.OnProgramStopping, options.OnProgramResuming);
-
-                    if (options.AutoSave)
-                    {
-                        PlatformServices.Current.RegisterProgramStoppingHandler(options.OnProgramStopping);
-                        PlatformServices.Current.RegisterProgramResumingHandler(options.OnProgramResuming);
-                    }
-
                     return options;
                 }
                 catch (Exception ex)
@@ -324,19 +398,15 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
-        /// Handles auto saving when the program is stopping.
+        /// Schedules a debounced save operation. Resets the timer to 15 seconds
+        /// each time it is called, so rapid property changes result in a single save.
         /// </summary>
-        private void OnProgramStopping()
+        private void ScheduleSave()
         {
-            Save();
-        }
-
-        /// <summary>
-        /// Handles auto loading when the program is resuming.
-        /// </summary>
-        private void OnProgramResuming()
-        {
-            Load();
+            if (autoSave)
+            {
+                saveTimer.Change(TimeSpan.FromSeconds(15), Timeout.InfiniteTimeSpan);
+            }
         }
     }
 }

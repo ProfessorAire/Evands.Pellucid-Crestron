@@ -48,25 +48,6 @@ namespace Evands.Pellucid
         string GetDefaultConfigFileName();
 
         /// <summary>
-        /// Registers a handler to be called when the program is stopping or pausing.
-        /// </summary>
-        /// <param name="handler">The handler to invoke on program stop/pause.</param>
-        void RegisterProgramStoppingHandler(Action handler);
-
-        /// <summary>
-        /// Registers a handler to be called when the program is resuming.
-        /// </summary>
-        /// <param name="handler">The handler to invoke on program resume.</param>
-        void RegisterProgramResumingHandler(Action handler);
-
-        /// <summary>
-        /// Unregisters the stopping and resuming handlers that were previously registered.
-        /// </summary>
-        /// <param name="stoppingHandler">The stopping handler to unregister.</param>
-        /// <param name="resumingHandler">The resuming handler to unregister.</param>
-        void UnregisterProgramHandlers(Action stoppingHandler, Action resumingHandler);
-
-        /// <summary>
         /// Attempts to register a console command with the platform's console.
         /// </summary>
         /// <param name="action">The action to execute when the command is invoked.</param>
@@ -95,20 +76,5 @@ namespace Evands.Pellucid
         /// <param name="command">The command to send.</param>
         /// <param name="response">The response from the control system.</param>
         void SendControlSystemCommand(string command, ref string response);
-
-        /// <summary>
-        /// Gets whether the current platform is an appliance (as opposed to a server/virtual platform).
-        /// </summary>
-        bool IsAppliance { get; }
-
-        /// <summary>
-        /// Gets whether the current platform is a 3-Series system.
-        /// </summary>
-        bool IsSeries3 { get; }
-
-        /// <summary>
-        /// Gets whether the current platform is a 4-Series system.
-        /// </summary>
-        bool IsSeries4 { get; }
     }
 }
