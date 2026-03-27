@@ -80,21 +80,31 @@ namespace Evands.Pellucid
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Registers a handler to be called when the program is stopping or pausing.
+        /// </summary>
+        /// <param name="handler">The handler to invoke on program stop/pause.</param>
         public void RegisterProgramStoppingHandler(Action handler)
         {
             stoppingHandlers.Add(handler);
             CrestronEnvironment.ProgramStatusEventHandler += CreateStoppingHandler(handler);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Registers a handler to be called when the program is resuming.
+        /// </summary>
+        /// <param name="handler">The handler to invoke on program resume.</param>
         public void RegisterProgramResumingHandler(Action handler)
         {
             resumingHandlers.Add(handler);
             CrestronEnvironment.ProgramStatusEventHandler += CreateResumingHandler(handler);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Unregisters the stopping and resuming handlers that were previously registered.
+        /// </summary>
+        /// <param name="stoppingHandler">The stopping handler to unregister.</param>
+        /// <param name="resumingHandler">The resuming handler to unregister.</param>
         public void UnregisterProgramHandlers(Action stoppingHandler, Action resumingHandler)
         {
             stoppingHandlers.Remove(stoppingHandler);
@@ -130,19 +140,25 @@ namespace Evands.Pellucid
             CrestronConsole.SendControlSystemCommand(command, ref response);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets whether the current platform is an appliance (as opposed to a server/virtual platform).
+        /// </summary>
         public bool IsAppliance
         {
             get { return CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance; }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets whether the current platform is a 3-Series system.
+        /// </summary>
         public bool IsSeries3
         {
             get { return CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Series3; }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets whether the current platform is a 4-Series system.
+        /// </summary>
         public bool IsSeries4
         {
             get { return (CrestronEnvironment.ProgramCompatibility & eCrestronSeries.Series4) == eCrestronSeries.Series4; }

@@ -10,6 +10,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // </copyright>
 
+using System;
+
 namespace Evands.Pellucid
 {
     /// <summary>
@@ -24,6 +26,27 @@ namespace Evands.Pellucid
         /// The current platform services instance.
         /// </summary>
         private static IPlatformServices current;
+
+        /// <summary>
+        /// Initializes static members of the <see cref="PlatformServices"/> class.
+        /// Attempts to detect the Crestron platform services assembly and, if found,
+        /// instantiates it as the current platform.
+        /// </summary>
+        static PlatformServices()
+        {
+            try
+            {
+                var crestronType = Type.GetType("Evands.Pellucid.CrestronPlatformServices, Evands.Pellucid.Crestron");
+                if (crestronType != null)
+                {
+                    current = (IPlatformServices)Activator.CreateInstance(crestronType);
+                }
+            }
+            catch
+            {
+                // Crestron assembly not available, use default.
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current <see cref="IPlatformServices"/> implementation.

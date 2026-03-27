@@ -249,7 +249,7 @@ namespace Evands.Pellucid.Terminal.Commands
             {
                 if (PlatformServices.Current.AddConsoleCommand(ExecuteCommand, Name, Help, (int)CommandAccess))
                 {
-                    return Manager.RegisterCrestronConsoleCommand(this);
+                    return Manager.RegisterConsoleCommand(this);
                 }
 
                 return false;
@@ -264,7 +264,7 @@ namespace Evands.Pellucid.Terminal.Commands
         {
             lock (syncRoot)
             {
-                return Manager.RemoveCrestronConsoleCommand(Name);
+                return Manager.RemoveConsoleCommand(Name);
             }
         }
 

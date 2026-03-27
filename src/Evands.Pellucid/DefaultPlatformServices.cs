@@ -11,6 +11,9 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using Evands.Pellucid.Diagnostics;
 using Evands.Pellucid.Terminal;
 
@@ -28,6 +31,16 @@ namespace Evands.Pellucid
         /// The singleton instance.
         /// </summary>
         public static readonly DefaultPlatformServices Instance = new DefaultPlatformServices();
+
+        /// <summary>
+        /// Registered console commands.
+        /// </summary>
+        private readonly Dictionary<string, Action<string>> commands = new Dictionary<string, Action<string>>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// The console reader thread.
+        /// </summary>
+        private Thread consoleReaderThread;
 
         /// <inheritdoc/>
         public IConsoleWriter CreateDefaultConsoleWriter()
@@ -54,34 +67,34 @@ namespace Evands.Pellucid
         }
 
         /// <inheritdoc/>
-        public void RegisterProgramStoppingHandler(Action handler)
-        {
-            // No program lifecycle events on the default platform.
-        }
-
-        /// <inheritdoc/>
-        public void RegisterProgramResumingHandler(Action handler)
-        {
-            // No program lifecycle events on the default platform.
-        }
-
-        /// <inheritdoc/>
-        public void UnregisterProgramHandlers(Action stoppingHandler, Action resumingHandler)
-        {
-            // No program lifecycle events on the default platform.
-        }
-
-        /// <inheritdoc/>
         public bool AddConsoleCommand(Action<string> action, string name, string help, int accessLevel)
         {
-            // Console command registration is not supported on the default platform.
-            return false;
+            if (string.IsNullOrEmpty(name) || action == null)
+            {
+                return false;
+            }
+
+            lock (commands)
+            {
+                commands[name] = action;
+            }
+
+            EnsureConsoleReaderStarted();
+            return true;
         }
 
         /// <inheritdoc/>
         public void RemoveConsoleCommand(string commandName)
         {
-            // Console command removal is not supported on the default platform.
+            if (string.IsNullOrEmpty(commandName))
+            {
+                return;
+            }
+
+            lock (commands)
+            {
+                commands.Remove(commandName);
+            }
         }
 
         /// <inheritdoc/>
@@ -96,22 +109,77 @@ namespace Evands.Pellucid
             response = string.Empty;
         }
 
-        /// <inheritdoc/>
-        public bool IsAppliance
+        /// <summary>
+        /// Starts the console reader thread if it is not already running.
+        /// </summary>
+        private void EnsureConsoleReaderStarted()
         {
-            get { return false; }
+            if (consoleReaderThread != null)
+            {
+                return;
+            }
+
+            if (!Environment.UserInteractive)
+            {
+                return;
+            }
+
+            consoleReaderThread = new Thread(ConsoleReaderLoop)
+            {
+                IsBackground = true,
+                Name = "Pellucid Console Reader",
+            };
+            consoleReaderThread.Start();
         }
 
-        /// <inheritdoc/>
-        public bool IsSeries3
+        /// <summary>
+        /// Reads lines from the console and dispatches them to registered commands.
+        /// </summary>
+        private void ConsoleReaderLoop()
         {
-            get { return false; }
-        }
+            try
+            {
+                string line;
+                while ((line = Console.ReadLine()) != null)
+                {
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue;
+                    }
 
-        /// <inheritdoc/>
-        public bool IsSeries4
-        {
-            get { return false; }
+                    var trimmed = line.Trim();
+                    if (trimmed.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    var spaceIndex = trimmed.IndexOf(' ');
+                    var commandName = spaceIndex >= 0 ? trimmed.Substring(0, spaceIndex) : trimmed;
+                    var args = spaceIndex >= 0 ? trimmed.Substring(spaceIndex + 1) : string.Empty;
+
+                    Action<string> action;
+                    lock (commands)
+                    {
+                        commands.TryGetValue(commandName, out action);
+                    }
+
+                    if (action != null)
+                    {
+                        try
+                        {
+                            action(args);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Error.WriteLine("Error executing command '{0}': {1}", commandName, ex);
+                        }
+                    }
+                }
+            }
+            catch (IOException)
+            {
+                // Non-interactive environment; exit gracefully.
+            }
         }
     }
 }

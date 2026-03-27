@@ -26,11 +26,11 @@ namespace Evands.Pellucid.Terminal.Commands
         private static Dictionary<string, GlobalCommand> consoleCommandNames = new Dictionary<string, GlobalCommand>(1);
 
         /// <summary>
-        /// Creates a global command, adding it to the <see cref="CrestronConsole"/>.
+        /// Creates a global command, adding it to the console.
         /// </summary>
         /// <param name="command">The <see cref="GlobalCommand"/> to register.</param>
         /// <returns><see langword="true"/> if the command is newly registered, <see langword="false"/> if it isn't registered because a command with that name already was.</returns>
-        public static bool RegisterCrestronConsoleCommand(GlobalCommand command)
+        public static bool RegisterConsoleCommand(GlobalCommand command)
         {
             if (consoleCommandNames.ContainsKey(command.Name))
             {
@@ -63,11 +63,11 @@ namespace Evands.Pellucid.Terminal.Commands
         }
 
         /// <summary>
-        /// Removes the command with the specified name from the <see cref="CrestronConsole"/> and the <see cref="Manager"/>'s internal dictionary of commands.
+        /// Removes the command with the specified name from the console and the <see cref="Manager"/>'s internal dictionary of commands.
         /// </summary>
         /// <param name="commandName">The name of the <see cref="GlobalCommand"/> to remove.</param>
         /// <returns><see langword="true"/> if the command was removed, otherwise <see langword="false"/>.</returns>
-        public static bool RemoveCrestronConsoleCommand(string commandName)
+        public static bool RemoveConsoleCommand(string commandName)
         {
             PlatformServices.Current.RemoveConsoleCommand(commandName);
             return consoleCommandNames.Remove(commandName);
