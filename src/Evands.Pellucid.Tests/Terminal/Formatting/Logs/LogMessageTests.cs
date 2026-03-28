@@ -843,8 +843,8 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [Test]
         public async Task ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
-                                      be printed on two lines.";
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
+                                      be printed on two lines.".Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
@@ -856,10 +856,10 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [Test]
         public async Task ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_FourLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
                                       be printed on  four lines so that we can
                                       test multiple multiple lines with multip
-                                      le long sentences.";
+                                      le long sentences.".Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on  four lines so that we can test multiple multiple lines with multiple long sentences.");
@@ -911,8 +911,8 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [Test]
         public async Task ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
-      Error: This is a basic message that will be printed on two lines.";
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe
+      Error: This is a basic message that will be printed on two lines.".Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
@@ -924,11 +924,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [Test]
         public async Task ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_FourLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe
       Error: This is a basic message that will be printed on multiple lines bec
              ause it is really very very long and will take quite a bit of text
              in order to print it across at least three lines, despite what yo
-             u're thinking.";
+             u're thinking.".Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on multiple lines because it is really very very long and will take quite a bit of text in order to print it across at least three lines, despite what you're thinking.");
@@ -969,8 +969,8 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [Test]
         public async Task ToString_With_NoColor_And_TooShortTotalWidth_And_WrapHeaders_Returns_TwoLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
-      Error: This is a basic message that will be printed on two lines just because.";
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe
+      Error: This is a basic message that will be printed on two lines just because.".Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines just because.");
@@ -982,7 +982,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         [Test]
         public async Task ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_With_Exception_Returns_Expected()
         {
-            const string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1] |   Error: [01][ExampleCommands] Exception encountered.
+            string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1] |   Error: [01][ExampleCommands] Exception encountered.
                                                    --------Exception 1--------
                                                    System.FormatException: FormatException
                                                      at System.Text.StringBuilder.AppendFormat(IFormatProvider provider, String format, Object[] args)
@@ -1003,7 +1003,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                                                      at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
                                                      at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
 
-                                                   -----------------------------";
+                                                   -----------------------------".Replace("\n", "\r\n");
 
             const string message = @"[01][ExampleCommands] Exception encountered.
 --------Exception 1--------
@@ -1038,7 +1038,7 @@ System.FormatException: FormatException
         [Test]
         public async Task ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_With_Exception_Returns_Expected()
         {
-            const string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1]
+            string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1]
      Error: [01][ExampleCommands] Exception encountered.
             --------Exception 1--------
             System.FormatException: FormatException
@@ -1060,7 +1060,7 @@ System.FormatException: FormatException
               at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
               at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
 
-            -----------------------------";
+            -----------------------------".Replace("\n", "\r\n");
 
             const string message = @"[01][ExampleCommands] Exception encountered.
 --------Exception 1--------

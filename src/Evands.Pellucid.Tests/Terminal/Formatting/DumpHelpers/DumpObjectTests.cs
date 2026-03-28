@@ -107,7 +107,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             var underTest = new DumpObject(new Object(), null, null);
             var expected = @"
 <unknown type> (0 Properties)
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(true);
             await Assert.That(actual).IsEqualTo(expected);
@@ -119,7 +119,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             var underTest = new DumpObject(new Object(), null, null);
             var expected = @"
 <unknown type> (0 Properties)
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -137,7 +137,7 @@ Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass (4 Pro
 | ThirdProperty  = 3
 | FourthProperty = True
 ----------------------------------------------------------------------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(1, -10, true);
 
@@ -156,7 +156,7 @@ Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass (4 Pro
 | ThirdProperty  = 3
 | FourthProperty = True
 ----------------------------------------------------------------------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(true);
 
@@ -179,7 +179,7 @@ TestClass2 (2 Properties)
 |          | FourthProperty = False
 |          ------------------------
 -------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString();
 
@@ -215,7 +215,7 @@ Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass3 (4 Pr
 |          |          ----------------------------------------------------------------------------------------
 |          -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(true);
 
@@ -246,7 +246,7 @@ Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass3 (4 Pr
 |          | Second = Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass (4 Properties)
 |          -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(2, true);
 
@@ -278,7 +278,7 @@ TestClassWithList (2 Properties)
 |              | 0: ""OneItem""
 |              ---------------
 --------------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString();
 
@@ -312,7 +312,7 @@ TestClassWithList (2 Properties)
 |  | 0: ""OneItem""
 |  ---------------
 --------------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString();
             
@@ -347,7 +347,7 @@ TestFailureClass (1 Property)
 |                |    --------------------------------
 |                ----------------
 -----------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString();
 
@@ -392,7 +392,7 @@ Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass3 (4 Pr
 |  |  ----------------------------------------------------------------------------------------
 |  -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(true);
             
