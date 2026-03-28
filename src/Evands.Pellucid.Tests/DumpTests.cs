@@ -227,7 +227,7 @@ private class EnumerableObject : IEnumerable
 |          | Name = ""Much""
 |          -------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-".Replace("\n", "\r\n");
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
             testValue.Dump(true);
 
             await Assert.That(ContainsText(expected)).IsTrue();
@@ -246,7 +246,7 @@ private class EnumerableObject : IEnumerable
 | Key2   = 3
 | Value2 = ""Value 3""
 ----------------------
-".Replace("\n", "\r\n");
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             testValue2.Dump();
 

@@ -844,7 +844,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         public async Task ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
         {
             string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
-                                      be printed on two lines.".Replace("\n", "\r\n");
+                                      be printed on two lines.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
@@ -859,7 +859,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
                                       be printed on  four lines so that we can
                                       test multiple multiple lines with multip
-                                      le long sentences.".Replace("\n", "\r\n");
+                                      le long sentences.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on  four lines so that we can test multiple multiple lines with multiple long sentences.");
@@ -912,7 +912,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         public async Task ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
         {
             string expected = @"  1. 22/10/02 07:12:34 | test.exe
-      Error: This is a basic message that will be printed on two lines.".Replace("\n", "\r\n");
+      Error: This is a basic message that will be printed on two lines.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
@@ -928,7 +928,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
       Error: This is a basic message that will be printed on multiple lines bec
              ause it is really very very long and will take quite a bit of text
              in order to print it across at least three lines, despite what yo
-             u're thinking.".Replace("\n", "\r\n");
+             u're thinking.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on multiple lines because it is really very very long and will take quite a bit of text in order to print it across at least three lines, despite what you're thinking.");
@@ -970,7 +970,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         public async Task ToString_With_NoColor_And_TooShortTotalWidth_And_WrapHeaders_Returns_TwoLines()
         {
             string expected = @"  1. 22/10/02 07:12:34 | test.exe
-      Error: This is a basic message that will be printed on two lines just because.".Replace("\n", "\r\n");
+      Error: This is a basic message that will be printed on two lines just because.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines just because.");
@@ -1003,7 +1003,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                                                      at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
                                                      at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
 
-                                                   -----------------------------".Replace("\n", "\r\n");
+                                                   -----------------------------".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             const string message = @"[01][ExampleCommands] Exception encountered.
 --------Exception 1--------
@@ -1060,7 +1060,7 @@ System.FormatException: FormatException
               at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
               at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
 
-            -----------------------------".Replace("\n", "\r\n");
+            -----------------------------".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             const string message = @"[01][ExampleCommands] Exception encountered.
 --------Exception 1--------
