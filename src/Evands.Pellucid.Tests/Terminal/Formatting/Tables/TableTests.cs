@@ -736,7 +736,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var expected = @"-------
 |  |  |
 -------
-".Replace("\n", "\r\n");
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
             var actual = t.ToString();
             await Assert.That(actual).IsEqualTo(expected);
         }
@@ -748,7 +748,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var expected = @"-------
 |  |  |
 -------
-".Replace("\n", "\r\n");
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
             var actual = t.ToString();
             await Assert.That(actual).IsEqualTo(expected);
         }
@@ -799,7 +799,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 |-----------|
 | Test2 (2) |
 -------------
-".Replace("\n", "\r\n");
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var t = new Table().AddColumn("Test (1)\r\nTest3 (3)", "Test2 (2)");
 

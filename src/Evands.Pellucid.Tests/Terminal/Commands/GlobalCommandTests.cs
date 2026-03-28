@@ -737,7 +737,7 @@ testCommand (test)      Test command help.
 testCommand2 (tc2)      Test command 2 help.
 zed                     Test command 4 help.
 -----
-".Replace("\n", "\r\n");
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             await Assert.That(testWriter.ToString() == expected).IsTrue();
 

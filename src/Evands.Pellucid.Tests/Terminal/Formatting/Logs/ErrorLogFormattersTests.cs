@@ -66,7 +66,7 @@ System.FormatException: FormatException
   at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
   at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
 
------------------------------".Replace("\n", "\r\n");
+-----------------------------".Replace("\r\n", "\n").Replace("\n", "\r\n");
             var expectedCount = 2;
             var expectedItem1 = new LogMessage(66, "Error", "SimplSharpPro.exe [App 1]", DateTime.Parse("2022-05-07 09:32:46"), expectedMessage);
 
@@ -110,7 +110,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
   at System.String.FormatHelper (System.IFormatProvider provider, System.String format, System.ParamsArray args) [0x00023] in <2ad40006e9c141b299c9c7c533021a74>:0
   at System.String.Format (System.String format, System.Object[] args) [0x00020] in <2ad40006e9c141b299c9c7c533021a74>:0
   at Evands.Pellucid.ProDemo.ExampleCommands.WriteEx (System.Boolean log) [0x00002] in <13a4773037194d369e3948ff53170bec>:0
------------------------------".Replace("\n", "\r\n");
+-----------------------------".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var expectedCount = 3;
             var expectedItem2 = new LogMessage(3, "Error", "SimplSharpPro[App10]", DateTime.Parse("2022-05-09 16:21:20"), expectedMessage);
@@ -183,7 +183,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
 2222. 22/05/12 11:11:11 | nk.exe               |  Notice: User Reboot
 2323. 22/05/13 11:11:11 | nk.exe               |  Notice: User Reboot
 2442. 22/05/14 11:11:11 | nk.exe               |  Notice: User Reboot
-".Replace("\n", "\r\n");
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var actual = ErrorLogFormatters.PrintPrettyErrorLog(items.AsEnumerable(), false);
 
@@ -221,7 +221,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
 {1}2222. 22/05/12 11:11:11 | nk.exe               | {2} Notice: User Reboot{0}
 {1}2323. 22/05/13 11:11:11 | nk.exe               | {2} Notice: User Reboot{0}
 {1}2442. 22/05/14 11:11:11 | nk.exe               | {2} Notice: User Reboot{0}
-".Replace("\n", "\r\n"),
+".Replace("\r\n", "\n").Replace("\n", "\r\n"),
     ColorFormat.CloseTextFormat(string.Empty),
     ConsoleBase.Colors.LogHeaders.FormatText(false, string.Empty),
     ConsoleBase.Colors.Notice.FormatText(false, string.Empty),
