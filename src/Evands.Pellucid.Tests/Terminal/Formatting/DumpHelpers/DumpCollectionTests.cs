@@ -39,7 +39,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 <unknown null collection> (0 Items)
 -----------------------------------
 -----------------------------------
-";
+".Replace("\n", "\r\n");
             var actual = "\r\n" + underTest.ToString();
             await Assert.That(actual).IsEqualTo(expected);
         }
@@ -53,7 +53,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 <unknown null collection> (0 Items)
 -----------------------------------
 -----------------------------------
-";
+".Replace("\n", "\r\n");
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
         }
@@ -70,7 +70,7 @@ List`1 (4 Items)
 | 2: 245.43
 | 3: EventArgs (0 Properties)
 ----------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -88,7 +88,7 @@ List`1 (4 Items)
 | 2: 245.43
 | 3: EventArgs (0 Properties)
 ----------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(0, -1, false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -116,7 +116,7 @@ List`1 (4 Items)
 |    | TestProp2     = 123.321
 |    --------------------------
 ----------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -134,7 +134,7 @@ Object[] (4 Items)
 | 2: 245.43
 | 3: EventArgs (0 Properties)
 ------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -163,7 +163,7 @@ Dictionary`2 (4 Items)
 | Key3   = ""EventArgs""
 | Value3 = EventArgs (0 Properties)
 ----------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -187,7 +187,7 @@ Dictionary`2 (1 Item)
 |          | TestProp2     = 2.22
 |          --------------------------
 ---------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -202,7 +202,7 @@ Dictionary`2 (1 Item)
 Dictionary`2 (0 Items)
 ----------------------
 ----------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -217,7 +217,7 @@ Dictionary`2 (0 Items)
 Object[] (0 Items)
 ------------------
 ------------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString(false);
             await Assert.That(actual).IsEqualTo(expected);
@@ -235,7 +235,7 @@ ItemOne = Int32[] (4 Items)
           | 2: 3
           | 3: 4
           -----------------
-";
+".Replace("\n", "\r\n");
 
             var actual = "\r\n" + underTest.ToString();
 
@@ -266,7 +266,7 @@ TestValue = List`1 (2 Items)
             |    | 1: TestProp2     = 32.23
             |    --------------------------
             ----------------
-";
+".Replace("\n", "\r\n");
 
             var actual = expected.ToString();
 
