@@ -173,6 +173,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         }
 
         [Test]
+        [Obsolete]
         public async Task Table_HorizontalBorder_GetsSets()
         {
             var t = Table.Create();

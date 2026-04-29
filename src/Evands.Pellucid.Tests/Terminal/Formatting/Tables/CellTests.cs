@@ -33,10 +33,10 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         public async Task Contents_Ctor_Creates_Cell_WithContents_NoColor()
         {
             var expected = "Test Value";
-            UnderTest = new Cell(expected);
-            await Assert.That(UnderTest).IsNotNull();
-            await Assert.That(UnderTest.Contents == expected).IsTrue();
-            await Assert.That(UnderTest.Color == ColorFormat.None).IsTrue();
+            var underTest = new Cell(expected);
+            await Assert.That(underTest).IsNotNull();
+            await Assert.That(underTest.Contents == expected).IsTrue();
+            await Assert.That(underTest.Color == ColorFormat.None).IsTrue();
         }
 
         [Test]

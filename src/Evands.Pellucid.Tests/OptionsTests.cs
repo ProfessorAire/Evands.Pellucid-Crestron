@@ -30,8 +30,8 @@ namespace Evands.Pellucid
             await Assert.That(Options.Instance.ColorizeConsoleOutput).IsTrue();
             await Assert.That(Options.Instance.UseTimestamps).IsTrue();
             await Assert.That(Options.Instance.Use24HourTime).IsTrue();
-            await Assert.That(Evands.Pellucid.Diagnostics.LogLevels.None).IsEqualTo(Options.Instance.LogLevels);
-            await Assert.That(Evands.Pellucid.Diagnostics.DebugLevels.All).IsEqualTo(Options.Instance.DebugLevels);
+            await Assert.That(Options.Instance.LogLevels).IsEqualTo(Evands.Pellucid.Diagnostics.LogLevels.None);
+            await Assert.That(Options.Instance.DebugLevels).IsEqualTo(Evands.Pellucid.Diagnostics.DebugLevels.All);
             await Assert.That(Options.Instance.Suppressed.Count == 0).IsTrue();
             await Assert.That(Options.Instance.Allowed.Count == 0).IsTrue();
             await Assert.That(Options.Instance.AutoSave).IsFalse();

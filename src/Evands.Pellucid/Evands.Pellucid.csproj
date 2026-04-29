@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net47;net472;netstandard2.0</TargetFrameworks>
     <RootNamespace>Evands.Pellucid</RootNamespace>
     <AssemblyName>Evands.Pellucid</AssemblyName>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>

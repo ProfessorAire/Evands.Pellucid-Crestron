@@ -22,7 +22,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Server;
             var actual = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetThreeSeriesLog()).ToList();
-            await Assert.That(0).IsEqualTo(actual.Count);
+            await Assert.That(actual.Coutn).Is.Zero();
         }
 
         #region ParseCrestronErrorLogThreeSeries

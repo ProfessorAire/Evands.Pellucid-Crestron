@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net47;net472;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>Evands.Pellucid</RootNamespace>
     <AssemblyName>Evands.Pellucid.Tests</AssemblyName>
@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="TUnit" Version="1.6.0" />
+		<PackageReference Include="Polyfill" Version="9.4.1" PrivateAssets="all" /> 
   </ItemGroup>
 
   <ItemGroup>

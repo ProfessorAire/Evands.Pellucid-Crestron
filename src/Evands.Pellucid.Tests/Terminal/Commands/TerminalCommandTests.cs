@@ -23,29 +23,30 @@ namespace Evands.Pellucid.Terminal.Commands
             // TODO: Add constructor logic here
             //
         }
-         [Before(Test)]
-         public void MyTestInitialize()
-         {
-             global = new GlobalCommand("app", "App Command", Access.Administrator);
-             global.AddToConsole();
-             command = new TestCommand();
-             global.AddCommand(command);
-             global.AddCommand(new TestCommand2());
-         }
-         [After(Test)]
-         public void MyTestCleanup()
-         {
-             Options.UseDefault();
-             ConsoleBase.NewLine = Environment.NewLine;
-             global.RemoveCommand(command);
-             global = null;
-             command = null;
-             CrestronConsole.Messages.Length = 0;
-             if (writer != null)
-             {
-                 ConsoleBase.UnregisterConsoleWriter(writer);
-             }
-         }
+        [Before(Test)]
+        public void MyTestInitialize()
+        {
+            global = new GlobalCommand("app", "App Command", Access.Administrator);
+            global.AddToConsole();
+            command = new TestCommand();
+            global.AddCommand(command);
+            global.AddCommand(new TestCommand2());
+        }
+        [After(Test)]
+        public void MyTestCleanup()
+        {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
+            global.RemoveCommand(command);
+            global.Dispose();
+            global = null;
+            command = null;
+            CrestronConsole.Messages.Length = 0;
+            if (writer != null)
+            {
+                ConsoleBase.UnregisterConsoleWriter(writer);
+            }
+        }
 
         [Test]
         public async Task Command_WithAlias_CalledByAlias_Functions()

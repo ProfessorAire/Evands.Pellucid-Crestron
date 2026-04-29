@@ -1,8 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;
 
 namespace Evands.Pellucid
 {
@@ -13,7 +12,7 @@ namespace Evands.Pellucid
         [Before(Test)]
         public void TestInitialize()
         {
-            ConsoleBase.RegisterConsoleWriter(writer);
+            ConsoleBase.RegisterConsoleWriter(this.writer);
         }
 
         [After(Test)]
@@ -21,26 +20,26 @@ namespace Evands.Pellucid
         {
             Options.UseDefault();
             ConsoleBase.NewLine = Environment.NewLine;
-            writer.Messages.Clear();
-            ConsoleBase.UnregisterConsoleWriter(writer);
+            this.writer.Messages.Clear();
+            ConsoleBase.UnregisterConsoleWriter(this.writer);
             ConsoleBase.OptionalHeader = string.Empty;
         }
 
         public DumpTests()
         {
         }
-private class EnumerableObject : IEnumerable
+        private class EnumerableObject : IEnumerable
         {
             private object[] internalItems;
 
             public EnumerableObject(params object[] args)
             {
-                internalItems = args;
+                this.internalItems = args;
             }
 
             public IEnumerator GetEnumerator()
             {
-                return internalItems.GetEnumerator();
+                return this.internalItems.GetEnumerator();
             }
         }
 
@@ -66,7 +65,7 @@ private class EnumerableObject : IEnumerable
         {
             public TestWithSameName()
             {
-                Name = string.Empty;
+                this.Name = string.Empty;
             }
 
             public override string ToString()
@@ -81,25 +80,25 @@ private class EnumerableObject : IEnumerable
         {
             public TestObject(string name)
             {
-                Name = name;
-                Number = 42;
-                Enumerable = new EnumerableObject("Object 1", 2, new object(), 8743L);
+                this.Name = name;
+                this.Number = 42;
+                this.Enumerable = new EnumerableObject("Object 1", 2, new object(), 8743L);
                 EmptyEnumerable = new EnumerableObject();
-                List = new List<string>() { "List1", "List2", "List3" };
-                Collection = new List<object>() { "Collection1", 13245, new List<string>() { "CollSub1", "CollSub2" }, new List<string>() };
+                this.List = new List<string>() { "List1", "List2", "List3" };
+                this.Collection = new List<object>() { "Collection1", 13245, new List<string>() { "CollSub1", "CollSub2" }, new List<string>() };
                 OtherValue = 16;
-                TestEnumeration = TestEnum.Item3;
+                this.TestEnumeration = TestEnum.Item3;
                 TestFlagEnumeration = TestFlags.Item1 | TestFlags.Item2;
                 TestFlagEnumerationTwo = TestFlags.All;
                 TestWithSameName = new TestWithSameName();
                 TestDictionary = new Dictionary<int, string>() { { 123, "Value One" }, { 234, "Value Two Three Four" } };
-                TestDictionary2 = new Dictionary<int,TestWithSameName>()
+                TestDictionary2 = new Dictionary<int, TestWithSameName>()
                 {
                     { 1, new TestWithSameName() { Name = "Nothing" } },
                     { 2, new TestWithSameName() { Name = "Much" } }
                 };
 
-                SameName = new TestWithSameName() { Name = "ThirdLevel" };
+                this.SameName = new TestWithSameName() { Name = "ThirdLevel" };
             }
 
             public string Name { get; set; }
@@ -138,7 +137,7 @@ private class EnumerableObject : IEnumerable
         private class TestDepthOne
         {
             public string TestValue { get { return "TestValue"; } }
-            public TestObject TestObject {  get { return new TestObject("testName"); } }
+            public TestObject TestObject { get { return new TestObject("testName"); } }
         }
 
         private bool ContainsText(string value)
@@ -152,7 +151,7 @@ private class EnumerableObject : IEnumerable
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(1);
-            await Assert.That(ContainsText("TestValue") && !ContainsText("42")).IsTrue();
+            await Assert.That(this.ContainsText("TestValue") && !this.ContainsText("42")).IsTrue();
         }
 
         [Test]
@@ -161,7 +160,7 @@ private class EnumerableObject : IEnumerable
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(2);
-            await Assert.That(ContainsText("TestValue") && ContainsText("42") && !ContainsText("ThirdLevel")).IsTrue();
+            await Assert.That(this.ContainsText("TestValue") && this.ContainsText("42") && !this.ContainsText("ThirdLevel")).IsTrue();
         }
 
         [Test]
@@ -170,7 +169,7 @@ private class EnumerableObject : IEnumerable
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(3);
-            await Assert.That(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel")).IsTrue();
+            await Assert.That(this.ContainsText("TestValue") && this.ContainsText("42") && this.ContainsText("ThirdLevel")).IsTrue();
         }
 
         [Test]
@@ -179,7 +178,7 @@ private class EnumerableObject : IEnumerable
             Options.Instance.ColorizeConsoleOutput = false;
             var d1 = new TestDepthOne();
             d1.Dump(0);
-            await Assert.That(ContainsText("TestValue") && ContainsText("42") && ContainsText("ThirdLevel")).IsTrue();
+            await Assert.That(this.ContainsText("TestValue") && this.ContainsText("42") && this.ContainsText("ThirdLevel")).IsTrue();
         }
 
         [Test]
@@ -189,7 +188,7 @@ private class EnumerableObject : IEnumerable
             var expected = "<null>";
             testValue.Dump();
 
-            await Assert.That(ContainsText(expected)).IsTrue();
+            await Assert.That(this.writer.Messages.Last()).Contains(expected);
         }
 
         [Test]
@@ -200,7 +199,7 @@ private class EnumerableObject : IEnumerable
             var expected = "<null>";
             testValue.Dump();
 
-            await Assert.That(ContainsText(expected)).IsTrue();
+            await Assert.That(this.writer.Messages.Last()).Contains(expected);
         }
 
         [Test]
@@ -213,9 +212,16 @@ private class EnumerableObject : IEnumerable
                     { 2, new TestWithSameName() { Name = "Much" } }
                 };
 
+#if NET47 || NET472
             var expected =
 @"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Evands.Pellucid.DumpTests+TestWithSameName, Evands.Pellucid.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (2 Items)
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#else
+            var expected =
+@"System.Collections.Generic.Dictionary`2[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[Evands.Pellucid.DumpTests+TestWithSameName, Evands.Pellucid.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (2 Items)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#endif
++ @"
 | Key0   = 1
 | Value0 = Evands.Pellucid.DumpTests+TestWithSameName (1 Property)
 |          -------------------------------------------------------
@@ -227,12 +233,12 @@ private class EnumerableObject : IEnumerable
 |          | Name = ""Much""
 |          -------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-".Replace("\r\n", "\n").Replace("\n", "\r\n");
+";
             testValue.Dump(true);
 
-            await Assert.That(ContainsText(expected)).IsTrue();
+            await Assert.That(this.writer.Messages.Last()).Equals(expected);
 
-            writer.Messages.Clear();
+            this.writer.Messages.Clear();
 
             var testValue2 = new Dictionary<int, string>() { { 1, "Value 1" }, { 2, "Value 2" }, { 3, "Value 3" } };
 
@@ -246,11 +252,11 @@ private class EnumerableObject : IEnumerable
 | Key2   = 3
 | Value2 = ""Value 3""
 ----------------------
-".Replace("\r\n", "\n").Replace("\n", "\r\n");
+";
 
             testValue2.Dump();
 
-            await Assert.That(ContainsText(expected)).IsTrue();
+            await Assert.That(this.writer.Messages.Last()).Contains(expected);
         }
     }
 }

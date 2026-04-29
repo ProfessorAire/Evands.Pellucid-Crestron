@@ -30,8 +30,8 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [Test]
         public async Task RowCollection_Ctor_WithDefaults_Succeeds()
         {
-            UnderTest = new RowCollection(new Row[] { new Row(), new Row() });
-            await Assert.That(UnderTest).IsNotNull();
+            var underTest = new RowCollection(new Row[] { new Row(), new Row() });
+            await Assert.That(underTest).IsNotNull();
         }
 
         [Test]
