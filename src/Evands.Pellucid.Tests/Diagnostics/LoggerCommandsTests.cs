@@ -31,6 +31,7 @@ namespace Evands.Pellucid.Diagnostics
             ConsoleBase.NewLine = Environment.NewLine;
             CrestronConsole.Messages.Length = 0;
             CrestronConsole.CommandResponse = string.Empty;
+            global.Dispose();
         }
 
         [Test]
