@@ -1,27 +1,19 @@
-﻿#region copyright
-// <copyright file="Options.cs" company="Christopher McNeely">
-// The MIT License (MIT)
-// Copyright (c) Christopher McNeely
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-// and associated documentation files (the "Software"), to deal in the Software without restriction,
-// including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
+// <copyright file="Options.cs">
+// The MIT License
+// Copyright © Christopher McNeely
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-// NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // </copyright>
-#endregion
 
 using System;
 using System.Collections.Generic;
-using Crestron.SimplSharp;
-using Crestron.SimplSharp.CrestronIO;
+using System.IO;
+using System.Threading;
 using Evands.Pellucid.Diagnostics;
 using Evands.Pellucid.Internal;
 
@@ -43,6 +35,61 @@ namespace Evands.Pellucid
         private bool autoSave = true;
 
         /// <summary>
+        /// Timer used to debounce save operations.
+        /// </summary>
+        private Timer saveTimer;
+
+        /// <summary>
+        /// Backing field for the <see cref="ColorizeConsoleOutput"/> property.
+        /// </summary>
+        private bool colorizeConsoleOutput;
+
+        /// <summary>
+        /// Backing field for the <see cref="LogLevels"/> property.
+        /// </summary>
+        private LogLevels logLevels;
+
+        /// <summary>
+        /// Backing field for the <see cref="DebugLevels"/> property.
+        /// </summary>
+        private DebugLevels debugLevels;
+
+        /// <summary>
+        /// Backing field for the <see cref="UseTimestamps"/> property.
+        /// </summary>
+        private bool useTimestamps;
+
+        /// <summary>
+        /// Backing field for the <see cref="UseFullTypeNamesWhenDumping"/> property.
+        /// </summary>
+        private bool useFullTypeNamesWhenDumping;
+
+        /// <summary>
+        /// Backing field for the <see cref="UseMinimalSpacingWhenDumping"/> property.
+        /// </summary>
+        private bool useMinimalSpacingWhenDumping;
+
+        /// <summary>
+        /// Backing field for the <see cref="Use24HourTime"/> property.
+        /// </summary>
+        private bool use24HourTime;
+
+        /// <summary>
+        /// Backing field for the <see cref="Suppressed"/> property.
+        /// </summary>
+        private List<string> suppressed;
+
+        /// <summary>
+        /// Backing field for the <see cref="Allowed"/> property.
+        /// </summary>
+        private List<string> allowed;
+
+        /// <summary>
+        /// Backing field for the <see cref="EnableMarkup"/> property.
+        /// </summary>
+        private bool enableMarkup;
+
+        /// <summary>
         /// Backing field for the <see cref="DefaultLogTimestampFormat"/> property.
         /// </summary>
         private string defaultLogTimestampFormat = "yy/MM/dd HH:mm:ss";
@@ -57,6 +104,21 @@ namespace Evands.Pellucid
         /// </summary>        
         public Options()
         {
+            this.saveTimer = new Timer(
+                _ =>
+                {
+                    try
+                    {
+                        Save();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Trace.WriteLine("Exception while auto-saving Pellucid options: " + ex);
+                    }
+                },
+                null,
+                Timeout.InfiniteTimeSpan,
+                Timeout.InfiniteTimeSpan);
         }
 
         /// <summary>
@@ -87,56 +149,92 @@ namespace Evands.Pellucid
         /// text console in ToolBox.</para>
         /// </summary>
         [TomlProperty("console-colorizeOutput")]
-        public bool ColorizeConsoleOutput { get; set; }
+        public bool ColorizeConsoleOutput
+        {
+            get { return this.colorizeConsoleOutput; }
+            set { this.colorizeConsoleOutput = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="LogLevels"/> used to determine what items are written to the logs.
         /// </summary>        
         [TomlProperty("logging-levels")]
-        public LogLevels LogLevels { get; set; }
+        public LogLevels LogLevels
+        {
+            get { return this.logLevels; }
+            set { this.logLevels = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="DebugLevels"/> used to determine what debug messages are written to the consoles.
         /// </summary>        
         [TomlProperty("debugging-levels")]
-        public DebugLevels DebugLevels { get; set; }
+        public DebugLevels DebugLevels
+        {
+            get { return this.debugLevels; }
+            set { this.debugLevels = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not debug messages will have timestamps prepended to them.
         /// </summary>        
         [TomlProperty("debugging-useTimestamps")]
-        public bool UseTimestamps { get; set; }
+        public bool UseTimestamps
+        {
+            get { return this.useTimestamps; }
+            set { this.useTimestamps = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether dumping items to the console will use full type names by default.
         /// </summary>
         [TomlProperty("dump-useFullTypeNames")]
-        public bool UseFullTypeNamesWhenDumping { get; set; }
+        public bool UseFullTypeNamesWhenDumping
+        {
+            get { return this.useFullTypeNamesWhenDumping; }
+            set { this.useFullTypeNamesWhenDumping = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether dumping items to the console will use minimal spacing for nested objects.
         /// When true, uses 2 character indentation. When false, uses the default spacing based on property names.
         /// </summary>
         [TomlProperty("dump-useMinimalSpacing")]
-        public bool UseMinimalSpacingWhenDumping { get; set; }
+        public bool UseMinimalSpacingWhenDumping
+        {
+            get { return this.useMinimalSpacingWhenDumping; }
+            set { this.useMinimalSpacingWhenDumping = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether debug messages will use shorter 24 hour timestamps, or longer 12 hour timestamps.
         /// </summary>        
         [TomlProperty("debugging-shortTimestamps")]
-        public bool Use24HourTime { get; set; }
+        public bool Use24HourTime
+        {
+            get { return this.use24HourTime; }
+            set { this.use24HourTime = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a list of headers that are suppressed and will not have debug messages of any level print to the console.
         /// </summary>        
         [TomlProperty("suppressed")]
-        public List<string> Suppressed { get; set; }
+        public List<string> Suppressed
+        {
+            get { return this.suppressed; }
+            set { this.suppressed = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a list of headers that are exclusively allowed to print debug messages to the console.
         /// </summary>        
         [TomlProperty("allowed")]
-        public List<string> Allowed { get; set; }
+        public List<string> Allowed
+        {
+            get { return this.allowed; }
+            set { this.allowed = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the options will be auto saved.
@@ -145,23 +243,7 @@ namespace Evands.Pellucid
         public bool AutoSave
         {
             get { return autoSave; }
-
-            set
-            {
-                if (autoSave != value)
-                {
-                    autoSave = value;
-
-                    if (value)
-                    {
-                        CrestronEnvironment.ProgramStatusEventHandler += HandleAutoLoad;
-                    }
-                    else
-                    {
-                        CrestronEnvironment.ProgramStatusEventHandler -= HandleAutoLoad;
-                    }
-                }
-            }
+            set { autoSave = value; ScheduleSave(); }
         }
         
         /// <summary>
@@ -170,7 +252,11 @@ namespace Evands.Pellucid
         /// <para>View the project Github Wiki for more information about Pellucid Console Markup.</para>
         /// </summary>
         [TomlProperty("enableMarkup")]
-        public bool EnableMarkup { get; set; }
+        public bool EnableMarkup
+        {
+            get { return this.enableMarkup; }
+            set { this.enableMarkup = value; ScheduleSave(); }
+        }
 
         /// <summary>
         /// Gets or sets a value representing the default Date/Time format string to use when writing log
@@ -190,6 +276,7 @@ namespace Evands.Pellucid
             set
             {
                 this.defaultLogTimestampFormat = value;
+                ScheduleSave();
             }
         }
 
@@ -210,6 +297,7 @@ namespace Evands.Pellucid
             set
             {
                 this.maxDebugMessageLength = value >= 20 ? value : -1;
+                ScheduleSave();
             }
         }
 
@@ -242,7 +330,6 @@ namespace Evands.Pellucid
             }
             catch (Exception ex)
             {
-                ErrorLog.Exception("Pellucid.Options", ex);
                 Debug.WriteException(this, ex, "Exception while saving Pellucid.Options to disk.");
             }
         }
@@ -263,13 +350,6 @@ namespace Evands.Pellucid
                 try
                 {
                     var options = MinimalTomlParser.DeserializeFromDisk<Options>(FilePath);
-                    CrestronEnvironment.ProgramStatusEventHandler -= options.HandleAutoLoad;
-
-                    if (options.AutoSave)
-                    {
-                        CrestronEnvironment.ProgramStatusEventHandler += options.HandleAutoLoad;
-                    }
-
                     return options;
                 }
                 catch (Exception ex)
@@ -291,17 +371,23 @@ namespace Evands.Pellucid
         {
             if (string.IsNullOrEmpty(FilePath))
             {
-                string fileName;
-                if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Appliance)
+                var dir = PlatformServices.Current.GetDefaultConfigDirectory();
+                var fileName = PlatformServices.Current.GetDefaultConfigFileName();
+
+                if (!Directory.Exists(dir))
                 {
-                    fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.ApplicationNumber.ToString().PadLeft(2, '0'));
-                }
-                else
-                {
-                    fileName = string.Format("pellucid.console-options{0}.toml", InitialParametersClass.RoomId);
+                    try
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    catch
+                    {
+                        // Fall back to app directory if we can't create the config directory
+                        dir = AppDomain.CurrentDomain.BaseDirectory;
+                    }
                 }
 
-                FilePath = Path.Combine(Path.Combine("/USER", "Pellucid"), fileName);
+                FilePath = Path.Combine(dir, fileName);
             }
         }
 
@@ -326,20 +412,21 @@ namespace Evands.Pellucid
         }
 
         /// <summary>
-        /// Handles auto saving and loading.
+        /// Schedules a debounced save operation. Resets the timer to 15 seconds
+        /// each time it is called, so rapid property changes result in a single save.
         /// </summary>
-        /// <param name="status">The status of the program.</param>
-        private void HandleAutoLoad(eProgramStatusEventType status)
+        private void ScheduleSave()
         {
-            switch (status)
+            if (autoSave && saveTimer != null)
             {
-                case eProgramStatusEventType.Stopping:
-                case eProgramStatusEventType.Paused:
-                    Save();
-                    break;
-                case eProgramStatusEventType.Resumed:
-                    Load();
-                    break;
+                try
+                {
+                    saveTimer.Change(TimeSpan.FromSeconds(15), Timeout.InfiniteTimeSpan);
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Timer was disposed; ignore.
+                }
             }
         }
     }

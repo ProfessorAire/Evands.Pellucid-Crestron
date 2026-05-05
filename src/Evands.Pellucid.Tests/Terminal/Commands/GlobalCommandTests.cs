@@ -1,20 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using Evands.Pellucid.Terminal.Commands.Attributes;
 
 namespace Evands.Pellucid.Terminal.Commands
 {
-    [TestClass]
     public class GlobalCommandTests
     {
         private GlobalCommand underTest;
-
-        private TestContext testContextInstance;
-
         private TestConsoleWriter testWriter;
 
         private class InvalidCommand : TerminalCommandBase
@@ -84,24 +79,7 @@ namespace Evands.Pellucid.Terminal.Commands
             }
         }
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        // Use TestInitialize to run code before running each test 
-        [TestInitialize()]
+        [Before(Test)]
         public void MyTestInitialize()
         {
             underTest = new GlobalCommand("app", "app", Access.Administrator);
@@ -109,11 +87,11 @@ namespace Evands.Pellucid.Terminal.Commands
             testWriter = new TestConsoleWriter();
             ConsoleBase.RegisterConsoleWriter(testWriter);
         }
-
-        // Use TestCleanup to run code after each test has run
-        [TestCleanup()]
+        [After(Test)]
         public void MyTestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             underTest.RemoveFromConsole();
             underTest.Dispose();
             underTest = null;
@@ -123,78 +101,68 @@ namespace Evands.Pellucid.Terminal.Commands
             testWriter = null;
         }
 
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Constructor_Throws_ArgumentOutOfRangeException_When_NameTooLong()
+        [Test]
+        public async Task Constructor_Throws_ArgumentOutOfRangeException_When_NameTooLong()
         {
-            var gc = new GlobalCommand("This name is longer than 23 characters.", "Help", Access.Administrator);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+
+                var gc = new GlobalCommand("This name is longer than 23 characters.", "Help", Access.Administrator);
+        
+            });
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Constructor_Throws_ArgumentOutOfRangeException_When_Name_Null()
+        [Test]
+        public async Task Constructor_Throws_ArgumentOutOfRangeException_When_Name_Null()
         {
-            var gc = new GlobalCommand(null, "Help", Access.Administrator);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+
+                var gc = new GlobalCommand(null, "Help", Access.Administrator);
+        
+            });
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Constructor_Throws_ArgumentOutOfRangeException_When_Name_Empty()
+        [Test]
+        public async Task Constructor_Throws_ArgumentOutOfRangeException_When_Name_Empty()
         {
-            var gc = new GlobalCommand(string.Empty, "Help", Access.Administrator);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+
+                var gc = new GlobalCommand(string.Empty, "Help", Access.Administrator);
+        
+            });
         }
 
-        [TestMethod]
-        public void Constructor_Sets_Name()
+        [Test]
+        public async Task Constructor_Sets_Name()
         {
             var expected = "ex";
             var gc = new GlobalCommand(expected, "help", Access.Administrator);
 
-            Assert.IsTrue(gc.Name == expected);
+            await Assert.That(gc.Name == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void Constructor_Sets_Help_WhenShortHelp()
+        [Test]
+        public async Task Constructor_Sets_Help_WhenShortHelp()
         {
             var help = "HelpTest";
             var gc = new GlobalCommand("TestTest", help, Access.Administrator);
 
-            Assert.IsTrue(gc.Help == help);
+            await Assert.That(gc.Help == help).IsTrue();
         }
 
-        [TestMethod]
-        public void Constructor_Sets_Help_WhenEmpty()
+        [Test]
+        public async Task Constructor_Sets_Help_WhenEmpty()
         {
             var help = string.Empty;
             var gc = new GlobalCommand("TestTest", help, Access.Administrator);
 
-            Assert.IsTrue(gc.Help == help);
+            await Assert.That(gc.Help == help).IsTrue();
         }
 
-        [TestMethod]
-        public void Constructor_Truncates_Help_When_TooLong()
+        [Test]
+        public async Task Constructor_Truncates_Help_When_TooLong()
         {
             var help = "This help is longer than 79 characters long and is going to be truncated by the constructor.";
             var expected = "This help is longer than 79 characters long and is going to be truncated by ...";
@@ -202,96 +170,96 @@ namespace Evands.Pellucid.Terminal.Commands
 
             Trace.WriteLine("Help: '" + gc.Help + "'");
 
-            Assert.IsTrue(gc.Help == expected);
+            await Assert.That(gc.Help == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void Constructor_Sets_CommandAccess_Tests()
+        [Test]
+        public async Task Constructor_Sets_CommandAccess_Tests()
         {
             var gc1 = new GlobalCommand("Test", "Help", Access.Operator);
-            Assert.IsTrue(gc1.CommandAccess == Access.Operator);
+            await Assert.That(gc1.CommandAccess == Access.Operator).IsTrue();
 
             var gc2 = new GlobalCommand("Test", "Help", Access.Programmer);
-            Assert.IsTrue(gc2.CommandAccess == Access.Programmer);
+            await Assert.That(gc2.CommandAccess == Access.Programmer).IsTrue();
 
             var gc3 = new GlobalCommand("Test", "Help", Access.Administrator);
-            Assert.IsTrue(gc3.CommandAccess == Access.Administrator);
+            await Assert.That(gc3.CommandAccess == Access.Administrator).IsTrue();
         }
 
-        [TestMethod]
-        public void WriteErrorMethod_Property_Sets()
+        [Test]
+        public async Task WriteErrorMethod_Property_Sets()
         {
             Action<string> expected = (s) => Trace.WriteLine(s);
             underTest.WriteErrorMethod = expected;
 
-            Assert.IsTrue(underTest.WriteErrorMethod == expected);
+            await Assert.That(underTest.WriteErrorMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void WriteHelpMethod_Property_Sets()
+        [Test]
+        public async Task WriteHelpMethod_Property_Sets()
         {
             Action<string> expected = (s) => Trace.WriteLine(s);
             underTest.WriteHelpMethod = expected;
 
-            Assert.IsTrue(underTest.WriteHelpMethod == expected);
+            await Assert.That(underTest.WriteHelpMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void FormatHelpCommandMethod_Property_Sets()
+        [Test]
+        public async Task FormatHelpCommandMethod_Property_Sets()
         {
             Func<string, string> expected = (s) => s;
             underTest.FormatHelpCommandMethod = expected;
 
-            Assert.IsTrue(underTest.FormatHelpCommandMethod == expected);
+            await Assert.That(underTest.FormatHelpCommandMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void FormatHelpVerbMethod_Property_Sets()
+        [Test]
+        public async Task FormatHelpVerbMethod_Property_Sets()
         {
             Func<string, string> expected = (s) => s;
             underTest.FormatHelpVerbMethod = expected;
 
-            Assert.IsTrue(underTest.FormatHelpVerbMethod == expected);
+            await Assert.That(underTest.FormatHelpVerbMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void FormatHelpOperandMethod_Property_Sets()
+        [Test]
+        public async Task FormatHelpOperandMethod_Property_Sets()
         {
             Func<string, string> expected = (s) => s;
             underTest.FormatHelpOperandMethod = expected;
 
-            Assert.IsTrue(underTest.FormatHelpOperandMethod == expected);
+            await Assert.That(underTest.FormatHelpOperandMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void FormatHelpFlagMethod_Property_Sets()
+        [Test]
+        public async Task FormatHelpFlagMethod_Property_Sets()
         {
             Func<string, string> expected = (s) => s;
             underTest.FormatHelpFlagMethod = expected;
 
-            Assert.IsTrue(underTest.FormatHelpFlagMethod == expected);
+            await Assert.That(underTest.FormatHelpFlagMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void FormatHelpSampleMethod_Property_Sets()
+        [Test]
+        public async Task FormatHelpSampleMethod_Property_Sets()
         {
             Func<string, string> expected = (s) => s;
             underTest.FormatHelpSampleMethod = expected;
 
-            Assert.IsTrue(underTest.FormatHelpSampleMethod == expected);
+            await Assert.That(underTest.FormatHelpSampleMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void FormatHelpTextMethod_Property_Sets()
+        [Test]
+        public async Task FormatHelpTextMethod_Property_Sets()
         {
             Func<string, string> expected = (s) => s;
             underTest.FormatHelpTextMethod = expected;
 
-            Assert.IsTrue(underTest.FormatHelpTextMethod == expected);
+            await Assert.That(underTest.FormatHelpTextMethod == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void AddToConsole_ReturnsTrue_WhenNoOtherCommandAdded()
+        [Test]
+        public async Task AddToConsole_ReturnsTrue_WhenNoOtherCommandAdded()
         {
             var expected = true;
             var gc = new GlobalCommand("aps", "help", Access.Administrator);
@@ -299,12 +267,12 @@ namespace Evands.Pellucid.Terminal.Commands
 
             var actual = gc.AddToConsole();
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
             gc.RemoveFromConsole();
         }
 
-        [TestMethod]
-        public void AddToConsole_ReturnsFalse_WhenCrestronConsole_ReturnsFalse()
+        [Test]
+        public async Task AddToConsole_ReturnsFalse_WhenCrestronConsole_ReturnsFalse()
         {
             var expected = false;
             var gc = new GlobalCommand("aps", "help", Access.Administrator);
@@ -312,12 +280,12 @@ namespace Evands.Pellucid.Terminal.Commands
             var actual = gc.AddToConsole();
             Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
             gc.RemoveFromConsole();
         }
 
-        [TestMethod]
-        public void AddToConsole_ReturnsFalse_WhenSameCommandAdded()
+        [Test]
+        public async Task AddToConsole_ReturnsFalse_WhenSameCommandAdded()
         {
             var expected = false;
             var gc = new GlobalCommand("aps", "help", Access.Administrator);
@@ -326,12 +294,12 @@ namespace Evands.Pellucid.Terminal.Commands
             var gc2 = new GlobalCommand("aps", "help", Access.Administrator);
             var actual = gc2.AddToConsole();
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
             gc.RemoveFromConsole();
         }
 
-        [TestMethod]
-        public void AddToConsole_ReturnsTrue_WhenServer_AndConsoleReturnsFalse()
+        [Test]
+        public async Task AddToConsole_ReturnsTrue_WhenServer_AndConsoleReturnsFalse()
         {
             Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = false;
             Crestron.SimplSharp.CrestronEnvironment.DevicePlatform = Crestron.SimplSharp.eDevicePlatform.Server;
@@ -339,11 +307,11 @@ namespace Evands.Pellucid.Terminal.Commands
             var gc = new GlobalCommand("spa", "Help", Access.Administrator);
             var actual = gc.AddToConsole();
 
-            Assert.IsTrue(actual);
+            await Assert.That(actual).IsTrue();
         }
 
-        [TestMethod]
-        public void RemoveFromConsole_ReturnsTrue_WhenCommandAdded()
+        [Test]
+        public async Task RemoveFromConsole_ReturnsTrue_WhenCommandAdded()
         {
             var expected = true;
             var gc = new GlobalCommand("aps", "help", Access.Administrator);
@@ -351,83 +319,83 @@ namespace Evands.Pellucid.Terminal.Commands
             gc.AddToConsole();
             var actual = gc.RemoveFromConsole();
 
-            Assert.IsTrue(actual == expected);
+            await Assert.That(actual == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void RemoveFromConsole_ReturnsFalse_WhenNoCommandAdded()
+        [Test]
+        public async Task RemoveFromConsole_ReturnsFalse_WhenNoCommandAdded()
         {
             var expected = false;
             var gc = new GlobalCommand("aps", "help", Access.Administrator);
             var actual = gc.RemoveFromConsole();
 
-            Assert.IsTrue(actual == expected);
+            await Assert.That(actual == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void AddCommand_Returns_Success()
+        [Test]
+        public async Task AddCommand_Returns_Success()
         {
             var expected = RegisterResult.Success;
             var c1 = new TestCommand();
             var actual = underTest.AddCommand(c1);
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
         }
 
-        [TestMethod]
-        public void AddCommand_Returns_GlobalCommandNotFound_WhenNoGlobalRegistered()
+        [Test]
+        public async Task AddCommand_Returns_GlobalCommandNotFound_WhenNoGlobalRegistered()
         {
             var expected = RegisterResult.GlobalCommandNotFound;
             var c1 = new TestCommand();
             var actual = c1.RegisterCommand("missing");
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
         }
 
-        [TestMethod]
-        public void AddCommand_Returns_NoCommandAttributeFound()
+        [Test]
+        public async Task AddCommand_Returns_NoCommandAttributeFound()
         {
             var expected = RegisterResult.NoCommandAttributeFound;
             var c1 = new InvalidCommand();
             var actual = underTest.AddCommand(c1);
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
         }
 
-        [TestMethod]
-        public void AddCommand_AllowsMultiple_CustomName()
+        [Test]
+        public async Task AddCommand_AllowsMultiple_CustomName()
         {
             var expected = RegisterResult.Success;
             var c1 = new TestCommand4("CustomName1");
             var c2 = new TestCommand4("ADifferentName");
 
-            Assert.IsTrue(underTest.AddCommand(c1) == expected);
-            Assert.IsTrue(underTest.AddCommand(c2) == expected);
+            await Assert.That(underTest.AddCommand(c1) == expected).IsTrue();
+            await Assert.That(underTest.AddCommand(c2) == expected).IsTrue();
         }
 
-        [TestMethod]
-        public void RemoveCommand_Returns_True_When_CommandRemoved()
+        [Test]
+        public async Task RemoveCommand_Returns_True_When_CommandRemoved()
         {
             var expected = true;
             var c1 = new TestCommand();
             underTest.AddCommand(c1);
             var actual = underTest.RemoveCommand(c1);
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
         }
 
-        [TestMethod]
-        public void RemoveCommand_Returns_False_When_NoCommandRemoved()
+        [Test]
+        public async Task RemoveCommand_Returns_False_When_NoCommandRemoved()
         {
             var expected = false;
             var c1 = new TestCommand();
             var actual = underTest.RemoveCommand(c1);
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
         }
 
-        [TestMethod]
-        public void IsCommandRegistered_Returns_True_When_CommandRegistered()
+        [Test]
+        public async Task IsCommandRegistered_Returns_True_When_CommandRegistered()
         {
             var expected = true;
             var c1 = new TestCommand();
@@ -435,21 +403,21 @@ namespace Evands.Pellucid.Terminal.Commands
 
             var actual = underTest.IsCommandRegistered(c1);
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
         }
 
-        [TestMethod]
-        public void IsCommandRegistered_Returns_False_When_CommandRegistered()
+        [Test]
+        public async Task IsCommandRegistered_Returns_False_When_CommandRegistered()
         {
             var expected = false;
             var c1 = new TestCommand();
             var actual = underTest.IsCommandRegistered(c1);
 
-            Assert.IsTrue(expected == actual);
+            await Assert.That(expected == actual).IsTrue();
         }
 
-        [TestMethod]
-        public void Dispose_RemovesAllCommands_When_Called()
+        [Test]
+        public async Task Dispose_RemovesAllCommands_When_Called()
         {
             var c1 = new TestCommand();
 
@@ -457,15 +425,15 @@ namespace Evands.Pellucid.Terminal.Commands
             gc.AddToConsole();
             gc.AddCommand(c1);
 
-            Assert.IsTrue(gc.IsCommandRegistered(c1));
+            await Assert.That(gc.IsCommandRegistered(c1)).IsTrue();
 
             gc.Dispose();
 
-            Assert.IsFalse(gc.IsCommandRegistered(c1));
+            await Assert.That(gc.IsCommandRegistered(c1)).IsFalse();
         }
 
-        [TestMethod]
-        public void Dispose_RemovesFromConsole_When_Called()
+        [Test]
+        public async Task Dispose_RemovesFromConsole_When_Called()
         {
             var c1 = new TestCommand();
 
@@ -473,234 +441,234 @@ namespace Evands.Pellucid.Terminal.Commands
             gc.AddToConsole();
             gc.Dispose();
 
-            Assert.IsFalse(gc.RemoveFromConsole());
+            await Assert.That(gc.RemoveFromConsole()).IsFalse();
         }
 
-        [TestMethod]
-        public void DuplicateFlag_WritesError()
+        [Test]
+        public async Task DuplicateFlag_WritesError()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd v -f -f -f -f");
 
-            Assert.IsTrue(testWriter.Contains("Duplicate operand or flag names are not allowed!"));
-            Assert.IsFalse(testWriter.Contains("NOTHING"));
+            await Assert.That(testWriter.Contains("Duplicate operand or flag names are not allowed!")).IsTrue();
+            await Assert.That(testWriter.Contains("NOTHING")).IsFalse();
         }
 
-        [TestMethod]
-        public void DuplicateOperand_WritesError()
+        [Test]
+        public async Task DuplicateOperand_WritesError()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd v --f temp --f");
 
-            Assert.IsTrue(testWriter.Contains("Duplicate operand or flag names are not allowed!"));
-            Assert.IsFalse(testWriter.Contains("NOTHING"));
+            await Assert.That(testWriter.Contains("Duplicate operand or flag names are not allowed!")).IsTrue();
+            await Assert.That(testWriter.Contains("NOTHING")).IsFalse();
         }
 
-        [TestMethod]
-        public void BasicCommand_PerformsAction_Coverage1()
+        [Test]
+        public async Task BasicCommand_PerformsAction_Coverage1()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd v --f \"value\"");
 
-            Assert.IsTrue(testWriter.Contains("NOTHING"));
+            await Assert.That(testWriter.Contains("NOTHING")).IsTrue();
         }
 
-        [TestMethod]
-        public void BasicCommand_PerformsAction_Coverage2()
+        [Test]
+        public async Task BasicCommand_PerformsAction_Coverage2()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd v --f value");
 
-            Assert.IsTrue(testWriter.Contains("NOTHING"));
+            await Assert.That(testWriter.Contains("NOTHING")).IsTrue();
         }
 
-        [TestMethod]
-        public void BasicCommand_PerformsAction_Coverage3()
+        [Test]
+        public async Task BasicCommand_PerformsAction_Coverage3()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd v --f");
 
-            Assert.IsTrue(testWriter.Contains("NOTHING"));
+            await Assert.That(testWriter.Contains("NOTHING")).IsTrue();
         }
 
-        [TestMethod]
-        public void BasicCommand_PerformsAction_Coverage4()
+        [Test]
+        public async Task BasicCommand_PerformsAction_Coverage4()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd some -v");
 
-            Assert.IsTrue(testWriter.Contains("NOTHING"));
+            await Assert.That(testWriter.Contains("NOTHING")).IsTrue();
         }
 
-        [TestMethod]
-        public void BasicCommand_PerformsAction_Coverage5()
+        [Test]
+        public async Task BasicCommand_PerformsAction_Coverage5()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd some -v -x");
 
-            Assert.IsTrue(testWriter.Contains("The verb 'some' requires a different combination of operands than what was provided."));
+            await Assert.That(testWriter.Contains("The verb 'some' requires a different combination of operands than what was provided.")).IsTrue();
         }
 
-        [TestMethod]
-        public void BasicCommand_WithInvalidParamType_WritesMessage()
+        [Test]
+        public async Task BasicCommand_WithInvalidParamType_WritesMessage()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd some --a bah");
 
-            Assert.IsTrue(testWriter.Contains("Unable to convert the operand 'a' with the value 'bah' to the expected type value 'System.Boolean'."));
+            await Assert.That(testWriter.Contains("Unable to convert the operand 'a' with the value 'bah' to the expected type value 'System.Boolean'.")).IsTrue();
         }
 
-        [TestMethod]
-        public void ConvertParameter_ConvertsType_Success()
+        [Test]
+        public async Task ConvertParameter_ConvertsType_Success()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd typeTest --bool1 --bool2 yes --bool3 no --bool4 on --bool5 off --bool6 true --int1 \"-123\" --int2 65535 --int3 123 --int4 123.43 --int5 423123");
 
-            Assert.IsTrue(testWriter.Contains("SUCCESS"));
+            await Assert.That(testWriter.Contains("SUCCESS")).IsTrue();
         }
 
-        [TestMethod]
-        public void ConvertParameter_ConvertsType_Failure1()
+        [Test]
+        public async Task ConvertParameter_ConvertsType_Failure1()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd typeTest --bool1 --bool2 yes --bool3 no --bool4 on --bool5 off --bool6 true --int1 gbg --int2 65535 --int3 123 --int4 123.43 --int5 423123");
 
-            Assert.IsFalse(testWriter.Contains("SUCCESS"));
+            await Assert.That(testWriter.Contains("SUCCESS")).IsFalse();
         }
 
-        [TestMethod]
-        public void ConvertParameter_ConvertsType_Failure2()
+        [Test]
+        public async Task ConvertParameter_ConvertsType_Failure2()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd typeTest --bool1 --bool2 yes --bool3 no --bool4 on --bool5 off --bool6 true --int1 123 --int2 gbg --int3 123 --int4 123.43 --int5 423123");
 
-            Assert.IsFalse(testWriter.Contains("SUCCESS"));
+            await Assert.That(testWriter.Contains("SUCCESS")).IsFalse();
         }
 
-        [TestMethod]
-        public void ConvertParameter_ConvertsType_Failure3()
+        [Test]
+        public async Task ConvertParameter_ConvertsType_Failure3()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd typeTest --bool1 --bool2 yes --bool3 no --bool4 on --bool5 off --bool6 true --int1 123 --int2 132 --int3 gbg --int4 123.43 --int5 423123");
 
-            Assert.IsFalse(testWriter.Contains("SUCCESS"));
+            await Assert.That(testWriter.Contains("SUCCESS")).IsFalse();
         }
 
-        [TestMethod]
-        public void ConvertParameter_ConvertsType_Failure4()
+        [Test]
+        public async Task ConvertParameter_ConvertsType_Failure4()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd typeTest --bool1 --bool2 yes --bool3 no --bool4 on --bool5 off --bool6 true --int1 123 --int2 132 --int3 123 --int4 gbg --int5 423123");
 
-            Assert.IsFalse(testWriter.Contains("SUCCESS"));
+            await Assert.That(testWriter.Contains("SUCCESS")).IsFalse();
         }
 
-        [TestMethod]
-        public void ConvertParameter_ConvertsType_Failure5()
+        [Test]
+        public async Task ConvertParameter_ConvertsType_Failure5()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd typeTest --bool1 --bool2 yes --bool3 no --bool4 on --bool5 off --bool6 true --int1 123 --int2 132 --int3 123 --int4 123 --int5 gbg");
 
-            Assert.IsFalse(testWriter.Contains("SUCCESS"));
+            await Assert.That(testWriter.Contains("SUCCESS")).IsFalse();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_WithNoOptionalFlag_ExecutesCommand()
+        [Test]
+        public async Task ExecuteCommand_WithNoOptionalFlag_ExecutesCommand()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd opt");
 
-            Assert.IsTrue(testWriter.Contains("OPTIONAL"));
+            await Assert.That(testWriter.Contains("OPTIONAL")).IsTrue();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_WithNoCommandName_WritesResponse()
+        [Test]
+        public async Task ExecuteCommand_WithNoCommandName_WritesResponse()
         {
             underTest.ExecuteCommand("-v");
-            Assert.IsTrue(testWriter.Contains("You must enter the name of a command."));
+            await Assert.That(testWriter.Contains("You must enter the name of a command.")).IsTrue();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_WithInvalidCommandName_WritesResponse()
+        [Test]
+        public async Task ExecuteCommand_WithInvalidCommandName_WritesResponse()
         {
             underTest.ExecuteCommand("coms");
-            Assert.IsTrue(testWriter.Contains("No command with the name 'coms' exists."));
+            await Assert.That(testWriter.Contains("No command with the name 'coms' exists.")).IsTrue();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_WithNoVerb_WritesResponse()
+        [Test]
+        public async Task ExecuteCommand_WithNoVerb_WritesResponse()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd");
-            Assert.IsTrue(testWriter.Contains("The command 'cmd' requires a verb."));
+            await Assert.That(testWriter.Contains("The command 'cmd' requires a verb.")).IsTrue();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_WithInvalidVerb_WritesResponse()
+        [Test]
+        public async Task ExecuteCommand_WithInvalidVerb_WritesResponse()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd not");
-            Assert.IsTrue(testWriter.Contains("No verb with the specified name 'not' exists."));
+            await Assert.That(testWriter.Contains("No verb with the specified name 'not' exists.")).IsTrue();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_WithDefaultValue_Coverage()
+        [Test]
+        public async Task ExecuteCommand_WithDefaultValue_Coverage()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
             var handled = false;
             underTest.CommandExceptionEncountered += (o, a) => handled = true;
             underTest.ExecuteCommand("cmd not value");
-            Assert.IsFalse(handled);
+            await Assert.That(handled).IsFalse();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_ProcessesException()
+        [Test]
+        public async Task ExecuteCommand_ProcessesException()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("cmd x");
 
-            Assert.IsTrue(testWriter.Contains("TEST MESSAGE") && testWriter.Contains("System.NullReferenceException"));
+            await Assert.That(testWriter.Contains("TEST MESSAGE") && testWriter.Contains("System.NullReferenceException")).IsTrue();
         }
 
-        [TestMethod]
-        public void ExecuteCommand_Handler_ProcessesException()
+        [Test]
+        public async Task ExecuteCommand_Handler_ProcessesException()
         {
             var c = new InvalidInternals();
             underTest.AddCommand(c);
@@ -710,35 +678,33 @@ namespace Evands.Pellucid.Terminal.Commands
             underTest.CommandExceptionEncountered += handler;
             underTest.ExecuteCommand("cmd x2");
             underTest.CommandExceptionEncountered -= handler;
-            Assert.IsTrue(handled);
+            await Assert.That(handled).IsTrue();
         }
 
-        [TestMethod]
-        public void GlobalHelp_IsPrinted_When_LongHelp_Requested()
+        [Test]
+        public async Task GlobalHelp_IsPrinted_When_LongHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("--help");
-            Assert.IsTrue(
-                testWriter.Contains("testCommand (test)") &&
-                testWriter.Contains("Test command help."));
+            await Assert.That(testWriter.Contains("testCommand (test)") &&
+                testWriter.Contains("Test command help.")).IsTrue();
         }
 
-        [TestMethod]
-        public void GlobalHelp_IsPrinted_When_ShortHelp_Requested()
+        [Test]
+        public async Task GlobalHelp_IsPrinted_When_ShortHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
 
             underTest.ExecuteCommand("-h");
-            Assert.IsTrue(
-                testWriter.Contains("testCommand (test)") &&
-                testWriter.Contains("Test command help."));
+            await Assert.That(testWriter.Contains("testCommand (test)") &&
+                testWriter.Contains("Test command help.")).IsTrue();
         }
 
-        [TestMethod]
-        public void GlobalHelp_Prints_CommandNamesWithSuffix_When_SuffixPresent()
+        [Test]
+        public async Task GlobalHelp_Prints_CommandNamesWithSuffix_When_SuffixPresent()
         {
             var c1 = new TestCommand3("string", "s1");
             var c2 = new TestCommand3("string", "s2");
@@ -746,13 +712,12 @@ namespace Evands.Pellucid.Terminal.Commands
             underTest.AddCommand(c2);
 
             underTest.ExecuteCommand("-h");
-            Assert.IsTrue(
-                testWriter.Contains("testCommand3s1 (tc3s1)") &&
-                testWriter.Contains("testCommand3s2 (tc3s2)"));
+            await Assert.That(testWriter.Contains("testCommand3s1 (tc3s1)") &&
+                testWriter.Contains("testCommand3s2 (tc3s2)")).IsTrue();
         }
 
-        [TestMethod]
-        public void GlobalHelp_Prints_CommandNames_Alphabetically()
+        [Test]
+        public async Task GlobalHelp_Prints_CommandNames_Alphabetically()
         {
             var c3 = new TestCommand4("Zed");
             var c1 = new TestCommand();
@@ -772,158 +737,133 @@ testCommand (test)      Test command help.
 testCommand2 (tc2)      Test command 2 help.
 zed                     Test command 4 help.
 -----
-";
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
-            Assert.IsTrue(
-                testWriter.ToString() == expected);
+            await Assert.That(testWriter.ToString() == expected).IsTrue();
 
             Options.Instance.ColorizeConsoleOutput = true;
         }
 
-        [TestMethod]
-        public void VerbHelp_Sample_IsPrinted_When_LongHelp_Requested()
+        [Test]
+        public async Task VerbHelp_Sample_IsPrinted_When_LongHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
             underTest.ExecuteCommand("TestCommand test --help");
 
-            Assert.IsTrue(
-                testWriter.Contains("TestCommand test --fluff") &&
-                testWriter.Contains("Sample One"),
-                "Sample One Not Found");
+            await Assert.That(testWriter.Contains("TestCommand test --fluff") &&
+                testWriter.Contains("Sample One")).IsTrue();
 
-            Assert.IsTrue(
-                testWriter.Contains("TestCommand t -f") &&
-                testWriter.Contains("Sample Two"),
-                "Sample Two Not Found");
+            await Assert.That(testWriter.Contains("TestCommand t -f") &&
+                testWriter.Contains("Sample Two")).IsTrue();
         }
 
-        [TestMethod]
-        public void VerbHelp_Sample_IsPrinted_When_ShortHelp_Requested()
+        [Test]
+        public async Task VerbHelp_Sample_IsPrinted_When_ShortHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
             underTest.ExecuteCommand("TestCommand test -h");
 
-            Assert.IsTrue(
-                testWriter.Contains("TestCommand test --fluff") &&
-                testWriter.Contains("Sample One"),
-                "Sample One Not Found");
+            await Assert.That(testWriter.Contains("TestCommand test --fluff") &&
+                testWriter.Contains("Sample One")).IsTrue();
 
-            Assert.IsTrue(
-                testWriter.Contains("TestCommand t -f") &&
-                testWriter.Contains("Sample Two"),
-                "Sample Two Not Found");
+            await Assert.That(testWriter.Contains("TestCommand t -f") &&
+                testWriter.Contains("Sample Two")).IsTrue();
         }
 
-        [TestMethod]
-        public void VerbHelp_Operands_ArePrinted_When_LongHelp_Requested()
+        [Test]
+        public async Task VerbHelp_Operands_ArePrinted_When_LongHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
             underTest.ExecuteCommand("TestCommand t2 --help");
 
-            Assert.IsTrue(
-                testWriter.Contains("--fluff") &&
-                testWriter.Contains("Provides fluff."),
-                "Fluff operand help not found.");
+            await Assert.That(testWriter.Contains("--fluff") &&
+                testWriter.Contains("Provides fluff.")).IsTrue();
 
-            Assert.IsTrue(
-                testWriter.Contains("--stuff") &&
-                testWriter.Contains("Provides stuff."),
-                "Stuff operand help not found.");
+            await Assert.That(testWriter.Contains("--stuff") &&
+                testWriter.Contains("Provides stuff.")).IsTrue();
         }
 
-        [TestMethod]
-        public void VerbHelp_Operands_ArePrinted_When_ShortHelp_Requested()
+        [Test]
+        public async Task VerbHelp_Operands_ArePrinted_When_ShortHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
             underTest.ExecuteCommand("TestCommand t2 -h");
 
-            Assert.IsTrue(
-                testWriter.Contains("--fluff") &&
-                testWriter.Contains("Provides fluff."),
-                "Fluff operand help not found.");
+            await Assert.That(testWriter.Contains("--fluff") &&
+                testWriter.Contains("Provides fluff.")).IsTrue();
 
-            Assert.IsTrue(
-                testWriter.Contains("--stuff") &&
-                testWriter.Contains("Provides stuff."),
-                "Stuff operand help not found.");
+            await Assert.That(testWriter.Contains("--stuff") &&
+                testWriter.Contains("Provides stuff.")).IsTrue();
         }
 
-        [TestMethod]
-        public void VerbHelp_Flags_ArePrinted_When_LongHelp_Requested()
+        [Test]
+        public async Task VerbHelp_Flags_ArePrinted_When_LongHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
             underTest.ExecuteCommand("TestCommand t3 --help");
 
-            Assert.IsTrue(
-                testWriter.Contains("--fluff") &&
-                testWriter.Contains("Indicates fluff."),
-                "Fluff flag help not found.");
+            await Assert.That(testWriter.Contains("--fluff") &&
+                testWriter.Contains("Indicates fluff.")).IsTrue();
 
-            Assert.IsTrue(
-                testWriter.Contains("--stuff, -s (optional)") &&
-                testWriter.Contains("Indicates stuff."),
-                "Stuff flag help not found.");
+            await Assert.That(testWriter.Contains("--stuff, -s (optional)") &&
+                testWriter.Contains("Indicates stuff.")).IsTrue();
         }
 
-        [TestMethod]
-        public void VerbHelp_Flags_ArePrinted_When_ShortHelp_Requested()
+        [Test]
+        public async Task VerbHelp_Flags_ArePrinted_When_ShortHelp_Requested()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
             underTest.ExecuteCommand("TestCommand t3 -h");
 
-            Assert.IsTrue(
-                testWriter.Contains("--fluff") &&
-                testWriter.Contains("Indicates fluff."),
-                "Fluff flag help not found.");
+            await Assert.That(testWriter.Contains("--fluff") &&
+                testWriter.Contains("Indicates fluff.")).IsTrue();
 
-            Assert.IsTrue(
-                testWriter.Contains("--stuff, -s (optional)") &&
-                testWriter.Contains("Indicates stuff."),
-                "Stuff flag help not found.");
+            await Assert.That(testWriter.Contains("--stuff, -s (optional)") &&
+                testWriter.Contains("Indicates stuff.")).IsTrue();
         }
 
-        [TestMethod]
-        public void CommandHelp_Verbs_WithNoName_Show_FormattedNone()
+        [Test]
+        public async Task CommandHelp_Verbs_WithNoName_Show_FormattedNone()
         {
             var c = new TestCommand();
             underTest.AddCommand(c);
             underTest.ExecuteCommand("TestCommand --help");
 
-            Assert.IsTrue(testWriter.Contains("<none>"));
+            await Assert.That(testWriter.Contains("<none>")).IsTrue();
         }
 
-        [TestMethod]
-        public void ValidateWriter_DoesNothing_When_NewValidator_IsNull()
+        [Test]
+        public async Task ValidateWriter_DoesNothing_When_NewValidator_IsNull()
         {
             underTest.WriteErrorMethod = (s) => { ConsoleBase.Write(s); };
             underTest.WriteErrorMethod("temp");
-            Assert.IsTrue(testWriter.Contains("temp") && !testWriter.Contains("temp" + ConsoleBase.NewLine));
+            await Assert.That(testWriter.Contains("temp") && !testWriter.Contains("temp" + ConsoleBase.NewLine)).IsTrue();
 
             underTest.WriteErrorMethod = null;
             underTest.WriteErrorMethod("Error");
-            Assert.IsTrue(testWriter.Contains("Error"));
+            await Assert.That(testWriter.Contains("Error")).IsTrue();
         }
 
-        [TestMethod]
-        public void ValidateFormatter_DoesNothing_When_NewValidator_IsNull()
+        [Test]
+        public async Task ValidateFormatter_DoesNothing_When_NewValidator_IsNull()
         {
             underTest.FormatHelpCommandMethod = (s) => s + "1";
             var result = underTest.FormatHelpCommandMethod("temp");
-            Assert.IsTrue(result == "temp1");
+            await Assert.That(result == "temp1").IsTrue();
 
             underTest.FormatHelpCommandMethod = null;
             result = underTest.FormatHelpCommandMethod("temp");
-            Assert.IsTrue(result == "temp");
+            await Assert.That(result == "temp").IsTrue();
         }
 
-        [TestMethod]
-        public void GetAllGlobalCommands_ReturnsAllGlobalCommands()
+        [Test]
+        public async Task GetAllGlobalCommands_ReturnsAllGlobalCommands()
         {
             Crestron.SimplSharp.CrestronConsole.AddNewConsoleCommandResult = true;
             var gc2 = new GlobalCommand("sap", "Test", Access.Administrator);
@@ -934,9 +874,9 @@ zed                     Test command 4 help.
 
             var values = GlobalCommand.GetAllGlobalCommands();
 
-            Assert.IsTrue(values.Contains(gc2));
-            Assert.IsTrue(values.Contains(gc3));
-            Assert.IsTrue(values.Contains(underTest));
+            await Assert.That(values.Contains(gc2)).IsTrue();
+            await Assert.That(values.Contains(gc3)).IsTrue();
+            await Assert.That(values.Contains(underTest)).IsTrue();
         }
     }
 }

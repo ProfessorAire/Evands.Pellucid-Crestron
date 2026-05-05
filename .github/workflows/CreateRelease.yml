@@ -1,140 +1,78 @@
-name: CreateRelease
+name: Release-Workflow
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create the GitHub release (automatic on main push, manual on other branches for pre-release)'
+        required: false
+        default: 'false'
+      upload_asset:
+        description: 'Upload the release asset'
+        required: false
+        default: 'false'
 
 jobs:
-  getVersions:
-    runs-on: self-hosted
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: ./.github/workflows
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-
-      - name: Get Versions
-        run: |
-          $versions = .\packaging\getVersions.ps1
-          $libSemVer = $versions[0]
-          $proSemVer = $versions[2]
-          $preRelease = $versions[4]
-          echo "VERSION=$libSemVer" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "PRO_VERSION=$proSemVer" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "PRE=$preRelease" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-
-      - name: Check Version Tags
-        uses: mukunku/tag-exists-action@v1.0.0
-        id: contains_tag
-        with:
-          tag: "v${{ env.VERSION }}"
-        env:
-          GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
-
-      - name: Validate Versions
-        run: |
-          if ("${{ steps.contains_tag.outputs.exists }}" -eq "true")
-          {
-            Write-Error "The tag 'v${{ env.VERSION }}' already exists."
-            exit 1
-          }    
-    outputs:
-      libVer: ${{ env.VERSION }}
-      proVer: ${{ env.PRO_VERSION }}
-      preRelease: ${{ env.PRE }}
-
-  build:
-    runs-on: self-hosted
-    needs: getVersions
-    steps:
-      - name: Build Project
-        run: |
-          .\scripts\buildProject.ps1 -Mode Release
-      
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-output
-          path: |
-            .\src\Evands.Pellucid\bin\Release\Evands.Pellucid.dll
-            .\src\Evands.Pellucid\bin\Release\Evands.Pellucid.xml
-            .\src\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.dll
-            .\src\Evands.Pellucid.Pro\bin\Release\Evands.Pellucid.Pro.xml
-            .\src\Evands.Pellucid.ProDemo\bin\Release\Evands.Pellucid.ProDemo.cpz
-  
-  createPackages:
-    runs-on: self-hosted
-    needs: [build, getVersions]
-    steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: release-output
-          path: .\src\
-      
-      - name: Create Packages
-        run: |
-          $paths = .\packaging\createPackages.ps1 ${{ needs.getVersions.outputs.libVer }} ${{ needs.getVersions.outputs.proVer }}
-          $lib = $paths[0]
-          $pro = $paths[1]
-          $zip = $paths[2]
-          echo "LIBPATH=$lib" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "PROPATH=$pro" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-          echo "ZIPPATH=$zip" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
-      
-      - name: Upload Package Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: package-output
-          path: |
-            .\packaging\.releases\*.nupkg
-            .\packaging\.releases\*.zip
-
-  createRelease:
-    runs-on: self-hosted
-    needs: [createPackages, getVersions]
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Download Package Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: package-output
-          path: .\packaging\.releases\
 
-      - name: CreateChangelog
-        id: changelog
-        run: |
-          .\scripts\generateChangelog.ps1
-
-      - name: Create Github Release
-        uses: ncipollo/release-action@v1.8.6
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          name: "Evands.Pellucid-Crestron v${{ needs.getVersions.outputs.libVer }}"
-          tag: "v${{ needs.getVersions.outputs.libVer }}"
-          artifactErrorsFailBuild: true
-          prerelease: ${{ needs.getVersions.outputs.preRelease }}
-          bodyFile: "changelog.md"
-          draft: true
-          artifacts: "./packaging/.releases/*.zip"
-          commit: main
-          token: ${{ secrets.RELEASE_TOKEN }}
-      
-      - name: Push Nuget Packages
-        run:
-          .\packaging\pushPackages.ps1 'packaging/.releases/*.nupkg' ${{ secrets.NUGET_API_KEY }}
+          dotnet-version: '8.0.x'
 
-  createVersionBadge:
-    runs-on: self-hosted
-    needs: [createRelease, getVersions]
-    steps:
-      - name: Create Badge
-        uses: schneegans/dynamic-badges-action@v1.0.0
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+        working-directory: ./
+
+      - name: Run Clean
+        uses: cake-build/cake-action@v3
         with:
-          auth: ${{ secrets.GIST_AUTH_TOKEN }}
-          gistID: 511fb463532b10f6fca3eba9df658486
-          filename: Evands.Pellucid-Version.json
-          label: Nuget
-          color: blue
-          message: "${{ needs.getVersions.outputs.libVer }}"
-          style: flat
+          script-path: ./.github/workflows/Clean.cake
+
+      - name: Run DetermineVersion
+        uses: cake-build/cake-action@v3
+        with:
+          script-path: ./.github/workflows/DetermineVersion.cake
+
+      - name: Build solution
+        run: dotnet build src/Evands.Pellucid.slnx --configuration Release -p:PackageVersion=${{ env.RELEASE_VERSION || '0.0.0' }}
+        working-directory: ./
+
+      - name: Pack NuGet
+        run: dotnet pack src/Evands.Pellucid/Evands.Pellucid.csproj --configuration Release --no-build -p:PackageVersion=${{ env.RELEASE_VERSION || '0.0.0' }} --output ./artifacts
+        working-directory: ./
+
+      - name: Package assets
+        uses: cake-build/cake-action@v3
+        with:
+          script-path: ./.github/workflows/PackageAssets.cake
+
+      - name: Create release via Cake
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release == 'true') }}
+        uses: cake-build/cake-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script-path: ./.github/workflows/CreateGitHubRelease.cake
+
+      - name: Upload asset via Cake
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.upload_asset == 'true') }}
+        uses: cake-build/cake-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script-path: ./.github/workflows/UploadGitHubAssets.cake

@@ -1,29 +1,21 @@
-﻿#region copyright
-// <copyright file="DumpObject.cs" company="Christopher McNeely">
-// The MIT License (MIT)
-// Copyright (c) Christopher McNeely
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-// and associated documentation files (the "Software"), to deal in the Software without restriction,
-// including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
+// <copyright file="DumpObject.cs">
+// The MIT License
+// Copyright © Christopher McNeely
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-// NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // </copyright>
-#endregion
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-using Crestron.SimplSharp.Reflection;
 
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
@@ -100,11 +92,11 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 
             if (useFullTypeNames)
             {
-                typeName = this.ValueType != null ? this.ValueType.GetCType().FullName : "<unknown type>";
+                typeName = this.ValueType != null ? this.ValueType.FullName : "<unknown type>";
             }
             else
             {
-                typeName = this.ValueType != null ? this.ValueType.GetCType().Name : "<unknown type>";
+                typeName = this.ValueType != null ? this.ValueType.Name : "<unknown type>";
             }
 
             var underscoreLength = typeName.Length + 10 + this.Children.Count.ToString().Length + (this.Children.Count == 1 ? 1 : 3);
@@ -120,11 +112,11 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                     "{0} {1} ",
                     ConsoleBase.Colors.DumpPropertyName.FormatText(this.Name),
                     ConsoleBase.Colors.DumpObjectChrome.FormatText("="));
-                
+
                 // Use minimal spacing (2 chars) for nested objects when the option is enabled
                 if (Options.Instance.UseMinimalSpacingWhenDumping && currentDepth > 0)
                 {
-                    padding = 2;
+                    padding = 1;
                 }
                 else
                 {
@@ -208,11 +200,11 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             {
                 if (this.Value != null)
                 {
-                    PropertyInfo[][] props = new PropertyInfo[2][];
+                    var props = new PropertyInfo[2][];
 
                     try
                     {
-                        props[0] = this.Value.GetType().GetCType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                        props[0] = this.Value.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                     }
                     catch (Exception ex)
                     {
@@ -227,7 +219,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 
                     try
                     {
-                        props[1] = this.Value.GetType().GetCType().GetProperties(BindingFlags.Static | BindingFlags.Public);
+                        props[1] = this.Value.GetType().GetProperties(BindingFlags.Static | BindingFlags.Public);
                     }
                     catch (Exception ex)
                     {

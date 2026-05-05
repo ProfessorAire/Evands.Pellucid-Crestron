@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Evands.Pellucid;
 using System.Diagnostics;
 
@@ -11,77 +10,38 @@ namespace Evands.Pellucid.Diagnostics
     /// <summary>
     /// Summary description for DebugTests
     /// </summary>
-    [TestClass]
     public class DebugOptionalHeaderTests
     {
         private TestConsoleWriter writer = new TestConsoleWriter();
 
-        [TestInitialize]
+        [Before(Test)]
         public void TestInitialize()
         {
             ConsoleBase.RegisterConsoleWriter(writer);
         }
 
-        [TestCleanup]
+        [After(Test)]
         public void TestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
             writer.Messages.Clear();
             ConsoleBase.UnregisterConsoleWriter(writer);
             ConsoleBase.OptionalHeader = string.Empty;
         }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
-
-        [TestMethod]
-        public void When_ConsoleBaseOptionalHeader_IsEmpty_NoPrefixWritten()
+        [Test]
+        public async Task When_ConsoleBaseOptionalHeader_IsEmpty_NoPrefixWritten()
         {
             var invalidStart = "[01]";
             var expectedContents = "Test Message";
             Debug.WriteLine(expectedContents);
             var msg = writer.Messages.Last();
-            Assert.IsTrue(!msg.StartsWith(invalidStart) && msg.Contains(expectedContents));
+            await Assert.That(!msg.StartsWith(invalidStart) && msg.Contains(expectedContents)).IsTrue();
         }
 
-        [TestMethod]
-        public void When_ConsoleBaseOptionalHeader_IsNotEmpty_PrefixWritten()
+        [Test]
+        public async Task When_ConsoleBaseOptionalHeader_IsNotEmpty_PrefixWritten()
         {
             ConsoleBase.WriteLine();
             var expectedHeader = "[OptionalHeader]";
@@ -91,8 +51,8 @@ namespace Evands.Pellucid.Diagnostics
             Debug.WriteLine(this, Evands.Pellucid.Terminal.ColorCode.None, expectedContents);
             var msg = writer.Messages.Last();
             Trace.WriteLine(msg);
-            Assert.IsTrue(msg.Contains(expectedHeader), "Starts incorrectly.");
-            Assert.IsTrue(msg.Contains(expectedContents), "Doesn't contain message.");
+            await Assert.That(msg.Contains(expectedHeader)).IsTrue();
+            await Assert.That(msg.Contains(expectedContents)).IsTrue();
         }
     }
 }

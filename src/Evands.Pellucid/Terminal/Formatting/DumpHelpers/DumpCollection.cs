@@ -1,29 +1,19 @@
-﻿#region copyright
-// <copyright file="DumpCollection.cs" company="Christopher McNeely">
-// The MIT License (MIT)
-// Copyright (c) Christopher McNeely
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-// and associated documentation files (the "Software"), to deal in the Software without restriction,
-// including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
-//
+// <copyright file="DumpCollection.cs">
+// The MIT License
+// Copyright © Christopher McNeely
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-// NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // </copyright>
-#endregion
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Crestron.SimplSharp.Reflection;
 
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
@@ -120,7 +110,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                 // Use minimal spacing (2 chars) for nested collections when the option is enabled
                 if (Options.Instance.UseMinimalSpacingWhenDumping && currentDepth > 0)
                 {
-                    rootPadding = 2;
+                    rootPadding = 1;
                 }
                 else
                 {
@@ -151,7 +141,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             padSb.Append(' ', rootPadding);
             padSb.Append(ConsoleBase.Colors.DumpObjectChrome.FormatText(Formatters.Chrome.BodyLeft));
             padSb.Append(' ', itemPadding);
-            
+
             sb.Append(ConsoleBase.Colors.DumpObjectDetail.FormatText(typeName));
             if (maxDepth == 0 || currentDepth < maxDepth)
             {
@@ -179,8 +169,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                 if (!string.IsNullOrEmpty(str))
                 {
                     sb.Append(' ', rootPadding);
-                    sb.Append(ConsoleBase.Colors.DumpObjectChrome.FormatText(false, "{0} ",
-                        Formatters.Chrome.BodyLeft));
+                    sb.Append(ConsoleBase.Colors.DumpObjectChrome.FormatText(false, "{0} ", Formatters.Chrome.BodyLeft));
                     if (!(this.Value is IDictionary))
                     {
                         sb.AppendFormat(
