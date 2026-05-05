@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Crestron.SimplSharp;
 using Evands.Pellucid.Helpers;
 
@@ -22,7 +21,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
         {
             CrestronEnvironment.DevicePlatform = eDevicePlatform.Server;
             var actual = ErrorLogFormatters.ParseCrestronErrorLog(ErrorLogData.GetThreeSeriesLog()).ToList();
-            await Assert.That(actual.Coutn).Is.Zero();
+            await Assert.That(actual.Count).IsZero();
         }
 
         #region ParseCrestronErrorLogThreeSeries
@@ -132,7 +131,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
             {
 
                 ErrorLogFormatters.PrintPrettyErrorLog(null, false);
-        
+
             });
         }
 
@@ -140,7 +139,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
         public async Task PrettyPrintErrorLog_NoColor_Returns_ExpectedMessage_When_Items_Empty()
         {
             var expected = "No Messages to Display";
-            var actual = ErrorLogFormatters.PrintPrettyErrorLog(new List<LogMessage>() as IEnumerable<LogMessage>, false);
+            var actual = ErrorLogFormatters.PrintPrettyErrorLog(new List<LogMessage>(), false);
             await Assert.That(actual).IsEqualTo(expected);
         }
 
@@ -148,7 +147,7 @@ System.FormatException: Index (zero based) must be greater than or equal to zero
         public async Task PrettyPrintErrorLog_Color_Returns_ExpectedMessage_When_Items_Empty()
         {
             var expected = ConsoleBase.Colors.Warning.FormatText("No Messages to Display");
-            var actual = ErrorLogFormatters.PrintPrettyErrorLog(new List<LogMessage>() as IEnumerable<LogMessage>, true);
+            var actual = ErrorLogFormatters.PrintPrettyErrorLog(new List<LogMessage>(), true);
             await Assert.That(actual).IsEqualTo(expected);
         }
 

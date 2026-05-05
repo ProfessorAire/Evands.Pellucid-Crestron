@@ -214,7 +214,7 @@ namespace Evands.Pellucid
 
 #if NET47 || NET472
             var expected =
-@"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Evands.Pellucid.DumpTests+TestWithSameName, Evands.Pellucid.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (2 Items)
+@"System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[Evands.Pellucid.DumpTests+TestWithSameName, Evands.Pellucid.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] (2 Items)
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
 #else
             var expected =
@@ -231,12 +231,19 @@ namespace Evands.Pellucid
 | Value1 = Evands.Pellucid.DumpTests+TestWithSameName (1 Property)
 |          -------------------------------------------------------
 |          | Name = ""Much""
-|          -------------------------------------------------------
+|          -------------------------------------------------------"
+#if NET47 || NET472
++ @"
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ";
+#else
++ @"
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+";
+#endif
             testValue.Dump(true);
 
-            await Assert.That(this.writer.Messages.Last()).Equals(expected);
+            await Assert.That(this.writer.Messages.Last()).IsEqualTo(expected);
 
             this.writer.Messages.Clear();
 
@@ -256,7 +263,7 @@ namespace Evands.Pellucid
 
             testValue2.Dump();
 
-            await Assert.That(this.writer.Messages.Last()).Contains(expected);
+            await Assert.That(this.writer.Messages.Last()).IsEqualTo(expected);
         }
     }
 }

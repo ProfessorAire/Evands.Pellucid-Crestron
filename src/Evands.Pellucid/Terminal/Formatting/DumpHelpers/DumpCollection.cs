@@ -13,9 +13,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Reflection;
 
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
@@ -112,7 +110,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                 // Use minimal spacing (2 chars) for nested collections when the option is enabled
                 if (Options.Instance.UseMinimalSpacingWhenDumping && currentDepth > 0)
                 {
-                    rootPadding = 2;
+                    rootPadding = 1;
                 }
                 else
                 {
@@ -143,7 +141,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             padSb.Append(' ', rootPadding);
             padSb.Append(ConsoleBase.Colors.DumpObjectChrome.FormatText(Formatters.Chrome.BodyLeft));
             padSb.Append(' ', itemPadding);
-            
+
             sb.Append(ConsoleBase.Colors.DumpObjectDetail.FormatText(typeName));
             if (maxDepth == 0 || currentDepth < maxDepth)
             {
@@ -171,8 +169,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                 if (!string.IsNullOrEmpty(str))
                 {
                     sb.Append(' ', rootPadding);
-                    sb.Append(ConsoleBase.Colors.DumpObjectChrome.FormatText(false, "{0} ",
-                        Formatters.Chrome.BodyLeft));
+                    sb.Append(ConsoleBase.Colors.DumpObjectChrome.FormatText(false, "{0} ", Formatters.Chrome.BodyLeft));
                     if (!(this.Value is IDictionary))
                     {
                         sb.AppendFormat(

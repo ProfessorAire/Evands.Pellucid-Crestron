@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 namespace Evands.Pellucid.Diagnostics
 {
     public class DebugTests
@@ -11,7 +8,8 @@ namespace Evands.Pellucid.Diagnostics
         [Before(Test)]
         public void TestInitialize()
         {
-            ConsoleBase.RegisterConsoleWriter(writer);
+            ConsoleBase.RegisterConsoleWriter(this.writer);
+            this.writer.Messages.Clear();
         }
 
         [After(Test)]
@@ -19,8 +17,8 @@ namespace Evands.Pellucid.Diagnostics
         {
             Options.UseDefault();
             ConsoleBase.NewLine = Environment.NewLine;
-            writer.Messages.Clear();
-            ConsoleBase.UnregisterConsoleWriter(writer);
+            this.writer.Messages.Clear();
+            ConsoleBase.UnregisterConsoleWriter(this.writer);
             ConsoleBase.OptionalHeader = string.Empty;
             Options.Instance.Suppressed.Clear();
             Options.Instance.Allowed.Clear();
@@ -144,6 +142,8 @@ namespace Evands.Pellucid.Diagnostics
         {
             Options.Instance.ColorizeConsoleOutput = true;
             Options.Instance.UseTimestamps = false;
+            Debug.WriteLine(string.Empty);
+            this.writer.Messages.Clear();
 
             var expected = string.Format(
                 "{0} {1}\r\n",
