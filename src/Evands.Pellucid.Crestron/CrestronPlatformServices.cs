@@ -45,6 +45,36 @@ namespace Evands.Pellucid
             PlatformServices.Current = new CrestronPlatformServices();
         }
 
+        private CrestronPlatformServices()
+        {
+            CrestronEnvironment.ProgramStatusEventHandler += (args) =>
+            {
+                switch (args)
+                {
+                    case eProgramStatusEventType.Stopping or eProgramStatusEventType.Paused:
+                        {
+                            foreach (var handler in this.stoppingHandlers)
+                            {
+                                handler();
+                            }
+
+                            break;
+                        }
+
+                    default:
+                        if (args is eProgramStatusEventType.Resumed)
+                        {
+                            foreach (var handler in this.resumingHandlers)
+                            {
+                                handler();
+                            }
+                        }
+
+                        break;
+                }
+            };
+        }
+
         /// <inheritdoc/>
         public IConsoleWriter CreateDefaultConsoleWriter()
         {
@@ -86,8 +116,7 @@ namespace Evands.Pellucid
         /// <param name="handler">The handler to invoke on program stop/pause.</param>
         public void RegisterProgramStoppingHandler(Action handler)
         {
-            stoppingHandlers.Add(handler);
-            CrestronEnvironment.ProgramStatusEventHandler += CreateStoppingHandler(handler);
+            this.stoppingHandlers.Add(handler);
         }
 
         /// <summary>
@@ -96,8 +125,7 @@ namespace Evands.Pellucid
         /// <param name="handler">The handler to invoke on program resume.</param>
         public void RegisterProgramResumingHandler(Action handler)
         {
-            resumingHandlers.Add(handler);
-            CrestronEnvironment.ProgramStatusEventHandler += CreateResumingHandler(handler);
+            this.resumingHandlers.Add(handler);
         }
 
         /// <summary>
@@ -107,17 +135,14 @@ namespace Evands.Pellucid
         /// <param name="resumingHandler">The resuming handler to unregister.</param>
         public void UnregisterProgramHandlers(Action stoppingHandler, Action resumingHandler)
         {
-            stoppingHandlers.Remove(stoppingHandler);
-            resumingHandlers.Remove(resumingHandler);
-
-            CrestronEnvironment.ProgramStatusEventHandler -= CreateStoppingHandler(stoppingHandler);
-            CrestronEnvironment.ProgramStatusEventHandler -= CreateResumingHandler(resumingHandler);
+            this.stoppingHandlers.Remove(stoppingHandler);
+            this.resumingHandlers.Remove(resumingHandler);
         }
 
         /// <inheritdoc/>
         public bool AddConsoleCommand(Action<string> action, string name, string help, int accessLevel)
         {
-            ConsoleAccessLevelEnum level = (ConsoleAccessLevelEnum)accessLevel;
+            var level = (ConsoleAccessLevelEnum)accessLevel;
             return CrestronConsole.AddNewConsoleCommand(action, name, help, level)
                 || CrestronEnvironment.DevicePlatform == eDevicePlatform.Server;
         }
@@ -162,38 +187,6 @@ namespace Evands.Pellucid
         public bool IsSeries4
         {
             get { return (CrestronEnvironment.ProgramCompatibility & eCrestronSeries.Series4) == eCrestronSeries.Series4; }
-        }
-
-        /// <summary>
-        /// Creates a program status event handler that invokes the specified action on stopping/pausing.
-        /// </summary>
-        /// <param name="handler">The action to invoke.</param>
-        /// <returns>A <see cref="ProgramStatusEventHandler"/>.</returns>
-        private static ProgramStatusEventHandler CreateStoppingHandler(Action handler)
-        {
-            return (args) =>
-            {
-                if (args == eProgramStatusEventType.Stopping || args == eProgramStatusEventType.Paused)
-                {
-                    handler();
-                }
-            };
-        }
-
-        /// <summary>
-        /// Creates a program status event handler that invokes the specified action on resuming.
-        /// </summary>
-        /// <param name="handler">The action to invoke.</param>
-        /// <returns>A <see cref="ProgramStatusEventHandler"/>.</returns>
-        private static ProgramStatusEventHandler CreateResumingHandler(Action handler)
-        {
-            return (args) =>
-            {
-                if (args == eProgramStatusEventType.Resumed)
-                {
-                    handler();
-                }
-            };
         }
     }
 }
