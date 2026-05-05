@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
     public class DumpObjectTests
@@ -11,7 +9,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         [Before(Test)]
         public void TestInitialize()
         {
-            ConsoleBase.RegisterConsoleWriter(writer);
+            ConsoleBase.RegisterConsoleWriter(this.writer);
             Options.Instance.ColorizeConsoleOutput = false;
         }
 
@@ -20,8 +18,8 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
         {
             Options.UseDefault();
             ConsoleBase.NewLine = Environment.NewLine;
-            writer.Messages.Clear();
-            ConsoleBase.UnregisterConsoleWriter(writer);
+            this.writer.Messages.Clear();
+            ConsoleBase.UnregisterConsoleWriter(this.writer);
             ConsoleBase.OptionalHeader = string.Empty;
         }
 
@@ -260,7 +258,7 @@ Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass3 (4 Pr
                 new TestClassWithList()
                 {
                     IntList = new List<int>() { 0, 1, 2, 3 },
-                    StringList = new List<string>() { "OneItem" } 
+                    StringList = new List<string>() { "OneItem" }
                 });
 
             var expected = @"
@@ -289,12 +287,12 @@ TestClassWithList (2 Properties)
         public async Task ToString_WithMinimalSpacing_With_ListProperty_Prints_Correct()
         {
             Options.Instance.UseMinimalSpacingWhenDumping = true;
-            
+
             var underTest = new DumpObject(
                 new TestClassWithList()
                 {
                     IntList = new List<int>() { 0, 1, 2, 3 },
-                    StringList = new List<string>() { "OneItem" } 
+                    StringList = new List<string>() { "OneItem" }
                 });
 
             var expected = @"
@@ -312,10 +310,10 @@ TestClassWithList (2 Properties)
 |  | 0: ""OneItem""
 |  ---------------
 --------------------------------
-".Replace("\r\n", "\n").Replace("\n", "\r\n");
+";
 
             var actual = "\r\n" + underTest.ToString();
-            
+
             Options.Instance.UseMinimalSpacingWhenDumping = false;
 
             await Assert.That(actual).IsEqualTo(expected);
@@ -365,7 +363,7 @@ TestFailureClass (1 Property)
         public async Task ToString_WithMinimalSpacing_WithDeepNestedProperties_Writes_Correct()
         {
             Options.Instance.UseMinimalSpacingWhenDumping = true;
-            
+
             var underTest = new DumpObject(
                 new TestClass3()
                 {
@@ -392,10 +390,10 @@ Evands.Pellucid.Terminal.Formatting.DumpHelpers.DumpObjectTests+TestClass3 (4 Pr
 |  |  ----------------------------------------------------------------------------------------
 |  -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
-".Replace("\r\n", "\n").Replace("\n", "\r\n");
+";
 
             var actual = "\r\n" + underTest.ToString(true);
-            
+
             Options.Instance.UseMinimalSpacingWhenDumping = false;
 
             await Assert.That(actual).IsEqualTo(expected);

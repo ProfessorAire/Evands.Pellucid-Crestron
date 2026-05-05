@@ -1,7 +1,4 @@
 using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 namespace Evands.Pellucid.Diagnostics
 {
     /// <summary>
@@ -14,7 +11,7 @@ namespace Evands.Pellucid.Diagnostics
         [Before(Test)]
         public void TestInitialize()
         {
-            ConsoleBase.RegisterConsoleWriter(writer);
+            ConsoleBase.RegisterConsoleWriter(this.writer);
         }
 
         [After(Test)]
@@ -22,16 +19,16 @@ namespace Evands.Pellucid.Diagnostics
         {
             Options.UseDefault();
             ConsoleBase.NewLine = Environment.NewLine;
-            writer.Messages.Clear();
-            ConsoleBase.UnregisterConsoleWriter(writer);
+            this.writer.Messages.Clear();
+            ConsoleBase.UnregisterConsoleWriter(this.writer);
             ConsoleBase.OptionalHeader = string.Empty;
         }
-private class TestException : Exception
+        private class TestException : Exception
         {
             public TestException(string message, bool value, Exception innerException)
                 : base(message, innerException)
             {
-                Value = value;
+                this.Value = value;
             }
 
             public bool Value { get; private set; }
@@ -42,13 +39,17 @@ private class TestException : Exception
         {
             Options.Instance.ColorizeConsoleOutput = false;
             Options.Instance.UseTimestamps = false;
+            ConsoleBase.NewLine = "\r\n";
             var inner = new TestException("Inner Exception", false, null);
             var ex = new TestException("Simple Message", true, inner);
             Debug.WriteException("Test", ex, "Exception encountered when doing test stuff.");
-
+            var temp = ex.ToString();
+#if NET6_0_OR_GREATER
+            var expected = "[Test] Exception encountered when doing test stuff.\r\n--------Exception 1--------\r\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Simple Message\r\n ---> Evands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\r\n   --- End of inner exception stack trace ---\r\n-----------------------------\r\n--------Exception 2--------\r\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\r\n-----------------------------\r\n";
+#else
             var expected = "[Test] Exception encountered when doing test stuff.\r\n--------Exception 1--------\r\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Simple Message ---> Evands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\r\n   --- End of inner exception stack trace ---\r\n-----------------------------\r\n--------Exception 2--------\r\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\r\n-----------------------------\r\n";
-
-            await Assert.That(writer.Last()).IsEqualTo(expected);
+#endif
+            await Assert.That(this.writer.Last()).IsEqualTo(expected);
         }
 
         [Test]
@@ -61,9 +62,13 @@ private class TestException : Exception
             var ex = new TestException("Simple Message", true, inner);
             Debug.WriteException("Test", ex, "Exception encountered when doing test stuff.");
 
+#if NET6_0_OR_GREATER
+            var expected = "[Test] Exception encountered when doing test stuff.\n--------Exception 1--------\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Simple Message\n ---> Evands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\n   --- End of inner exception stack trace ---\n-----------------------------\n--------Exception 2--------\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\n-----------------------------\n";
+#else
             var expected = "[Test] Exception encountered when doing test stuff.\n--------Exception 1--------\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Simple Message ---> Evands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\n   --- End of inner exception stack trace ---\n-----------------------------\n--------Exception 2--------\nEvands.Pellucid.Diagnostics.DebugWriteExceptionTests+TestException: Inner Exception\n-----------------------------\n";
+#endif
 
-            await Assert.That(writer.Last()).IsEqualTo(expected);
+            await Assert.That(this.writer.Last()).IsEqualTo(expected);
         }
     }
 }

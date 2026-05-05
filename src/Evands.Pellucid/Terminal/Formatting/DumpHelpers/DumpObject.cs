@@ -14,8 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Reflection;
+using System.Text;
 
 namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
 {
@@ -112,11 +112,11 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
                     "{0} {1} ",
                     ConsoleBase.Colors.DumpPropertyName.FormatText(this.Name),
                     ConsoleBase.Colors.DumpObjectChrome.FormatText("="));
-                
+
                 // Use minimal spacing (2 chars) for nested objects when the option is enabled
                 if (Options.Instance.UseMinimalSpacingWhenDumping && currentDepth > 0)
                 {
-                    padding = 2;
+                    padding = 1;
                 }
                 else
                 {
@@ -200,7 +200,7 @@ namespace Evands.Pellucid.Terminal.Formatting.DumpHelpers
             {
                 if (this.Value != null)
                 {
-                    PropertyInfo[][] props = new PropertyInfo[2][];
+                    var props = new PropertyInfo[2][];
 
                     try
                     {

@@ -1,7 +1,5 @@
 using System;
 using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 namespace Evands.Pellucid.Terminal.Formatting.Tables
 {
     /// <summary>
@@ -35,15 +33,15 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
                 maxCellWidth = 4;
             }
 
-            var totalWidth = 10 + maxCellWidth * 3;
+            var totalWidth = 10 + (maxCellWidth * 3);
 
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", head[0].Align(a, maxCellWidth), head[1].Align(a, maxCellWidth), head[2].Align(a, maxCellWidth));
+            sb.AppendFormat("| {0} | {1} | {2} |", this.head[0].Align(a, maxCellWidth), this.head[1].Align(a, maxCellWidth), this.head[2].Align(a, maxCellWidth));
             sb.Append("\r\n");
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", row1[0].Align(a, maxCellWidth), row1[1].Align(a, maxCellWidth), row1[2].Align(a, maxCellWidth));
+            sb.AppendFormat("| {0} | {1} | {2} |", this.row1[0].Align(a, maxCellWidth), this.row1[1].Align(a, maxCellWidth), this.row1[2].Align(a, maxCellWidth));
             sb.Append("\r\n");
             sb.Append('|');
 
@@ -57,7 +55,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             }
 
             sb.Append("|\r\n");
-            sb.AppendFormat("| {0} | {1} | {2} |", row2[0].Align(a, maxCellWidth), row2[1].Align(a, maxCellWidth), row2[2].Align(a, maxCellWidth));
+            sb.AppendFormat("| {0} | {1} | {2} |", this.row2[0].Align(a, maxCellWidth), this.row2[1].Align(a, maxCellWidth), this.row2[2].Align(a, maxCellWidth));
             sb.Append("\r\n");
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
@@ -77,7 +75,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             var split2 = "string that spans";
             var split3 = "three lines.";
 
-            var totalWidth = 10 + maxCellWidth * 3;
+            var totalWidth = 10 + (maxCellWidth * 3);
 
             sb.Append('-', totalWidth);
             sb.Append("\r\n");
@@ -547,12 +545,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Left;
             var width = 16;
-            var expected = GetExpectedTable(align, width);
+            var expected = this.GetExpectedTable(align, width);
             var t = Table.Create()
-                .WithHeaders(head)
+                .WithHeaders(this.head)
                 .FormatHeaders(align)
-                .AddRow(row1)
-                .AddRow(row2)
+                .AddRow(this.row1)
+                .AddRow(this.row2)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -568,12 +566,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Center;
             var width = 22;
-            var expected = GetExpectedTable(align, width);
+            var expected = this.GetExpectedTable(align, width);
             var t = Table.Create()
-                .WithHeaders(head)
+                .WithHeaders(this.head)
                 .FormatHeaders(align)
-                .AddRow(row1)
-                .AddRow(row2)
+                .AddRow(this.row1)
+                .AddRow(this.row2)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -589,12 +587,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Right;
             var width = 12;
-            var expected = GetExpectedTable(align, width);
+            var expected = this.GetExpectedTable(align, width);
             var t = Table.Create()
-                .WithHeaders(head)
+                .WithHeaders(this.head)
                 .FormatHeaders(align)
-                .AddRow(row1)
-                .AddRow(row2)
+                .AddRow(this.row1)
+                .AddRow(this.row2)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -610,12 +608,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Left;
             var width = 0;
-            var expected = GetExpectedTable(align, width);
+            var expected = this.GetExpectedTable(align, width);
             var t = Table.Create()
-                .WithHeaders(head)
+                .WithHeaders(this.head)
                 .FormatHeaders(align)
-                .AddRow(row1)
-                .AddRow(row2)
+                .AddRow(this.row1)
+                .AddRow(this.row2)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -631,12 +629,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Center;
             var width = 0;
-            var expected = GetExpectedTable(align, width);
+            var expected = this.GetExpectedTable(align, width);
             var t = Table.Create()
-                .WithHeaders(head)
+                .WithHeaders(this.head)
                 .FormatHeaders(align)
-                .AddRow(row1)
-                .AddRow(row2)
+                .AddRow(this.row1)
+                .AddRow(this.row2)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -652,12 +650,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Right;
             var width = 0;
-            var expected = GetExpectedTable(align, width);
+            var expected = this.GetExpectedTable(align, width);
             var t = Table.Create()
-                .WithHeaders(head)
+                .WithHeaders(this.head)
                 .FormatHeaders(align)
-                .AddRow(row1)
-                .AddRow(row2)
+                .AddRow(this.row1)
+                .AddRow(this.row2)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -673,12 +671,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Left;
             var width = 0;
-            var expected = GetExpectedBrokenTable(align, 17);
+            var expected = this.GetExpectedBrokenTable(align, 17);
             var t = Table.Create()
-                .WithHeaders(brokenRow)
+                .WithHeaders(this.brokenRow)
                 .FormatHeaders(align)
-                .AddRow(brokenRow)
-                .AddRow(brokenRow)
+                .AddRow(this.brokenRow)
+                .AddRow(this.brokenRow)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -694,12 +692,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Center;
             var width = 0;
-            var expected = GetExpectedBrokenTable(align, 17);
+            var expected = this.GetExpectedBrokenTable(align, 17);
             var t = Table.Create()
-                .WithHeaders(brokenRow)
+                .WithHeaders(this.brokenRow)
                 .FormatHeaders(align)
-                .AddRow(brokenRow)
-                .AddRow(brokenRow)
+                .AddRow(this.brokenRow)
+                .AddRow(this.brokenRow)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -715,12 +713,12 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
             Options.Instance.ColorizeConsoleOutput = false;
             var align = HorizontalAlignment.Right;
             var width = 0;
-            var expected = GetExpectedBrokenTable(align, 17);
+            var expected = this.GetExpectedBrokenTable(align, 17);
             var t = Table.Create()
-                .WithHeaders(brokenRow)
+                .WithHeaders(this.brokenRow)
                 .FormatHeaders(align)
-                .AddRow(brokenRow)
-                .AddRow(brokenRow)
+                .AddRow(this.brokenRow)
+                .AddRow(this.brokenRow)
                 .FormatRow(0, align)
                 .FormatRow(1, align);
 
@@ -733,7 +731,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [Test]
         public async Task ToString_WithNullCellContent_Prints_Correctly()
         {
-            var t = Table.Create().AddRow((string)null, (string)null);
+            var t = Table.Create().AddRow(null, (string)null);
             var expected = @"-------
 |  |  |
 -------
@@ -757,7 +755,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [Test]
         public async Task ToString_WithNullCellContents_AndRoundedChrome_Prints_Correctly()
         {
-            var t = Table.Create().AddRow((string)null, (string)null);
+            var t = Table.Create().AddRow(null, (string)null);
             var c = new RoundedChrome();
             var sb = new StringBuilder();
             sb.Append(c.BodyTopLeft);
@@ -793,6 +791,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
         [Test]
         public async Task ToString_WithMultiRowCell_WithNonStandardCharacterEndings_PrintsCorrect()
         {
+            Options.Instance.ColorizeConsoleOutput = false;
             var expected =
 @"-------------
 | Test (1)  |
@@ -800,7 +799,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Tables
 |-----------|
 | Test2 (2) |
 -------------
-".Replace("\r\n", "\n").Replace("\n", "\r\n");
+";
 
             var t = new Table().AddColumn("Test (1)\r\nTest3 (3)", "Test2 (2)");
 
