@@ -39,10 +39,12 @@ jobs:
         run: dotnet build src/Evands.Pellucid.Tests/Evands.Pellucid.Tests.csproj --configuration Test --no-restore
 
       - name: Test (net47)
+        if: runner.os == 'Windows'
         continue-on-error: true
         run: dotnet run --project src/Evands.Pellucid.Tests/Evands.Pellucid.Tests.csproj --configuration Test --no-build --framework net47
 
       - name: Test (net472)
+        if: runner.os == 'Windows'
         continue-on-error: true
         run: dotnet run --project src/Evands.Pellucid.Tests/Evands.Pellucid.Tests.csproj --configuration Test --no-build --framework net472
 
