@@ -1,45 +1,39 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Evands.Pellucid.Terminal.Formatting.Logs
 {
-    [TestClass]
     public class LogMessageTests
     {
-        [TestInitialize]
-        public void Initialize()
+        [After(Test)]
+        public void TestCleanup()
         {
+            Options.UseDefault();
+            ConsoleBase.NewLine = Environment.NewLine;
         }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-        }
-
-        [TestMethod]
-        public void TimestampFormat_Get_Returns_DefaultValue()
+        [Test]
+        public async Task TimestampFormat_Get_Returns_DefaultValue()
         {
             var msg = new LogMessage(1, "Error", "test.exe", DateTime.Now, "Nothing");
             var expected = Options.Instance.DefaultLogTimestampFormat;
             var actual = msg.TimestampFormat;
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void TimestampFormat_Set_Get_Returns_NewValue()
+        [Test]
+        public async Task TimestampFormat_Set_Get_Returns_NewValue()
         {
             var msg = new LogMessage(1, "Error", "test.exe", DateTime.Now, "Nothing");
             const string expected = "MM/dd/yy";
             msg.TimestampFormat = expected;
             var actual = msg.TimestampFormat;
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void TryParse_With_Exception_Returns_False()
+        [Test]
+        public async Task TryParse_With_Exception_Returns_False()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -50,13 +44,13 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
 
             var result = LogMessage.TryParse("1234567890987654321. " + GetFullMessage("Warning", origin, dt, msgText.Replace("\r\n", "\n")), 110, out msg);
 
-            Assert.IsFalse(result);
+            await Assert.That(result).IsFalse();
         }
 
         #region Warnings
 
-        [TestMethod]
-        public void TryParse_With_Warning_No_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Warning_No_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -66,18 +60,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Warning", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Warning", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Warning");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Warning_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Warning_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -87,18 +81,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Warning", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Warning", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Warning");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Warning_LongMessage_With_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Warning_LongMessage_With_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -108,18 +102,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Warning", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Warning", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Warning");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Warning_No_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Warning_No_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -129,18 +123,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Warning", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Warning", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Warning");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Warning_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Warning_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -150,18 +144,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Warning", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Warning", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Warning");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Warning_LongMessage_With_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Warning_LongMessage_With_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -171,22 +165,22 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Warning", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Warning", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Warning");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
         #endregion
 
         #region Notices
 
-        [TestMethod]
-        public void TryParse_With_Notice_No_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Notice_No_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -196,18 +190,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Notice", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Notice", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Notice");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Notice_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Notice_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -217,18 +211,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Notice", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Notice", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Notice");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Notice_LongMessage_With_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Notice_LongMessage_With_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -238,18 +232,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Notice", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Notice", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Notice");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Notice_No_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Notice_No_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -259,18 +253,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Notice", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Notice", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Notice");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Notice_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Notice_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -280,18 +274,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Notice", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Notice", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Notice");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Notice_LongMessage_With_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Notice_LongMessage_With_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -301,22 +295,22 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Notice", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Notice", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Notice");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
         #endregion
 
         #region Errors
 
-        [TestMethod]
-        public void TryParse_With_Error_No_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Error_No_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -326,18 +320,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Error", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Error", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Error");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Error_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Error_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -347,18 +341,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Error", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Error", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Error");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Error_LongMessage_With_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Error_LongMessage_With_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -368,18 +362,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Error", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Error", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Error");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Error_No_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Error_No_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -389,18 +383,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Error", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Error", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Error");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Error_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Error_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -410,18 +404,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Error", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Error", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Error");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Error_LongMessage_With_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Error_LongMessage_With_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -431,22 +425,22 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Error", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Error", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Error");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
         #endregion
 
         #region Info
 
-        [TestMethod]
-        public void TryParse_With_Info_No_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Info_No_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -456,18 +450,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Info", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Info", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Info");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Info_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Info_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -477,18 +471,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Info", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Info", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Info");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Info_LongMessage_With_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Info_LongMessage_With_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -498,18 +492,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Info", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Info", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Info");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Info_No_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Info_No_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -519,18 +513,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Info", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Info", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Info");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Info_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Info_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -540,18 +534,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Info", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Info", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Info");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Info_LongMessage_With_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Info_LongMessage_With_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -561,22 +555,22 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Info", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Info", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Info");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
         #endregion
 
         #region OK
 
-        [TestMethod]
-        public void TryParse_With_Ok_No_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Ok_No_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -586,18 +580,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Ok", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Ok", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Ok");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Ok_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Ok_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -607,18 +601,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Ok", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Ok", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Ok");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Ok_LongMessage_With_LineBreaks_No_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Ok_LongMessage_With_LineBreaks_No_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -628,18 +622,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse(GetFullMessage("Ok", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(110, msg.Number);
-            Assert.AreEqual("Ok", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(110);
+            await Assert.That(msg.MessageType).IsEqualTo("Ok");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Ok_No_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Ok_No_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(0);
@@ -649,18 +643,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Ok", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Ok", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Ok");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Ok_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Ok_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(1);
@@ -670,18 +664,18 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Ok", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Ok", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Ok");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
-        [TestMethod]
-        public void TryParse_With_Ok_LongMessage_With_LineBreaks_With_Number_Gets_Message()
+        [Test]
+        public async Task TryParse_With_Ok_LongMessage_With_LineBreaks_With_Number_Gets_Message()
         {
             LogMessage msg = null;
             var msgText = GetMessage(2);
@@ -691,20 +685,20 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var origin = "SomeRandomApp.exe";
             var result = LogMessage.TryParse("111. " + GetFullMessage("Ok", origin, dt, msgText), 110, out msg);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(msg);
-            Assert.AreEqual(msgText, msg.Message);
-            Assert.AreEqual(dt.ToLongDateString(), msg.TimeStamp.ToLongDateString());
-            Assert.AreEqual(dt.ToLongTimeString(), msg.TimeStamp.ToLongTimeString());
-            Assert.AreEqual(111, msg.Number);
-            Assert.AreEqual("Ok", msg.MessageType);
-            Assert.AreEqual(origin, msg.Origination);
+            await Assert.That(result).IsTrue();
+            await Assert.That(msg).IsNotNull();
+            await Assert.That(msg.Message).IsEqualTo(msgText);
+            await Assert.That(msg.TimeStamp.ToLongDateString()).IsEqualTo(dt.ToLongDateString());
+            await Assert.That(msg.TimeStamp.ToLongTimeString()).IsEqualTo(dt.ToLongTimeString());
+            await Assert.That(msg.Number).IsEqualTo(111);
+            await Assert.That(msg.MessageType).IsEqualTo("Ok");
+            await Assert.That(msg.Origination).IsEqualTo(origin);
         }
 
         #endregion
 
-        [TestMethod]
-        public void ToString_NoColor_Pad3_Pad6_Pad12_Returns_Expected()
+        [Test]
+        public async Task ToString_NoColor_Pad3_Pad6_Pad12_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Error", "Origin.exe", dt, "Test Message");
@@ -713,11 +707,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 dt.ToString("yy/MM/dd HH:mm:ss"));
             var actual = msg.ToString(false, 3, 6, 12);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_NoColor_Pad0_Pad0_Pad0_Returns_Expected()
+        [Test]
+        public async Task ToString_NoColor_Pad0_Pad0_Pad0_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Notice", "Origin.exe", dt, "Test Message");
@@ -726,11 +720,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 dt.ToString("yy/MM/dd HH:mm:ss"));
             var actual = msg.ToString(false, 0, 0, 0);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_Notice_Color_Pad0_Pad0_Pad0_Returns_Expected()
+        [Test]
+        public async Task ToString_Notice_Color_Pad0_Pad0_Pad0_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Notice", "Origin.exe", dt, "Test Message");
@@ -741,11 +735,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 ColorFormat.CloseTextFormat(""));
             var actual = msg.ToString(true, 0, 0, 0);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_Error_Color_Pad0_Pad0_Pad0_Returns_Expected()
+        [Test]
+        public async Task ToString_Error_Color_Pad0_Pad0_Pad0_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Error", "Origin.exe", dt, "Test Message");
@@ -756,11 +750,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 ColorFormat.CloseTextFormat(""));
             var actual = msg.ToString(true, 0, 0, 0);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_Warning_Color_Pad0_Pad0_Pad0_Returns_Expected()
+        [Test]
+        public async Task ToString_Warning_Color_Pad0_Pad0_Pad0_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Warning", "Origin.exe", dt, "Test Message");
@@ -771,11 +765,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 ColorFormat.CloseTextFormat(""));
             var actual = msg.ToString(true, 0, 0, 0);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_Info_Color_Pad0_Pad0_Pad0_Returns_Expected()
+        [Test]
+        public async Task ToString_Info_Color_Pad0_Pad0_Pad0_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Info", "Origin.exe", dt, "Test Message");
@@ -786,11 +780,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 ColorFormat.CloseTextFormat(""));
             var actual = msg.ToString(true, 0, 0, 0);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_Ok_Color_Pad0_Pad0_Pad0_Returns_Expected()
+        [Test]
+        public async Task ToString_Ok_Color_Pad0_Pad0_Pad0_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Ok", "Origin.exe", dt, "Test Message");
@@ -801,11 +795,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 ColorFormat.CloseTextFormat(""));
             var actual = msg.ToString(true, 0, 0, 0);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_Unknown_Color_Pad0_Pad0_Pad0_Returns_Expected()
+        [Test]
+        public async Task ToString_Unknown_Color_Pad0_Pad0_Pad0_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Argh", "Origin.exe", dt, "Test Message");
@@ -816,11 +810,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 ColorFormat.CloseTextFormat(""));
             var actual = msg.ToString(true, 0, 0, 0);
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_Returns_Expected()
+        [Test]
+        public async Task ToString_Returns_Expected()
         {
             var dt = DateTime.Now;
             var msg = new LogMessage(1, "Notice", "Origin.exe", dt, "Test Message");
@@ -829,11 +823,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 dt.ToString("yy/MM/dd HH:mm:ss"));
             var actual = msg.ToString();
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_New_TimestampFormat_Returns_Expected()
+        [Test]
+        public async Task ToString_With_New_TimestampFormat_Returns_Expected()
         {
             const string format = "ss:mm:HH dd/MM/yy";
             var dt = DateTime.Now;
@@ -843,39 +837,39 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                 dt.ToString(format));
             var actual = msg.ToString();
 
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
+        [Test]
+        public async Task ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
-                                      be printed on two lines.";
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
+                                      be printed on two lines.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
             var actual = msg.ToString(false, 3, 6, 10, 79, false);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_FourLines()
+        [Test]
+        public async Task ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_Returns_FourLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will
                                       be printed on  four lines so that we can
                                       test multiple multiple lines with multip
-                                      le long sentences.";
+                                      le long sentences.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on  four lines so that we can test multiple multiple lines with multiple long sentences.");
             var actual = msg.ToString(false, 3, 6, 10, 79, false);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_Color_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
+        [Test]
+        public async Task ToString_With_Color_And_TotalWidth_And_Not_WrapHeaders_Returns_TwoLines()
         {
             const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe   | \x1b[91;49m Error: This is a basic message that will\r\n" + 
 "                                      be printed on two lines.\x1b[0m";
@@ -884,11 +878,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
             var actual = msg.ToString(true, 3, 6, 10, 79, false);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_Color_And_TotalWidth_And_Not_WrapHeaders_Returns_FourLines()
+        [Test]
+        public async Task ToString_With_Color_And_TotalWidth_And_Not_WrapHeaders_Returns_FourLines()
         {
             const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe   | \x1b[91;49m Error: This is a basic message that will\r\n" +
 "                                      be printed on  four lines so that we can\r\n" + 
@@ -899,11 +893,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on  four lines so that we can test multiple multiple lines with multiple long sentences.");
             var actual = msg.ToString(true, 3, 6, 10, 79, false);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TooShortTotalWidth_And_Not_WrapHeaders_Returns_OneLine()
+        [Test]
+        public async Task ToString_With_NoColor_And_TooShortTotalWidth_And_Not_WrapHeaders_Returns_OneLine()
         {
             const string expected = @"  1. 22/10/02 07:12:34 | test.exe   |  Error: This is a basic message that will be printed on two lines.";
 
@@ -911,40 +905,40 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
             var actual = msg.ToString(false, 3, 6, 10, 15, false);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
+        [Test]
+        public async Task ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
-      Error: This is a basic message that will be printed on two lines.";
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe
+      Error: This is a basic message that will be printed on two lines.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
             var actual = msg.ToString(false, 3, 6, 10, 79, true);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_FourLines()
+        [Test]
+        public async Task ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_Returns_FourLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe
       Error: This is a basic message that will be printed on multiple lines bec
              ause it is really very very long and will take quite a bit of text
              in order to print it across at least three lines, despite what yo
-             u're thinking.";
+             u're thinking.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on multiple lines because it is really very very long and will take quite a bit of text in order to print it across at least three lines, despite what you're thinking.");
             var actual = msg.ToString(false, 3, 6, 10, 79, true);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_Color_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
+        [Test]
+        public async Task ToString_With_Color_And_TotalWidth_And_WrapHeaders_Returns_TwoLines()
         {
             const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe\r\n" +
 "     \x1b[91;49m Error: This is a basic message that will be printed on two lines.\x1b[0m";
@@ -953,11 +947,11 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines.");
             var actual = msg.ToString(true, 3, 6, 10, 79, true);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_Color_And_TotalWidth_And_WrapHeaders_Returns_FourLines()
+        [Test]
+        public async Task ToString_With_Color_And_TotalWidth_And_WrapHeaders_Returns_FourLines()
         {
             const string expected = "\x1b[90;49m  1. 22/10/02 07:12:34 | test.exe\r\n" +
 "     \x1b[91;49m Error: This is a basic message that will be printed on multiple lines bec\r\n" + 
@@ -969,26 +963,26 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on multiple lines because it is really very very long and will take quite a bit of text in order to print it across at least three lines, despite what you're thinking.");
             var actual = msg.ToString(true, 3, 6, 10, 79, true);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TooShortTotalWidth_And_WrapHeaders_Returns_TwoLines()
+        [Test]
+        public async Task ToString_With_NoColor_And_TooShortTotalWidth_And_WrapHeaders_Returns_TwoLines()
         {
-            const string expected = @"  1. 22/10/02 07:12:34 | test.exe
-      Error: This is a basic message that will be printed on two lines just because.";
+            string expected = @"  1. 22/10/02 07:12:34 | test.exe
+      Error: This is a basic message that will be printed on two lines just because.".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             var dt = new DateTime(2022, 10, 2, 7, 12, 34);
             var msg = new LogMessage(1, "Error", "test.exe", dt, "This is a basic message that will be printed on two lines just because.");
             var actual = msg.ToString(false, 3, 6, 10, 20, true);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_With_Exception_Returns_Expected()
+        [Test]
+        public async Task ToString_With_NoColor_And_TotalWidth_And_Not_WrapHeaders_With_Exception_Returns_Expected()
         {
-            const string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1] |   Error: [01][ExampleCommands] Exception encountered.
+            string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1] |   Error: [01][ExampleCommands] Exception encountered.
                                                    --------Exception 1--------
                                                    System.FormatException: FormatException
                                                      at System.Text.StringBuilder.AppendFormat(IFormatProvider provider, String format, Object[] args)
@@ -1009,7 +1003,7 @@ namespace Evands.Pellucid.Terminal.Formatting.Logs
                                                      at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
                                                      at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
 
-                                                   -----------------------------";
+                                                   -----------------------------".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             const string message = @"[01][ExampleCommands] Exception encountered.
 --------Exception 1--------
@@ -1038,13 +1032,13 @@ System.FormatException: FormatException
                 message);
 
             var actual = msg.ToString(false, 0, 7, 0, 151, false);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_With_Exception_Returns_Expected()
+        [Test]
+        public async Task ToString_With_NoColor_And_TotalWidth_And_WrapHeaders_With_Exception_Returns_Expected()
         {
-            const string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1]
+            string expected = @"1. 22/06/13 15:48:50 | SimplSharpPro.exe [App 1]
      Error: [01][ExampleCommands] Exception encountered.
             --------Exception 1--------
             System.FormatException: FormatException
@@ -1066,7 +1060,7 @@ System.FormatException: FormatException
               at Evands.Pellucid.Terminal.Commands.GlobalCommand.ExecuteCommand(String args)
               at Crestron.SimplSharpProInternal.SimplSharpProManager.k()
 
-            -----------------------------";
+            -----------------------------".Replace("\r\n", "\n").Replace("\n", "\r\n");
 
             const string message = @"[01][ExampleCommands] Exception encountered.
 --------Exception 1--------
@@ -1096,76 +1090,76 @@ System.FormatException: FormatException
 
             var actual = msg.ToString(false, 0, 7, 0, 112, true);
             Console.WriteLine(actual);
-            Assert.AreEqual(expected, actual);
+            await Assert.That(actual).IsEqualTo(expected);
         }
 
-        [TestMethod]
-        public void Equals_Returns_True_When_InstanceDetails_Are_Equal()
+        [Test]
+        public async Task Equals_Returns_True_When_InstanceDetails_Are_Equal()
         {
             var dt = DateTime.Now;
             var e1 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
             var e2 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
 
-            Assert.IsTrue(e1.Equals(e2));
+            await Assert.That(e1.Equals(e2)).IsTrue();
         }
 
-        [TestMethod]
-        public void Equals_Returns_False_When_Number_Differs()
+        [Test]
+        public async Task Equals_Returns_False_When_Number_Differs()
         {
             var dt = DateTime.Now;
             var e1 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
             var e2 = new LogMessage(2, "Error", "123.exe", dt, "Hello World!");
 
-            Assert.IsFalse(e1.Equals(e2));
+            await Assert.That(e1.Equals(e2)).IsFalse();
         }
 
-        [TestMethod]
-        public void Equals_Returns_False_When_Type_Differs()
+        [Test]
+        public async Task Equals_Returns_False_When_Type_Differs()
         {
             var dt = DateTime.Now;
             var e1 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
             var e2 = new LogMessage(1, "Warning", "123.exe", dt, "Hello World!");
 
-            Assert.IsFalse(e1.Equals(e2));
+            await Assert.That(e1.Equals(e2)).IsFalse();
         }
 
-        [TestMethod]
-        public void Equals_Returns_False_When_Origination_Differs()
+        [Test]
+        public async Task Equals_Returns_False_When_Origination_Differs()
         {
             var dt = DateTime.Now;
             var e1 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
             var e2 = new LogMessage(1, "Error", "1234.exe", dt, "Hello World!");
 
-            Assert.IsFalse(e1.Equals(e2));
+            await Assert.That(e1.Equals(e2)).IsFalse();
         }
 
-        [TestMethod]
-        public void Equals_Returns_False_When_DateTime_Differs()
+        [Test]
+        public async Task Equals_Returns_False_When_DateTime_Differs()
         {
             var dt = DateTime.Now;
             var e1 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
             var e2 = new LogMessage(1, "Error", "123.exe", dt.AddSeconds(1), "Hello World!");
 
-            Assert.IsFalse(e1.Equals(e2));
+            await Assert.That(e1.Equals(e2)).IsFalse();
         }
 
-        [TestMethod]
-        public void Equals_Returns_False_When_Message_Differs()
+        [Test]
+        public async Task Equals_Returns_False_When_Message_Differs()
         {
             var dt = DateTime.Now;
             var e1 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
             var e2 = new LogMessage(2, "Error", "123.exe", dt, "Hello World");
 
-            Assert.IsFalse(e1.Equals(e2));
+            await Assert.That(e1.Equals(e2)).IsFalse();
         }
 
-        [TestMethod]
-        public void Equals_Returns_False_When_SecondInstance_IsNull()
+        [Test]
+        public async Task Equals_Returns_False_When_SecondInstance_IsNull()
         {
             var dt = DateTime.Now;
             var e1 = new LogMessage(1, "Error", "123.exe", dt, "Hello World!");
 
-            Assert.IsFalse(e1.Equals(null));
+            await Assert.That(e1.Equals(null)).IsFalse();
         }
 
         private static string GetFullMessage(string prefix, string origin, DateTime dt, string msg)

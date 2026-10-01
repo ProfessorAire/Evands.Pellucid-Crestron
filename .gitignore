@@ -352,3 +352,6 @@ ASALocalRun/
 .localhistory/
 
 *.vsmdi
+
+# Code Rush
+.cr/

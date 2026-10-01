@@ -44,11 +44,6 @@ namespace Evands.Pellucid.ProDemo
         private readonly string header = "Control Processor";
 
         /// <summary>
-        /// Holds a reference to the CWS server so it can be disposed of.
-        /// </summary>
-        private Crestron.SimplSharp.WebScripting.HttpCwsServer cws;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ControlSystem"/> class.
         /// </summary>
         public ControlSystem()
@@ -65,31 +60,12 @@ namespace Evands.Pellucid.ProDemo
                 Options.FilePath = "/USER/pellucid.console-options.toml";
 
                 // Add a console writer to the console.
-                // This could be done with the ProConsole class as well, or your own
+                // This could be done with your own
                 // implementation extending the ConsoleBase class.
-                // Technically if no writer is registered then the CrestronConsoleWriter
+                // When Crestron platform services are initialized, the CrestronConsoleWriter
                 // gets registered by default, precluding the need for this, but it shows
                 // how to hook your own console nodes into the system.
                 ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Terminal.CrestronConsoleWriter());
-                cws = new Crestron.SimplSharp.WebScripting.HttpCwsServer("/pellucid/");
-                cws.Register();
-
-                // This is the optional CwsConsoleWriter, usually used for something like VC-4 console access.
-                if (CrestronEnvironment.DevicePlatform == eDevicePlatform.Server)
-                {
-                    ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, string.Format("console/{0}", InitialParametersClass.RoomId), 53000, false));
-                }
-                else
-                {
-                    if (CrestronEnvironment.ProgramCompatibility == eCrestronSeries.Series3)
-                    {
-                        ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, true, 53000, false));
-                    }
-                    else
-                    {
-                        ConsoleBase.RegisterConsoleWriter(new Evands.Pellucid.Cws.CwsConsoleWriter(cws, 53000, false));
-                    }
-                }
 
                 // Setup the global command(s).
                 var appCommand = new GlobalCommand("app", "Application commands.", Access.Programmer);
@@ -102,7 +78,7 @@ namespace Evands.Pellucid.ProDemo
                 }
 
                 // Initialize specific global commands.
-                ProConsole.InitializeConsole("app");
+                ConsoleBase.InitializeDefaultConsoleCommands("app");
 
                 var csc = new ControlSystemCommands();
                 csc.RegisterCommand("app");
@@ -121,12 +97,6 @@ namespace Evands.Pellucid.ProDemo
 
                 // Register log nodes.
                 Logger.RegisterLogWriter(new CrestronLogWriter());
-
-                // In addition to the CrestronLogWriter we're registering an additional writer that targets another file.
-                var path = Path.Combine(Directory.GetApplicationRootDirectory(), "/user");
-                path = Path.Combine(path, "logs");
-                path = Path.Combine(path, string.Format("App{0}SimpleLog.log", InitialParametersClass.ApplicationNumber));
-                Logger.RegisterLogWriter(new Evands.Pellucid.Diagnostics.SimpleFileLogger(path));
 
                 // This enables markup, which can make writing messages with formatting easier.
                 Options.Instance.EnableMarkup = true;
@@ -174,7 +144,7 @@ namespace Evands.Pellucid.ProDemo
                     {
                         Debug.WriteProgressLine(this, "Initializing Application Logic.");
                         Debug.WriteDebugLine(this, "This message is only written if debugging is enabled.");
-                        ConsoleBase.UseProgramSlotAsHeader();
+                        ConsoleBase.UseProgramSlotAsHeader(InitialParametersClass.ApplicationNumber);
                         Debug.WriteDebugLine(this, "Now messages have the program slot prepended.");
                         Logger.LogWarning(this, "This message is written to the console if debug warnings are enabled and to the registered LogWriters if Warnings are enabled in the Logger.");
                         Debug.WriteProgressLine(this, "Application Initialized.");

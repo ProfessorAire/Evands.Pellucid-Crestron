@@ -1,164 +1,41 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{906AE64A-D167-4567-AD60-FDA6C90C3291}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworks>net47;net472;netstandard2.0</TargetFrameworks>
     <RootNamespace>Evands.Pellucid</RootNamespace>
     <AssemblyName>Evands.Pellucid</AssemblyName>
-    <ProjectTypeGuids>{0B4745B0-194B-4BB6-8E21-E9057CA92500};{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
-    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
-    <OSVersion>5.0</OSVersion>
-    <DeployDirSuffix>SmartDeviceProject1</DeployDirSuffix>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <NativePlatformName>Windows CE</NativePlatformName>
-    <FormFactorID>
-    </FormFactorID>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <Version>2.0.0</Version>
+    <PackageId>Evands.Pellucid</PackageId>
+    <Description>Evands.Pellucid provides a flexible framework for console interactions, debug messaging, logging, and terminal commands for Crestron 4-Series and modern .NET projects. Includes the Pro command framework previously in Evands.Pellucid.Pro.</Description>
+    <Authors>christopher.mcneely</Authors>
+    <PackageProjectUrl>https://github.com/ProfessorAire/Evands.Pellucid-Crestron</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReleaseNotes>https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases</PackageReleaseNotes>
+    <PackageTags>Crestron S#Pro Simpl# Console Logging</PackageTags>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <AllowedReferenceRelatedFileExtensions>.allowedReferenceRelatedFileExtensions</AllowedReferenceRelatedFileExtensions>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <FileAlignment>512</FileAlignment>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
-    <DocumentationFile>bin\Debug\Evands.Pellucid.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <AllowedReferenceRelatedFileExtensions>.allowedReferenceRelatedFileExtensions</AllowedReferenceRelatedFileExtensions>
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <FileAlignment>512</FileAlignment>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
-    <DocumentationFile>bin\Release\Evands.Pellucid.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Test\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;TEST</DefineConstants>
-    <DocumentationFile>bin\Debug\Evands.Pellucid.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <Choose>
-    <When Condition=" '$(Configuration)' == 'Test' ">
-      <ItemGroup>
-        <ProjectReference Include="..\Evands.Pellucid.Fakes\Evands.Pellucid.Fakes.csproj">
-          <Project>{5A2D7A75-F172-43BE-AF04-18A89560D79E}</Project>
-          <Name>Evands.Pellucid.Fakes</Name>
-        </ProjectReference>
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="SimplSharpCustomAttributesInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpCustomAttributesInterface.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="SimplSharpHelperInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpHelperInterface.dll</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="SimplSharpPro, Version=1.5.3.17, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpPro.exe</HintPath>
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="SimplSharpReflectionInterface, Version=1.0.5583.25238, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpReflectionInterface.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+
   <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="ConsoleBase.cs" />
-    <Compile Include="Diagnostics\DebugExtensions.cs" />
-    <Compile Include="Internal\MinimalTomlParser.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="Internal\Parts\INamedToml.cs" />
-    <Compile Include="Internal\Parts\IPrintToml.cs" />
-    <Compile Include="Internal\Parts\TomlArray.cs" />
-    <Compile Include="Internal\Parts\TomlComment.cs" />
-    <Compile Include="Internal\Parts\TomlKeyValuePair.cs" />
-    <Compile Include="Internal\Parts\TomlClass.cs" />
-    <Compile Include="Internal\TomlPropertyAttribute.cs" />
-    <Compile Include="Diagnostics\CrestronLogWriter.cs" />
-    <Compile Include="Diagnostics\Debug.cs" />
-    <Compile Include="Diagnostics\DebugLevels.cs" />
-    <Compile Include="Diagnostics\DebugStateChangedEventArgs.cs" />
-    <Compile Include="Diagnostics\IDebugData.cs" />
-    <Compile Include="Diagnostics\ILogWriter.cs" />
-    <Compile Include="Diagnostics\Logger.cs" />
-    <Compile Include="Diagnostics\LoggerExtensions.cs" />
-    <Compile Include="Diagnostics\LogLevels.cs" />
-    <Compile Include="Diagnostics\LogLevelsChangedEventArgs.cs" />
-    <Compile Include="Diagnostics\SimpleFileLogger.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Terminal\ColorCode.cs" />
-    <Compile Include="Terminal\CrestronConsoleWriter.cs" />
-    <Compile Include="Terminal\Formatting\BasicChrome.cs" />
-    <Compile Include="Terminal\Formatting\ColorFormat.cs" />
-    <Compile Include="Terminal\Formatting\DumpHelpers\DumpObjectFailure.cs" />
-    <Compile Include="Terminal\Formatting\Logs\ErrorLogFormatters.cs" />
-    <Compile Include="Terminal\Formatting\Logs\LogMessage.cs" />
-    <Compile Include="Terminal\Formatting\Markup\ConsoleMarkup.cs" />
-    <Compile Include="Terminal\Formatting\RoundedChrome.cs" />
-    <Compile Include="Terminal\Formatting\SquareChrome.cs" />
-    <Compile Include="Terminal\Formatting\DumpHelpers\DumpCollection.cs" />
-    <Compile Include="Terminal\Formatting\DumpHelpers\DumpFactory.cs" />
-    <Compile Include="Terminal\Formatting\DumpHelpers\DumpNode.cs" />
-    <Compile Include="Terminal\Formatting\DumpHelpers\DumpObject.cs" />
-    <Compile Include="Terminal\Formatting\IChromeCollection.cs" />
-    <Compile Include="Terminal\Formatting\Tables\Column.cs" />
-    <Compile Include="Terminal\Formatting\Tables\ColumnCollection.cs" />
-    <Compile Include="Terminal\Formatting\Tables\Row.cs" />
-    <Compile Include="Terminal\Formatting\Tables\Extensions.cs" />
-    <Compile Include="Terminal\Formatting\Formatters.cs" />
-    <Compile Include="Terminal\Formatting\IConsoleColor.cs" />
-    <Compile Include="Terminal\Formatting\RgbColor.cs" />
-    <Compile Include="Terminal\Formatting\StandardColor.cs" />
-    <Compile Include="Terminal\Formatting\Tables\Cell.cs" />
-    <Compile Include="Terminal\Formatting\Tables\HorizontalAlignment.cs" />
-    <Compile Include="Terminal\Formatting\Tables\RowCollection.cs" />
-    <Compile Include="Terminal\Formatting\Tables\Table.cs">
-      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="Terminal\IConsoleWriter.cs" />
-    <None Include="Properties\ControlSystem.cfg" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>rem  S# preparation will execute after these operations</PostBuildEvent>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Test'">
+    <InternalsVisibleTo Include="Evands.Pellucid.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Evands.Pellucid.Crestron" />
+  </ItemGroup>
 </Project>

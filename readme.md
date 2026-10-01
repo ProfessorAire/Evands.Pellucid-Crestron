@@ -9,23 +9,23 @@ This library is intended to make writing information to the console or error log
 
 By providing `IConsoleWriter` and `ILogWriter` interfaces you have the option and ability to easily add new writers to the `ConsoleBase` and `Logger` classes to write to alternate locations. This makes it easier to do something like write a custom TCP console agent for a VC-4 instance. The right implementation can easily be swapped in based on the runtime environment. Pre-built implementations for the `CrestronConsole` and `ErrorLog` classes are automatically added when a call to the `ConsoleBase` or `Logger` classes occur without any registered implementations.
 
-Using the `Evands.Pellucid.Pro` library will also provide classes to make writing console commands far easier. With these classes you can add a single global command to the Crestron console and then register additional commands with that global command as you need. In addition, these commands are created by decorating classes with attributes, which allows automatic parsing and command help formatting, in addition to standardizing all your commands in a familiar manner.
+The library also provides classes to make writing console commands far easier. With these classes you can add a single global command to the Crestron console and then register additional commands with that global command as you need. In addition, these commands are created by decorating classes with attributes, which allows automatic parsing and command help formatting, in addition to standardizing all your commands in a familiar manner.
+
+> **Note:** Console command functionality (the `Terminal.Commands` namespace) is designed for use in Crestron S# Pro programs. It will not function in non-Pro library projects.
 
 ## Installation
 
-There are two different ways you can install these libraries.
-
 ### Nuget
 
-If you're using Visual Studio 2017/19 to produce code for Series-4 processors you can install the libraries via Nuget, as there are 2 Nuget packages available, `Evands.Pellucid` and `Evands.Pellucid.Pro`. If you're using Visual Studio 2008 you can still install via the Nuget packages manually. When you add references to the `dll`s, however, the Crestron Simpl# plugin might prevent the `Evands.Pellucid.Pro` from being properly added. If this happens, it can be overcome by manually adding the references to your project file. The easiest process is to add the `Evands.Pellucid.dll` reference and then manually edit your project file, copying the `Evands.Pellucid.dll` reference and updating it to point to the `Evands.Pellucid.Pro.dll` file.
+Install the `Evands.Pellucid` NuGet package. This single package includes all functionality, including the console command framework that was previously in the separate `Evands.Pellucid.Pro` package.
 
 ### Release Binaries
 
 The [Releases](https://github.com/ProfessorAire/Evands.Pellucid-Crestron/releases) page has binaries for each release. The releases also contain the compiled demo project `Evands.Pellucid.ProDemo.cpz` that you can load on a processor. View the demo code [here](https://github.com/ProfessorAire/Evands.Pellucid-Crestron/tree/main/src/Evands.Pellucid.ProDemo).
 
-### Dependencies
+### Supported Frameworks
 
-***Regardless of how you install this, the library functionality requires the inclusion of the*** `SimplSharpReflectionInterface.dll` ***from Crestron.***
+This library targets `netstandard2.0` and is compatible with `.NET Framework 4.7`, `.NET 6`, and `.NET 8`.
 
 ## Basic Functionality
 
@@ -36,16 +36,18 @@ There are a variety of options available for the `ConsoleBase`, `Debug`, and `Lo
 This also means that it's possible to provide a default configuration file with your program. Using your preferred method of configuration transformation you can create a different version for `Debug` and `Release` configurations and load them automatically with the code to the processor.
 
 The available options are:
-| Name                    | Type           | DefaultValue      | Description                                                                                                                                     |
-| ----------------------- | -------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ColorizeConsoleOutput` | `bool`         | `true`            | Indicates whether console output should be colorized.                                                                                           |
-| `UseTimestamps`         | `bool`         | `true`            | Indicates whether debug messages should have timestamps prepended to them.                                                                      |
-| `Use24HourTime`         | `bool`         | `true`            | Indicates whether debug timestamps should be formatted as `13:00:15` or `1:00:15 PM`                                                            |
-| `LogLevels`             | `LogLevels`    | `LogLevels.None`  | Flagged enumeration indicating what types of messages should be logged.                                                                         |
-| `DebugLevels`           | `DebugLevels`  | `DebugLevels.All` | Flagged enumeration indicating what debug messages should be printed.                                                                           |
-| `Suppressed`            | `List<string>` | Empty list        | List of strings matching suppressed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Debug` class methods, instead of the `Options` class. |
-| `Allowed`               | `List<string>` | Empty list        | List of strings matching allowed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Logger` class methods, instead of directly through the `Options` class.    |
-|`AutoSave`|`bool`|`true`| Indicates whether or not the file will be auto-saved on program shutdown.
+| Name                           | Type           | DefaultValue      | Description                                                                                                                                     |
+| ------------------------------ | -------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ColorizeConsoleOutput`        | `bool`         | `true`            | Indicates whether console output should be colorized.                                                                                           |
+| `UseTimestamps`                | `bool`         | `true`            | Indicates whether debug messages should have timestamps prepended to them.                                                                      |
+| `Use24HourTime`                | `bool`         | `true`            | Indicates whether debug timestamps should be formatted as `13:00:15` or `1:00:15 PM`                                                            |
+| `UseFullTypeNamesWhenDumping`  | `bool`         | `false`           | Indicates whether dumping items to the console will use full type names by default.                                                             |
+| `UseMinimalSpacingWhenDumping` | `bool`         | `false`           | Indicates whether dumping items to the console will use minimal spacing (2 chars) for nested objects instead of aligning based on property name length. |
+| `LogLevels`                    | `LogLevels`    | `LogLevels.None`  | Flagged enumeration indicating what types of messages should be logged.                                                                         |
+| `DebugLevels`                  | `DebugLevels`  | `DebugLevels.All` | Flagged enumeration indicating what debug messages should be printed.                                                                           |
+| `Suppressed`                   | `List<string>` | Empty list        | List of strings matching suppressed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Debug` class methods, instead of the `Options` class. |
+| `Allowed`                      | `List<string>` | Empty list        | List of strings matching allowed debug source headers as described below in [`Evands.Pellucid.Diagnostics.Debug`](#evspelluciddiagnosticsdebug). Typically these values should be added/removed via the `Logger` class methods, instead of directly through the `Options` class.    |
+|`AutoSave`                      |`bool`          |`true`             | Indicates whether or not the file will be auto-saved on program shutdown.
 
 The default values saved to disk will look like:
 
@@ -55,6 +57,8 @@ console-colorizeOutput = "True"
 debugging-useTimestamps = "True"
 debugging-shortTimestamps = "True"
 debugging-levels = "All"
+dump-useFullTypeNames = "False"
+dump-useMinimalSpacing = "False"
 suppressed = [  ]
 allowed = [  ]
 autosave = "True"
@@ -75,13 +79,11 @@ autosave = "True"
 
 To change the location that the file is loaded from you have to set the `static` property `FilePath` on the `Evands.Pellucid.Options` class. This defaults to the `\USER\Pellucid\pellucid.console-options#.toml` (where `#` is the application number).
 
-### `Evands.Pellucid.ConsoleBase` and `Evands.Pellucid.ProConsole`
+### `Evands.Pellucid.ConsoleBase`
 
-The `ConsoleBase` class is a bit of a unique one, as it's an `abstract` class that has only static methods. It isn't intended to be used as a instanced class. As such, its constructor is protected and allows other classes to extend it, in order to provide additional static functionality, or simply make it easier to call.
+The `ConsoleBase` class is a bit of a unique one, as it's an `abstract` class that has only static methods. It isn't intended to be used as an instanced class. As such, its constructor is protected and allows other classes to extend it, in order to provide additional static functionality, or simply make it easier to call.
 
-The `ProConsole` in the `Evands.Pellucid.Pro` project is an example of this and extends the class to provide the ability to add the `Evands.Pellucid.Pro` library's `ConsoleCommands` and `DebuggingCommands` to a list of commands that you provide the names of to the `ProConsole.InitializeConsole` method. In most cases if you're writing S# Pro Library or Program you'll want to extend the `ProConsole` over the `ConsoleBase`, unless you manually add these commands yourself.
-
-Generally it's easiest to call the console if you create your own implementation named `Console` that exists in the root of your project namespace. If it exists in the project's root namespace it will supersede the `System.Console` class, which will allow you to call `Console.[CommandName]` instead of `ConsoleBase.[CommandName]` or `ProConsole.[CommandName]`.
+The `ConsoleBase` class provides `InitializeDefaultConsoleCommands`, which registers the built-in `ConsoleCommands`, `DebuggingCommands`, and `LoggerCommands` with the global commands you specify. In most cases if you're writing an S# Pro Library or Program you'll want to call this method to register the default commands.
 
 In addition, the console has a variety of options for printing colorized text, which makes it far easier to differentiate messages when reading a busy console. You can specify a variety of standard console colors, or use an implementation of the `Evands.Pellucid.Terminal.Formatting.IConsoleColor` interface, such as `Evands.Pellucid.Terminal.Formatting.RgbColor` to specify a custom color. These colors are only printed if the `Evands.Pellucid.Options.Instance.ColorizeConsoleOutput` property is set to `true`. (By default it is.)
 
